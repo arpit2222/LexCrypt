@@ -1,0 +1,28 @@
+[
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "caseId", "type": "bytes32" },
+      { "internalType": "uint256", "name": "encArgumentScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "encPrecedentScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "encTimelinessScore", "type": "uint256" },
+      { "internalType": "bytes32", "name": "ipfsCidHash", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "permitHash", "type": "bytes32" }
+    ],
+    "name": "submitAttempt",
+    "outputs": [{ "internalType": "bytes32", "name": "resultHandle", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "caseId", "type": "bytes32" }],
+    "name": "getAttemptPlain",
+    "outputs": [
+      { "internalType": "uint256", "name": "totalScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
+      { "internalType": "bytes32", "name": "cidHash", "type": "bytes32" },
+      { "internalType": "address", "name": "submitter", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

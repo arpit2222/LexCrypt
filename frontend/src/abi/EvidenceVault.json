@@ -1,0 +1,26 @@
+[
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "encIdentityHash", "type": "uint256" },
+      { "internalType": "uint256", "name": "encContentHash", "type": "uint256" },
+      { "internalType": "bytes32", "name": "ipfsCidHash", "type": "bytes32" }
+    ],
+    "name": "submitEvidence",
+    "outputs": [{ "internalType": "bytes32", "name": "vaultId", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "vaultId", "type": "bytes32" }],
+    "name": "getEvidencePlain",
+    "outputs": [
+      { "internalType": "bytes32", "name": "cidHash", "type": "bytes32" },
+      { "internalType": "uint8", "name": "state", "type": "uint8" },
+      { "internalType": "bytes32", "name": "commitment", "type": "bytes32" },
+      { "internalType": "address", "name": "submitter", "type": "address" },
+      { "internalType": "address", "name": "arbiter", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

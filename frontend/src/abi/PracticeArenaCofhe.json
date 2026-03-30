@@ -1,0 +1,58 @@
+[
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "caseId", "type": "bytes32" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encArgumentScore",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encPrecedentScore",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encTimelinessScore",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "ipfsCidHash", "type": "bytes32" },
+      { "internalType": "bytes32", "name": "permitHash", "type": "bytes32" }
+    ],
+    "name": "submitAttempt",
+    "outputs": [{ "internalType": "bytes32", "name": "resultHandle", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "caseId", "type": "bytes32" }],
+    "name": "getAttemptPlain",
+    "outputs": [
+      { "internalType": "uint256", "name": "totalScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
+      { "internalType": "bytes32", "name": "cidHash", "type": "bytes32" },
+      { "internalType": "address", "name": "submitter", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

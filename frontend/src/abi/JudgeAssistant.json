@@ -1,0 +1,38 @@
+[
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "caseId", "type": "bytes32" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "encCaseDataHash", "type": "uint256" },
+          { "internalType": "uint256", "name": "encEvidenceScore", "type": "uint256" },
+          { "internalType": "uint256", "name": "encPriorConvictions", "type": "uint256" },
+          { "internalType": "uint256", "name": "encCaseTypeCode", "type": "uint256" },
+          { "internalType": "uint256", "name": "encJurisdiction", "type": "uint256" },
+          { "internalType": "uint256", "name": "encIsJuvenile", "type": "uint256" },
+          { "internalType": "uint256", "name": "encSensitivityTier", "type": "uint256" }
+        ],
+        "internalType": "struct JudgeAssistant.CaseAnalysisInput",
+        "name": "input",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "permitHash", "type": "bytes32" }
+    ],
+    "name": "analyzeCase",
+    "outputs": [{ "internalType": "bytes32", "name": "resultHandle", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "caseId", "type": "bytes32" }],
+    "name": "getAnalysisPlain",
+    "outputs": [
+      { "internalType": "uint256", "name": "verdictScore", "type": "uint256" },
+      { "internalType": "uint256", "name": "highRisk", "type": "uint256" },
+      { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
+      { "internalType": "bytes32", "name": "commitment", "type": "bytes32" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

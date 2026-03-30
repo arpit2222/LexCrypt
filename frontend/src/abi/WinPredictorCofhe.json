@@ -1,0 +1,81 @@
+[
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "caseId", "type": "bytes32" },
+      {
+        "components": [
+          {
+            "components": [
+              { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+              { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+              { "internalType": "uint8", "name": "utype", "type": "uint8" },
+              { "internalType": "bytes", "name": "signature", "type": "bytes" }
+            ],
+            "internalType": "struct CoFheInUint32",
+            "name": "encEvidenceScore",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+              { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+              { "internalType": "uint8", "name": "utype", "type": "uint8" },
+              { "internalType": "bytes", "name": "signature", "type": "bytes" }
+            ],
+            "internalType": "struct CoFheInUint32",
+            "name": "encPriorConvictions",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+              { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+              { "internalType": "uint8", "name": "utype", "type": "uint8" },
+              { "internalType": "bytes", "name": "signature", "type": "bytes" }
+            ],
+            "internalType": "struct CoFheInUint32",
+            "name": "encCaseTypeCode",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+              { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+              { "internalType": "uint8", "name": "utype", "type": "uint8" },
+              { "internalType": "bytes", "name": "signature", "type": "bytes" }
+            ],
+            "internalType": "struct CoFheInUint32",
+            "name": "encJurisdiction",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+              { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+              { "internalType": "uint8", "name": "utype", "type": "uint8" },
+              { "internalType": "bytes", "name": "signature", "type": "bytes" }
+            ],
+            "internalType": "struct CoFheInUint32",
+            "name": "encClaimAmount",
+            "type": "tuple"
+          }
+        ],
+        "internalType": "struct WinPredictor.WinInput",
+        "name": "input",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "permitHash", "type": "bytes32" }
+    ],
+    "name": "predictWin",
+    "outputs": [{ "internalType": "bytes32", "name": "resultHandle", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "caseId", "type": "bytes32" }],
+    "name": "getWinProbabilityPlain",
+    "outputs": [{ "internalType": "uint256", "name": "probability", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

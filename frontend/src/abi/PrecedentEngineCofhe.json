@@ -1,0 +1,73 @@
+[
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "precedentId", "type": "bytes32" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encCaseTypeCode",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encJurisdiction",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "ipfsCidHash", "type": "bytes32" }
+    ],
+    "name": "addPrecedent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "bytes32", "name": "queryId", "type": "bytes32" },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encCaseTypeCode",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint32",
+        "name": "encJurisdiction",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "permitHash", "type": "bytes32" }
+    ],
+    "name": "searchPrecedents",
+    "outputs": [{ "internalType": "bytes32", "name": "resultHandle", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "queryId", "type": "bytes32" }],
+    "name": "getMatchCountPlain",
+    "outputs": [{ "internalType": "uint256", "name": "count", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

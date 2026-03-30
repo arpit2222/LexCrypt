@@ -1,0 +1,46 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint128",
+        "name": "encIdentityHash",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          { "internalType": "uint256", "name": "ctHash", "type": "uint256" },
+          { "internalType": "uint8", "name": "securityZone", "type": "uint8" },
+          { "internalType": "uint8", "name": "utype", "type": "uint8" },
+          { "internalType": "bytes", "name": "signature", "type": "bytes" }
+        ],
+        "internalType": "struct CoFheInUint128",
+        "name": "encContentHash",
+        "type": "tuple"
+      },
+      { "internalType": "bytes32", "name": "ipfsCidHash", "type": "bytes32" }
+    ],
+    "name": "submitEvidence",
+    "outputs": [{ "internalType": "bytes32", "name": "vaultId", "type": "bytes32" }],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "vaultId", "type": "bytes32" }],
+    "name": "getEvidencePlain",
+    "outputs": [
+      { "internalType": "bytes32", "name": "cidHash", "type": "bytes32" },
+      { "internalType": "uint8", "name": "state", "type": "uint8" },
+      { "internalType": "bytes32", "name": "commitment", "type": "bytes32" },
+      { "internalType": "address", "name": "submitter", "type": "address" },
+      { "internalType": "address", "name": "arbiter", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
