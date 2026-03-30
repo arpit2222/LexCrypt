@@ -45,6 +45,14 @@ npm install
 npm run dev
 ```
 
+### Whitepaper + Pitch Deck Pages
+Place your docs here so the app can render them:
+- `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend/public/docs/LexCrypt_Whitepape.docx`
+- `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend/public/docs/LexCrypt_PitchDeck.pptx`
+
+Note: Inline preview uses the Office web viewer and requires a public URL. In local dev, use the
+Download/Open buttons instead.
+
 ### Frontend Env Vars
 Create `.env` in `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend`:
 
