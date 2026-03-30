@@ -1,8 +1,10 @@
 # LexCrypt MVP Demo
 
-Minimal buildathon demo for LexCrypt: FHE-inspired legal AI on Arbitrum Sepolia with a clean RainbowKit UI.
+LexCrypt: FHE-inspired legal AI on Arbitrum Sepolia with a clean RainbowKit UI.
 
 This repo contains:
+-Pitch Deck
+-WhitePaper
 - Solidity contracts (Registry, JudgeAssistant, WinPredictor) using a **MockFHE** library for demo/testing.
 - A minimal React + RainbowKit frontend to submit encrypted case inputs and "decrypt" results.
 
