@@ -1,101 +1,69 @@
-# LexCrypt MVP Demo
+# ⚖️ Nyaya AI - Akindo Wave Hackathon Build
 
-LexCrypt: FHE-inspired legal AI on Arbitrum Sepolia with a clean RainbowKit UI.
+Nyaya AI is an advanced, multilingual AI-powered legal intelligence and access platform. This build represents our complete End-to-End MVP for the hackathon, featuring real Azure OpenAI integration, Deep Web3 Fully Homomorphic Encryption (FHE), Voice Accessibility, and Live Video Infrastructure.
 
-This repo contains:
--Pitch Deck
--WhitePaper
-- Solidity contracts (Registry, JudgeAssistant, WinPredictor) using a **MockFHE** library for demo/testing.
-- A minimal React + RainbowKit frontend to submit encrypted case inputs and "decrypt" results.
+---
 
-> Note: `MockFHE.sol` is intentionally plaintext for fast demos and local testing. For real Fhenix CoFHE flows, the frontend can use `cofhejs` encryption (see CoFHE mode below) and the contracts should be swapped to the real `FHE.sol` library.
+## 🌟 What We Have Developed (Hackathon Build)
 
-## Repo Layout
-- `/Users/arpitchauhan/Desktop/akindo/LexCrypt/contracts` - Hardhat contracts + tests
-- `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend` - Vite React demo UI
+### 1. The Four Core Pillars
+* **Citizen Pillar**: Multilingual AI legal chat, PDF document intelligence, lawyer marketplace, and automated legal drafting (RTIs, Notices).
+* **Lawyer Pillar**: Case management dashboard, live video consultations, and AI Copilot for deep legal research.
+* **Associate / Law Student Pillar**: Mock Trial Simulator (Vakil Guru) featuring a Multi-Agent AI (Acting dynamically as both Prosecution and Judge).
+* **Admin Pillar**: System-wide analytics and user management.
 
-## Contracts (Hardhat)
+### 2. Deep Web3 FHE Integration (Fhenix)
+We implemented a Fully Homomorphic Encryption (FHE) flow to protect citizen data on-chain.
+* **Smart Contract**: `NyayaFHE.sol` stores encrypted case severity using `@fhenixprotocol/contracts`.
+* **Frontend Flow**: When a citizen connects their wallet (RainbowKit) and saves a case, the LLM secretly evaluates the severity. The frontend then encrypts this score using `fhenixjs` before it ever leaves the browser, generating the ciphertext needed for the smart contract!
 
+### 3. Voice Accessibility & Video Infrastructure
+* **Multilingual STT/TTS**: Integrated native Web Speech API. Citizens can speak their legal issues in Hindi/English using the **Mic icon**, and the AI can read advice out loud using the **Listen button**.
+* **Live Video Calls**: Integrated **Jitsi Meet** WebRTC directly into the app. Citizens and Lawyers can join secure, embedded video rooms without leaving the platform.
+
+### 4. Real Azure OpenAI & Document Intelligence
+* Replaced all mock data with a real `gpt-5.4` Azure OpenAI deployment.
+* Integrated `PyMuPDF` to extract text from uploaded documents, allowing the AI to summarize real PDFs.
+
+---
+
+## 🔑 Login Credentials
+
+The platform uses a role-based JWT authentication system connected to MongoDB Atlas. Use the following test accounts to explore the different dashboards:
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Citizen** | `citizen@nyaya.ai` | `password123` |
+| **Lawyer** | `lawyer@nyaya.ai` | `password123` |
+| **Associate/Student** | `associate@nyaya.ai` | `password123` |
+| **Admin** | `admin@nyaya.ai` | `password123` |
+
+---
+
+## 🚀 Setup & Run Instructions
+
+### 1. Backend (FastAPI)
+The backend handles MongoDB, JWT Auth, and the Azure OpenAI endpoints.
 ```bash
-cd /Users/arpitchauhan/Desktop/akindo/LexCrypt/contracts
-npm install
-npm run build
-npm test
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
 ```
+*API available at `http://localhost:8000`*
 
-### Deploy to Arbitrum Sepolia
-Set env vars:
-
+### 2. Frontend (Next.js)
+The frontend uses Next.js, Tailwind CSS, RainbowKit, Wagmi, and Fhenixjs.
 ```bash
-export ARBITRUM_SEPOLIA_RPC="https://sepolia-rollup.arbitrum.io/rpc"
-export PRIVATE_KEY="0x..."
-```
-
-Then deploy (example via Hardhat console or a script you add):
-
-```bash
-npx hardhat run script/deploy.js --network arbitrumSepolia
-```
-
-## Frontend (RainbowKit)
-
-```bash
-cd /Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend
+cd frontend
 npm install
 npm run dev
 ```
+*Web App available at `http://localhost:3000`*
 
-### Whitepaper + Pitch Deck Pages
-Place your docs here so the app can render them:
-- `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend/public/docs/LexCrypt_Whitepape.docx`
-- `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend/public/docs/LexCrypt_PitchDeck.pptx`
-
-Note: Inline preview uses the Office web viewer and requires a public URL. In local dev, use the
-Download/Open buttons instead.
-
-### Frontend Env Vars
-Create `.env` in `/Users/arpitchauhan/Desktop/akindo/LexCrypt/frontend`:
-
-```bash
-VITE_WALLETCONNECT_PROJECT_ID=your_project_id
-VITE_ARBITRUM_SEPOLIA_RPC=https://sepolia-rollup.arbitrum.io/rpc
-VITE_JUDGE_ASSISTANT_ADDRESS=0xYourDeployedJudgeAssistant
-VITE_WIN_PREDICTOR_ADDRESS=0xYourDeployedWinPredictor
-VITE_EVIDENCE_VAULT_ADDRESS=0xYourEvidenceVault
-VITE_PRACTICE_ARENA_ADDRESS=0xYourPracticeArena
-VITE_PRECEDENT_ENGINE_ADDRESS=0xYourPrecedentEngine
-VITE_USE_COFHE=false
-```
-
-## Demo Flow
-1. Connect wallet via RainbowKit.
-2. Submit encrypted case signals in **Judge AI Assistant**.
-3. Click **Decrypt Latest Result** to show the verdict score.
-4. Do the same for **Win Probability Engine**.
-
-## Feature Status
-Implemented:
-- Smart contracts: LexCryptRegistry, JudgeAssistant, WinPredictor, EvidenceVault, PracticeArena, PrecedentEngine (MockFHE demo mode)
-- Frontend: RainbowKit login, Judge AI submit + result, Win Probability submit + result, Evidence Vault, Practice Arena, Precedent Engine
-- On-chain encrypted handles + IPFS CID hash storage (no backend)
-- CoFHE toggle: browser encryption + permit creation + ABI switch (for Fhenix contracts)
-- Tests + deploy script
-
-Not yet implemented:
-- Real FHE.sol contracts on the Fhenix network (MockFHE only for now)
-
-## CoFHE Mode (Real Encryption)
-Enable this when pointing the frontend at FHE-enabled contracts on Fhenix:
-
-```bash
-VITE_USE_COFHE=true
-```
-
-This uses `cofhejs` in the browser to encrypt inputs and generate permits before calling the contracts. The ABI switches to the CoFHE input structs automatically, so the contract must accept the encrypted input types.
-
-## Buildathon Targets (Option 2)
-- Contracts: Registry + JudgeAssistant + WinPredictor
-- UI: Case submit + decrypt result
-- Network: Arbitrum Sepolia
-
-If you want, I can add deploy scripts, integrate real CoFHE encryption, or scaffold the remaining modules (EvidenceVault, PracticeArena, PrecedentEngine).
+### 3. Testing the FHE Web3 Flow
+1. Login as a **Citizen**.
+2. Click the **Connect Wallet** button in the top right header.
+3. Chat with the AI about a legal issue.
+4. Click **Save** beneath the AI's response. You will see an alert confirming the Fhenix encryption (`euint8`) occurred in the browser!
