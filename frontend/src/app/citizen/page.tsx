@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2 } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useWalletClient } from 'wagmi';
-"use client";
 
 export default function CitizenDashboard() {
   const { data: walletClient } = useWalletClient();
