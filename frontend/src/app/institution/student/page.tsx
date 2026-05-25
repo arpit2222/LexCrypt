@@ -32,7 +32,7 @@ export default function StudentSimulation() {
       const historyForApi = messages.map(m => ({ role: m.role === "ai" ? "assistant" : "user", content: m.content }));
       historyForApi.push({ role: "user", content: userMessage });
 
-      const response = await fetch("http://localhost:8000/api/simulation/chat", {
+      const response = await fetch("/api/simulation/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ history: historyForApi }),

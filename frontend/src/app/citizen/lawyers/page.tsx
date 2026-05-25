@@ -12,7 +12,7 @@ export default function LawyerMarketplace() {
   const [activeCall, setActiveCall] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/lawyers")
+    fetch("/api/lawyers")
       .then(res => res.json())
       .then(data => {
         setLawyers(data);
@@ -23,7 +23,7 @@ export default function LawyerMarketplace() {
 
   const handleBook = async (lawyer: any) => {
     try {
-      const res = await fetch("http://localhost:8000/api/bookings", {
+      const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lawyer_id: lawyer.id, date: "2026-06-01", time: "14:00", issue_summary: "Legal Consultation" })

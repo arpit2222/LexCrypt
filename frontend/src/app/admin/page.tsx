@@ -17,7 +17,7 @@ export default function AdminDashboard() {
       router.push("/login");
     }
 
-    fetch("http://localhost:8000/api/admin/stats")
+    fetch("/api/admin/stats")
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(console.error);

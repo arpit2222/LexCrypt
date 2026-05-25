@@ -15,7 +15,7 @@ export default function LawyerCopilot() {
     setLoading(true);
     
     try {
-      const res = await fetch("http://localhost:8000/api/copilot/research", {
+      const res = await fetch("/api/copilot/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query })

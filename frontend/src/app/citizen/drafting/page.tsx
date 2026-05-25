@@ -17,7 +17,7 @@ export default function Drafting() {
     setDraft("");
     
     try {
-      const res = await fetch("http://localhost:8000/api/draft", {
+      const res = await fetch("/api/draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ document_type: docType, details })
