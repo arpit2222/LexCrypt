@@ -55,9 +55,9 @@ export default function CitizenDashboard() {
   };
 
   const fetchHistory = async () => {
-    const email = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+    const userIdentifier = walletClient?.account.address || localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
     try {
-      const res = await fetch(`/api/chat/history?email=${email}`);
+      const res = await fetch(`/api/chat/history?email=${userIdentifier}`);
       const data = await res.json();
       setHistoryList(data);
       setShowHistory(true);
@@ -69,7 +69,7 @@ export default function CitizenDashboard() {
   const handleSave = async (index: number) => {
     const ai_response = messages[index].content;
     const query = messages[index-1]?.content || "Document Upload / General Chat";
-    const email = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+    const userIdentifier = walletClient?.account.address || localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
     
     // Deep FHE Web3 Integration
     if (walletClient) {
@@ -96,7 +96,7 @@ export default function CitizenDashboard() {
       const res = await fetch("/api/chat/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_email: email, query, ai_response })
+        body: JSON.stringify({ user_email: userIdentifier, query, ai_response })
       });
       if(res.ok) alert("Saved to history!");
     } catch(err) {
