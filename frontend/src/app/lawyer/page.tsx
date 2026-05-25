@@ -17,13 +17,13 @@ export default function LawyerDashboard() {
           <span className="font-bold tracking-wide">Nyaya Hub</span>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+          <Link href="/lawyer" className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
             <LayoutDashboard className="w-5 h-5" /> Dashboard
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+          <Link href="/lawyer/cases" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <Briefcase className="w-5 h-5" /> Active Cases
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+          <Link href="/lawyer/copilot" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <MessageSquare className="w-5 h-5" /> AI Copilot
           </Link>
           <Link href="#" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
@@ -141,12 +141,12 @@ export default function LawyerDashboard() {
                   <p className="text-sm text-neutral-400">Ask Nyaya AI for precedents, case summaries, or legal drafting assistance.</p>
                 </div>
                 <div className="space-y-3">
-                  <button className="w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-sm text-neutral-300 transition-colors border border-white/5">
+                  <Link href="/lawyer/copilot" className="block w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-sm text-neutral-300 transition-colors border border-white/5">
                     "Find recent Supreme Court judgments on Section 138 NI Act"
-                  </button>
-                  <button className="w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-sm text-neutral-300 transition-colors border border-white/5">
+                  </Link>
+                  <Link href="/lawyer/copilot" className="block w-full text-left px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-sm text-neutral-300 transition-colors border border-white/5">
                     "Draft a legal notice for breach of contract"
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
