@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video } from "lucide-react";
+import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video, Bot } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function LawyerDashboard() {
