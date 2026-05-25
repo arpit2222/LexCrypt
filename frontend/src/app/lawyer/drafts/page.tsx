@@ -15,7 +15,7 @@ export default function LawyerDrafts() {
     setLoading(true);
     
     try {
-      const res = await fetch("/api/copilot/draft", {
+      const res = await fetch("/api/draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
