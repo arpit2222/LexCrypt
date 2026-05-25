@@ -24,7 +24,7 @@ export default function LawyerDrafts() {
         })
       });
       const data = await res.json();
-      setDraft(data.draft);
+      setDraft(data.draft_content);
     } catch(err) {
       setDraft("Error generating draft. Please try again.");
     } finally {
