@@ -19,7 +19,7 @@ export default function LawyerDrafts() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          case_details: prompt,
+          details: prompt,
           document_type: "Legal Notice / Pleading"
         })
       });
