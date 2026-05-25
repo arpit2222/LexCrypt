@@ -26,7 +26,7 @@ export default function LawyerDashboard() {
           <Link href="/lawyer/copilot" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <MessageSquare className="w-5 h-5" /> AI Copilot
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+          <Link href="/lawyer/drafts" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <FileText className="w-5 h-5" /> Drafts & Documents
           </Link>
         </nav>
