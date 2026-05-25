@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   webpack: (config, { isServer }) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
     config.externals.push("pino-pretty", "lokijs", "encoding");
+    
+    // Ignore React Native storage in browser build to fix MetaMask SDK issue
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      '@react-native-async-storage/async-storage': false,
+    };
+
     config.experiments = { ...config.experiments, asyncWebAssembly: true, syncWebAssembly: true, layers: true };
     
     // Ignore fhenixjs WASM import errors during build
