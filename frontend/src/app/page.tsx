@@ -28,6 +28,11 @@ export default function Home() {
                 Citizen Login
               </Button>
             </Link>
+            <Link href="/student">
+              <Button variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
+                Student Login
+              </Button>
+            </Link>
             <Link href="/lawyer">
               <Button variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
                 Lawyer Login
