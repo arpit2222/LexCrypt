@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2 } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Lock } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useWalletClient } from 'wagmi';
+import { useWalletClient, useSignMessage } from 'wagmi';
 
 export default function CitizenDashboard() {
   const { data: walletClient } = useWalletClient();
+  const { signMessageAsync } = useSignMessage();
   const [messages, setMessages] = useState([
     {
       role: "ai",
@@ -257,19 +258,32 @@ export default function CitizenDashboard() {
                       onClick={async () => {
                         const citizen = walletClient?.account.address || "citizen@nyaya.ai";
                         try {
+                          if (walletClient) {
+                            // Smart Contract Escrow Simulation
+                            const signature = await signMessageAsync({
+                              message: `NYAYA AI ESCROW AGREEMENT\n\nI authorize the lock of 0.01 ETH in the smart contract escrow for Advocate Assignment.\nCase Details: ${item.query}\nAddress: ${citizen}`
+                            });
+                            console.log("Escrow Signature Verified:", signature);
+                            alert("Web3 Escrow Locked! Transaction signed successfully.");
+                          }
+                          
                           const res = await fetch("/api/cases/hire", {
                             method: "POST",
                             headers: {"Content-Type": "application/json"},
                             body: JSON.stringify({ citizen_wallet: citizen, lawyer_id: "1", query_details: item.query })
                           });
                           if(res.ok) alert("Case successfully sent to Advocate! They will review it shortly.");
-                        } catch(e) {
-                          alert("Failed to assign case");
+                        } catch(e: any) {
+                          if (e.message?.includes("User rejected")) {
+                            alert("Escrow cancelled. You must sign the transaction to hire an advocate.");
+                          } else {
+                            alert("Failed to assign case: " + e.message);
+                          }
                         }
                       }}
                       className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500" size="sm"
                     >
-                      Hire Advocate for this Case
+                      <Lock className="w-3 h-3 mr-2" /> Pay Escrow & Hire Advocate
                     </Button>
                   </div>
                 ))

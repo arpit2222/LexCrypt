@@ -97,15 +97,22 @@ def login_user(user: UserLogin):
 
 @app.get("/api/admin/stats")
 def get_admin_stats():
+    # Dynamic counts from DB
+    active_cases = assignments_collection.count_documents({"status": "PENDING"}) + assignments_collection.count_documents({"status": "ACCEPTED"})
+    total_citizens = saved_queries_collection.count_documents({}) # Approx based on unique queries or just total queries as proxy
+    ai_requests = saved_queries_collection.count_documents({}) * 3 # rough multiplier for demo
+    
     return {
-        "total_citizens": 1250,
+        "total_citizens": 1250 + total_citizens, # Baseline + real growth
         "total_lawyers": 85,
-        "active_cases": 340,
-        "ai_requests": 15000,
+        "active_cases": 340 + active_cases,
+        "ai_requests": 15000 + ai_requests,
+        "fhe_encryptions": 842 + active_cases, # Mock metric for Fhenix
+        "tvl_eth": round(12.5 + (active_cases * 0.01), 2), # Escrow Value
         "recent_users": [
-            {"email": "citizen@example.com", "role": "citizen", "joined": "Today"},
-            {"email": "lawyer@example.com", "role": "lawyer", "joined": "Yesterday"},
-            {"email": "student@example.com", "role": "citizen", "joined": "2 days ago"}
+            {"email": "0x7a...9f2", "role": "citizen", "joined": "Today"},
+            {"email": "adv.sharma@nyaya.ai", "role": "lawyer", "joined": "Yesterday"},
+            {"email": "student.nlu@nyaya.ai", "role": "student", "joined": "2 days ago"}
         ]
     }
 

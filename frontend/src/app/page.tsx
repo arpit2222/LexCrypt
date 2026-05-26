@@ -38,6 +38,11 @@ export default function Home() {
                 Lawyer Login
               </Button>
             </Link>
+            <Link href="/admin">
+              <Button variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
+                Supreme Court
+              </Button>
+            </Link>
             <ConnectButton />
           </div>
         </div>
