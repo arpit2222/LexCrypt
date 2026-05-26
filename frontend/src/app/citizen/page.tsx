@@ -117,12 +117,22 @@ export default function CitizenDashboard() {
     ]);
 
     try {
+      const userIdentifier = walletClient?.account.address || localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ message: userMessage, user_id: userIdentifier }),
       });
+      
       const data = await response.json();
+      
+      if (!response.ok && response.status === 429) {
+          setMessages(prev => [
+            ...prev.slice(0, -1),
+            { role: "ai", content: "🚨 **Weekly Limit Reached** 🚨\n\nYou have reached your limit of 1 case per week on the free tier. Please wait 7 days to initiate a new case, or upgrade to Nyaya Premium." }
+          ]);
+          return;
+      }
       
       setMessages(prev => [
         ...prev.slice(0, -1), // remove typing state
@@ -239,10 +249,28 @@ export default function CitizenDashboard() {
                 <p className="text-neutral-500 text-center mt-10">No saved queries yet.</p>
               ) : (
                 historyList.map((item, idx) => (
-                  <div key={idx} className="bg-neutral-800/50 p-4 rounded-xl border border-white/5">
-                    <p className="text-xs text-neutral-500 mb-2">{new Date(item.timestamp).toLocaleString()}</p>
-                    <p className="text-sm text-indigo-300 font-medium mb-2 border-b border-white/5 pb-2">Q: {item.query}</p>
+                  <div key={idx} className="bg-neutral-800/50 p-4 rounded-xl border border-white/5 flex flex-col gap-3">
+                    <p className="text-xs text-neutral-500">{new Date(item.timestamp).toLocaleString()}</p>
+                    <p className="text-sm text-indigo-300 font-medium border-b border-white/5 pb-2">Q: {item.query}</p>
                     <p className="text-sm text-neutral-300 line-clamp-3">A: {item.ai_response}</p>
+                    <Button 
+                      onClick={async () => {
+                        const citizen = walletClient?.account.address || "citizen@nyaya.ai";
+                        try {
+                          const res = await fetch("/api/cases/hire", {
+                            method: "POST",
+                            headers: {"Content-Type": "application/json"},
+                            body: JSON.stringify({ citizen_wallet: citizen, lawyer_id: "1", query_details: item.query })
+                          });
+                          if(res.ok) alert("Case successfully sent to Advocate! They will review it shortly.");
+                        } catch(e) {
+                          alert("Failed to assign case");
+                        }
+                      }}
+                      className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500" size="sm"
+                    >
+                      Hire Advocate for this Case
+                    </Button>
                   </div>
                 ))
               )}
@@ -268,8 +296,9 @@ export default function CitizenDashboard() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder="Type your legal problem or upload a document..." 
-            className="w-full bg-neutral-900/80 border border-white/10 rounded-full py-4 pl-16 pr-24 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-white placeholder-neutral-500 shadow-xl"
+            disabled={!walletClient}
+            placeholder={walletClient ? "Type your legal problem or upload a document..." : "Connect your Web3 Wallet to chat with AI..."}
+            className="w-full bg-neutral-900/80 border border-white/10 rounded-full py-4 pl-16 pr-24 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-white placeholder-neutral-500 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           />
           
           <div className="absolute right-2 flex gap-1">

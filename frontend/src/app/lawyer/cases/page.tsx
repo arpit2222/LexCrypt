@@ -1,11 +1,50 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, FileText, User, Calendar, MessageSquare } from "lucide-react";
+import { ChevronLeft, Briefcase, CheckCircle2, XCircle, Clock } from "lucide-react";
 
-export default function LawyerCaseView() {
+export default function LawyerCases() {
+  const [cases, setCases] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Hardcoded to simulate lawyer "1" login for the MVP
+  const lawyerId = "1";
+
+  const fetchCases = async () => {
+    try {
+      const res = await fetch(`/api/cases/lawyer?lawyer_id=${lawyerId}`);
+      const data = await res.json();
+      setCases(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCases();
+  }, []);
+
+  const handleAction = async (caseId: string, action: "ACCEPT" | "REJECT") => {
+    try {
+      const res = await fetch("/api/cases/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ case_id: caseId, action })
+      });
+      const data = await res.json();
+      alert(data.message);
+      
+      // Refresh cases list
+      fetchCases();
+    } catch (err) {
+      alert("Failed to perform action");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
       <header className="flex items-center px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-50">
@@ -14,70 +53,67 @@ export default function LawyerCaseView() {
             <ChevronLeft className="w-5 h-5 text-neutral-400" />
           </Button>
         </Link>
-        <h1 className="text-xl font-bold">Case Review: C-1049</h1>
+        <h1 className="text-xl font-bold flex items-center gap-2"><Briefcase className="w-6 h-6 text-indigo-400"/> Active & Pending Cases</h1>
       </header>
 
-      <main className="flex-1 max-w-6xl w-full mx-auto p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Left Column: Facts & Docs */}
-        <div className="md:col-span-2 space-y-6">
-          <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><User className="w-5 h-5 text-indigo-400" /> Client Information</h2>
-            <div className="grid grid-cols-2 gap-4 text-sm text-neutral-300">
-              <div><span className="text-neutral-500">Name:</span> Rahul Verma</div>
-              <div><span className="text-neutral-500">Phone:</span> +91 98xxxxxx21</div>
-              <div><span className="text-neutral-500">Language:</span> Hindi</div>
-              <div><span className="text-neutral-500">Location:</span> Mumbai, MH</div>
-            </div>
+      <main className="flex-1 max-w-5xl w-full mx-auto p-8">
+        {loading ? (
+          <p className="text-neutral-400 text-center mt-10">Loading cases...</p>
+        ) : cases.length === 0 ? (
+          <p className="text-neutral-400 text-center mt-10">No cases assigned to you at the moment.</p>
+        ) : (
+          <div className="space-y-6">
+            {cases.map((c) => (
+              <div key={c._id} className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
+                <div className="flex-1 space-y-2">
+                  <div className="flex items-center gap-3 mb-2">
+                    {c.status === "PENDING" ? (
+                      <span className="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-xs font-medium border border-yellow-500/20 flex items-center gap-1">
+                        <Clock className="w-3 h-3" /> PENDING REVIEW
+                      </span>
+                    ) : (
+                      <span className="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-medium border border-green-500/20 flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> ACCEPTED
+                      </span>
+                    )}
+                    <span className="text-xs text-neutral-500">{new Date(c.timestamp).toLocaleString()}</span>
+                  </div>
+                  <p className="text-sm text-neutral-400"><span className="text-neutral-300 font-semibold">Client Wallet/Email:</span> {c.citizen}</p>
+                  <div className="bg-black/30 p-4 rounded-xl border border-white/5 text-sm text-neutral-300">
+                    <p className="font-semibold text-indigo-300 mb-2">Case Summary (AI Generated):</p>
+                    {c.query}
+                  </div>
+                </div>
+                
+                {c.status === "PENDING" && (
+                  <div className="flex flex-col gap-3 min-w-[140px]">
+                    <Button 
+                      onClick={() => handleAction(c._id, "ACCEPT")}
+                      className="bg-green-600 hover:bg-green-500 w-full flex items-center gap-2"
+                    >
+                      <CheckCircle2 className="w-4 h-4" /> Accept Case
+                    </Button>
+                    <Button 
+                      onClick={() => handleAction(c._id, "REJECT")}
+                      variant="outline" 
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/10 w-full flex items-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" /> Reject & Reassign
+                    </Button>
+                  </div>
+                )}
+                
+                {c.status === "ACCEPTED" && (
+                  <div className="flex flex-col gap-3 min-w-[140px]">
+                    <Button variant="outline" className="border-indigo-500/30 text-indigo-400 w-full">
+                      Start Video Call
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          
-          <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><MessageSquare className="w-5 h-5 text-indigo-400" /> User Narrative</h2>
-            <p className="text-neutral-300 text-sm leading-relaxed p-4 bg-white/5 rounded-xl border border-white/5">
-              "My neighbor is trying to encroach on 10 feet of my land. I have the property papers from 1995, but he brought some local thugs to intimidate me. What are my rights?"
-            </p>
-          </div>
-
-          <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6">
-            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-indigo-400" /> Documents Attached</h2>
-            <div className="p-4 bg-white/5 rounded-xl border border-white/5 flex items-center justify-between hover:border-white/10 transition-colors cursor-pointer mb-2">
-              <div className="flex items-center gap-3">
-                <FileText className="w-5 h-5 text-blue-400" />
-                <span className="text-sm font-medium">Property_Deed_1995.pdf</span>
-              </div>
-              <span className="text-xs text-neutral-500 bg-neutral-800 px-2 py-1 rounded">OCR Verified</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Column: AI Brief */}
-        <div className="space-y-6">
-          <div className="bg-indigo-900/20 border border-indigo-500/20 rounded-2xl p-6 h-full shadow-[0_0_40px_rgba(79,70,229,0.1)]">
-            <h2 className="text-lg font-semibold mb-6 flex items-center gap-2 text-indigo-100">
-              <FileText className="w-5 h-5 text-indigo-400" /> AI Case Brief
-            </h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-indigo-300 mb-2">Legal Classification</h3>
-                <p className="text-sm text-neutral-300">Civil Litigation - Property Dispute / Encroachment</p>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-indigo-300 mb-2">Relevant Statutes</h3>
-                <ul className="text-sm text-neutral-300 list-disc pl-4 space-y-1">
-                  <li>Specific Relief Act, 1963 (Sec 38)</li>
-                  <li>Indian Penal Code (Sec 441, 503)</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-indigo-300 mb-2">Suggested Next Steps</h3>
-                <p className="text-sm text-neutral-300 mb-3">1. File an injunction suit immediately under Order 39 Rules 1 & 2 of CPC.</p>
-                <p className="text-sm text-neutral-300">2. File an FIR for criminal intimidation.</p>
-              </div>
-              <div className="pt-4 mt-6 border-t border-indigo-500/20">
-                <Button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white">Accept Case & Notify Client</Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </main>
     </div>
   );

@@ -20,6 +20,7 @@ import fitz
 from ai_service import chat_analysis, draft_document, copilot_research as ai_copilot, score_student, summarize_document, generate_severity_score, simulation_chat_analysis
 
 saved_queries_collection = db.saved_queries
+assignments_collection = db.assignments
 
 class ScoreRequest(BaseModel):
     issue: str
@@ -110,6 +111,7 @@ def get_admin_stats():
 
 class ChatRequest(BaseModel):
     message: str
+    user_id: str
     language: str = "english"
 
 @app.get("/")
@@ -122,6 +124,16 @@ def health_check():
 
 @app.post("/api/chat")
 def chat_with_ai(request: ChatRequest):
+    # Check rate limit: 1 case per week
+    if request.user_id:
+        seven_days_ago = datetime.utcnow().timestamp() - (7 * 24 * 60 * 60)
+        recent_cases = saved_queries_collection.count_documents({
+            "email": request.user_id,
+            "timestamp": {"$gte": datetime.fromtimestamp(seven_days_ago).isoformat()}
+        })
+        if recent_cases >= 1:
+            raise HTTPException(status_code=429, detail="You have reached your limit of 1 case per week. Please wait before creating a new case.")
+            
     reply = chat_analysis(request.message)
     return {
         "reply": reply
@@ -196,3 +208,57 @@ class SimulationRequest(BaseModel):
 def score_simulation(request: SimulationRequest):
     result = score_student(request.student_argument)
     return result
+
+# Marketplace Endpoints
+class HireRequest(BaseModel):
+    citizen_wallet: str
+    lawyer_id: str
+    query_details: str
+
+@app.post("/api/cases/hire")
+def hire_advocate(request: HireRequest):
+    assignment = {
+        "citizen": request.citizen_wallet,
+        "lawyer_id": request.lawyer_id,
+        "query": request.query_details,
+        "status": "PENDING",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+    result = assignments_collection.insert_one(assignment)
+    return {"message": "Case assigned to lawyer.", "id": str(result.inserted_id)}
+
+class ActionRequest(BaseModel):
+    case_id: str
+    action: str # "ACCEPT" or "REJECT"
+
+@app.post("/api/cases/action")
+def case_action(request: ActionRequest):
+    from bson.objectid import ObjectId
+    import random
+    
+    case = assignments_collection.find_one({"_id": ObjectId(request.case_id)})
+    if not case:
+        raise HTTPException(status_code=404, detail="Case not found")
+        
+    if request.action == "ACCEPT":
+        assignments_collection.update_one({"_id": ObjectId(request.case_id)}, {"$set": {"status": "ACCEPTED"}})
+        return {"message": "Case accepted successfully!"}
+    
+    elif request.action == "REJECT":
+        # Auto-assign to someone else
+        lawyers = get_lawyers()
+        available = [l["id"] for l in lawyers if l["id"] != case["lawyer_id"]]
+        next_lawyer = random.choice(available) if available else "1"
+        
+        assignments_collection.update_one(
+            {"_id": ObjectId(request.case_id)}, 
+            {"$set": {"lawyer_id": next_lawyer}}
+        )
+        return {"message": "Case rejected. Auto-assigned to another available advocate.", "new_lawyer_id": next_lawyer}
+
+@app.get("/api/cases/lawyer")
+def get_lawyer_cases(lawyer_id: str):
+    cases = list(assignments_collection.find({"lawyer_id": lawyer_id}, {"_id": 1, "citizen": 1, "query": 1, "status": 1, "timestamp": 1}).sort("timestamp", -1))
+    for c in cases:
+        c["_id"] = str(c["_id"])
+    return cases
