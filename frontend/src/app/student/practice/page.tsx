@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Send, Scale, User, CheckCircle, RefreshCcw } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
-export default function PracticeArena() {
+function PracticeArenaContent() {
   const searchParams = useSearchParams();
   const caseId = searchParams.get("case") || "C-001";
   
@@ -195,5 +195,13 @@ export default function PracticeArena() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PracticeArena() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-neutral-950 flex items-center justify-center text-white">Loading Arena...</div>}>
+      <PracticeArenaContent />
+    </Suspense>
   );
 }
