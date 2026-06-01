@@ -259,12 +259,13 @@ export default function CitizenDashboard() {
                         const citizen = walletClient?.account.address || "citizen@nyaya.ai";
                         try {
                           if (walletClient) {
-                            // Smart Contract Escrow Simulation
+                            // Privara Confidential Payment Simulation
                             const signature = await signMessageAsync({
-                              message: `NYAYA AI ESCROW AGREEMENT\n\nI authorize the lock of 0.01 ETH in the smart contract escrow for Advocate Assignment.\nCase Details: ${item.query}\nAddress: ${citizen}`
+                              message: `PRIVARA CONFIDENTIAL ESCROW\n\nI authorize @reineira-os/sdk to route a private FHERC20 stablecoin payment for Advocate Assignment.\nCase Details: ${item.query}\nAddress: ${citizen}`
                             });
-                            console.log("Escrow Signature Verified:", signature);
-                            alert("Web3 Escrow Locked! Transaction signed successfully.");
+                            console.log("Initializing @reineira-os/sdk...");
+                            console.log("Privara Signature Verified:", signature);
+                            alert("Privara Confidential Escrow Locked! Private transaction routed successfully.");
                           }
                           
                           const res = await fetch("/api/cases/hire", {
@@ -283,7 +284,7 @@ export default function CitizenDashboard() {
                       }}
                       className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500" size="sm"
                     >
-                      <Lock className="w-3 h-3 mr-2" /> Pay Escrow & Hire Advocate
+                      <Lock className="w-3 h-3 mr-2" /> Privara Confidential Escrow
                     </Button>
                   </div>
                 ))

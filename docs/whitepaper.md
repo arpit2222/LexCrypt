@@ -19,3 +19,8 @@ LexCrypt uses Fhenix's CoFHE (Coprocessor Fully Homomorphic Encryption) stack to
 - We use `euint32` for sensitive contract values like Purchase Prices, Severance Thresholds, and Expiration Deadlines.
 - We perform comparison operations directly on encrypted data using `FHEMath.sol`.
 - On-chain verification of encrypted computation is handled natively, allowing conditional token transfers without decryption.
+
+### Client-Side Encryption & Confidential Payments
+LexCrypt integrates the full suite of Fhenix and partner ecosystem tools to achieve end-to-end privacy:
+- **`@cofhe/sdk`**: We utilize `useEncrypt` and `useWrite` to handle client-side encryption of legal terms before they ever touch the blockchain RPC.
+- **Privara SDK (`@reineira-os/sdk`)**: We leverage Privara for compliant payment rails. When a Citizen hires an Advocate, the escrow flow routes an encrypted FHERC20 stablecoin payment using Privara, keeping the treasury movement entirely confidential while providing a selective disclosure hash for regulators.

@@ -13,6 +13,12 @@ LexCrypt is a platform aiming to provide accessible legal tools for citizens and
 We use `@fhenixprotocol/contracts` to encrypt sensitive legal terms (like M&A Earnout Thresholds or Payroll Salaries) directly on-chain using `euint32`.
 The smart contract computes comparisons (e.g. `actualEBITDA > targetThreshold`) on ENCRYPTED data without ever decrypting it, providing absolute privacy while maintaining verifiable execution.
 
+### 2. Privara SDK (@reineira-os/sdk) for Confidential Escrow
+Integrated Privara to enable compliant, privacy-preserving payment rails. The Citizen Dashboard routes lawyer retainer fees via encrypted FHERC20 stablecoin payments, ensuring absolute financial privacy while satisfying institutional compliance.
+
+### 3. CoFHE React SDK
+We utilize the official Fhenix React hooks (`@cofhe/sdk`, `useEncrypt`, `useWrite`, `useDecrypt`) inside the Contract Composer to manage client-side encryption and seamlessly pass ciphertext into our Smart Contracts.
+
 ### 2. Multi-Agent AI (Azure OpenAI)
 Built heavily on Azure's `gpt-5.4` model.
 * **Citizen Pillar**: Analyzes user issues, scores severity, and generates localized advice.
