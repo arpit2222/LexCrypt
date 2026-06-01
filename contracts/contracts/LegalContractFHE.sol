@@ -26,17 +26,21 @@ contract LegalContractFHE is Permissioned {
         ContractStatus status;
         bytes encryptedTermsSummary;
         uint256 clauseCount;
+        uint256 requiredApprovals;
+        uint256 currentApprovals;
     }
     
     mapping(uint256 => LegalAgreement) public agreements;
     // Map agreement ID to clauses array to avoid struct nesting issues
     mapping(uint256 => mapping(uint256 => EncryptedClause)) public agreementClauses;
     mapping(uint256 => mapping(address => bool)) public isAuthorized;
+    mapping(uint256 => mapping(address => bool)) public hasApproved;
     
     uint256 public agreementCounter;
     
     event AgreementCreated(uint256 indexed agreementId, address party1, address party2);
     event EarnoutExecuted(uint256 indexed agreementId, bool conditionMet);
+    event ExecutionApproved(uint256 indexed agreementId, address approver);
 
     /**
      * @dev Create encrypted legal agreement
@@ -56,6 +60,8 @@ contract LegalContractFHE is Permissioned {
         agreement.party2 = _party2;
         agreement.status = ContractStatus.Draft;
         agreement.clauseCount = 1;
+        agreement.requiredApprovals = 2; // Default 2-of-2 multi-sig for 1v1 contracts
+        agreement.currentApprovals = 0;
         
         isAuthorized[agreementId][msg.sender] = true;
         isAuthorized[agreementId][_party2] = true;
@@ -82,6 +88,7 @@ contract LegalContractFHE is Permissioned {
         inEuint32 memory inActualEBITDA
     ) public {
         require(isAuthorized[_agreementId][msg.sender], "Not authorized for this contract");
+        require(agreements[_agreementId].currentApprovals >= agreements[_agreementId].requiredApprovals, "Multi-sig threshold not met");
         
         EncryptedClause storage clause = agreementClauses[_agreementId][0];
         
@@ -110,5 +117,18 @@ contract LegalContractFHE is Permissioned {
     function generateAuditProof(uint256 _agreementId) public view returns (bytes memory) {
         require(isAuthorized[_agreementId][msg.sender], "Not authorized");
         return agreements[_agreementId].encryptedTermsSummary;
+    }
+
+    /**
+     * @dev Multi-sig approval for contract execution
+     */
+    function approveExecution(uint256 _agreementId) public {
+        require(isAuthorized[_agreementId][msg.sender], "Not authorized");
+        require(!hasApproved[_agreementId][msg.sender], "Already approved");
+        
+        hasApproved[_agreementId][msg.sender] = true;
+        agreements[_agreementId].currentApprovals += 1;
+        
+        emit ExecutionApproved(_agreementId, msg.sender);
     }
 }
