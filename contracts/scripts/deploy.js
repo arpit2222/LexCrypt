@@ -17,6 +17,20 @@ async function main() {
   const escrowAddress = await escrowContract.getAddress();
   console.log(`✅ ConfidentialEscrow deployed to: ${escrowAddress}`);
 
+  // 3. Deploy SealedBidRFP
+  const SealedBidRFP = await hre.ethers.getContractFactory("SealedBidRFP");
+  const rfpContract = await SealedBidRFP.deploy();
+  await rfpContract.waitForDeployment();
+  const rfpAddress = await rfpContract.getAddress();
+  console.log(`✅ SealedBidRFP deployed to: ${rfpAddress}`);
+
+  // 4. Deploy WhistleblowerVault
+  const WhistleblowerVault = await hre.ethers.getContractFactory("WhistleblowerVault");
+  const vaultContract = await WhistleblowerVault.deploy();
+  await vaultContract.waitForDeployment();
+  const vaultAddress = await vaultContract.getAddress();
+  console.log(`✅ WhistleblowerVault deployed to: ${vaultAddress}`);
+
   console.log("\nDeployment Successful!");
   console.log("Update your README.md and frontend with these live addresses to secure the Fhenix Ecosystem Grant.");
 }

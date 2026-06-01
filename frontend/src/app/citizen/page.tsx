@@ -204,6 +204,17 @@ export default function CitizenDashboard() {
 
       {/* Chat Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 flex flex-col gap-6 overflow-y-auto pt-8">
+        
+        {/* Phase 2 Quick Actions */}
+        <div className="flex gap-4 mb-4">
+          <Link href="/citizen/rfp" className="flex-1">
+            <Button variant="outline" className="w-full border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/10 h-12">Sealed-Bid Legal RFP</Button>
+          </Link>
+          <Link href="/citizen/vault" className="flex-1">
+            <Button variant="outline" className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10 h-12">Whistleblower Vault</Button>
+          </Link>
+        </div>
+
         {messages.map((msg, index) => (
           <div key={index} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${

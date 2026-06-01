@@ -21,8 +21,10 @@ We utilize the official Fhenix React hooks (`@cofhe/sdk`, `useEncrypt`, `useWrit
 
 ### 4. Live Arbitrum CoFHE Deployments
 Our startup-grade smart contracts are officially deployed and verifiable on the Arbitrum CoFHE (Fhenix) testnet:
-- **LegalContractFHE (Multi-Sig):** `0x8290345C33fCD2592Cc805CDfdB5d8350A3e221f`
-- **ConfidentialEscrow (Privara SDK FHERC20):** `0x0b4fCC77FEc1D09f138437fc6793748260670640`
+- **LegalContractFHE (Multi-Sig):** `0xEc8CBba8A35Db34498012c2C83be244aeb4f6d17`
+- **ConfidentialEscrow (Privara SDK):** `0xF35D45129Bb0FF34A9c431beAA7ed159c4DD1563`
+- **SealedBidRFP (Encrypted Law Marketplace):** `0xA48017BfdB85973bc89d524029B3fB93cA565F5e`
+- **WhistleblowerVault (Dead-man's Switch):** `0x5Ed8ba4C6f182bf13c53CeE0E187C549ceD636AA`
 
 ### 2. Multi-Agent AI (Azure OpenAI)
 Built heavily on Azure's `gpt-5.4` model.
