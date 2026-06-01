@@ -1,3 +1,4 @@
+require("dotenv").config();
 require("@nomicfoundation/hardhat-toolbox");
 require("fhenix-hardhat-plugin");
 require("fhenix-hardhat-docker");

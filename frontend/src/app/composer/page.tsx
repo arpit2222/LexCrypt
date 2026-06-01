@@ -173,7 +173,7 @@ export default function ContractComposer() {
                 <h3 className="text-xl font-bold text-green-400 mb-2">Contract Deployed Successfully!</h3>
                 <p className="text-sm text-neutral-400 mb-4">The agreement terms have been FHE-encrypted and deployed to Arbitrum CoFHE using @cofhe/sdk.</p>
                 <code className="bg-black/50 px-4 py-2 rounded-lg text-green-300 font-mono text-sm border border-green-500/20 mb-6">
-                  Contract Address: 0x8f2A...3b9C
+                  Contract Address: 0x8290345C33fCD2592Cc805CDfdB5d8350A3e221f
                 </code>
                 
                 <Button 
@@ -182,7 +182,7 @@ export default function ContractComposer() {
                       const res = await fetch("/api/fhe/audit", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ agreement_id: "AGR-101", contract_address: "0x8f2A...3b9C" })
+                        body: JSON.stringify({ agreement_id: "AGR-101", contract_address: "0x8290345C33fCD2592Cc805CDfdB5d8350A3e221f" })
                       });
                       const data = await res.json();
                       alert(`${data.message}\n\nAudit Hash: ${data.audit_verification_hash}\n\n${data.note}`);

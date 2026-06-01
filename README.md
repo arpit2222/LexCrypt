@@ -19,6 +19,11 @@ Integrated Privara to enable compliant, privacy-preserving payment rails. The Ci
 ### 3. CoFHE React SDK
 We utilize the official Fhenix React hooks (`@cofhe/sdk`, `useEncrypt`, `useWrite`, `useDecrypt`) inside the Contract Composer to manage client-side encryption and seamlessly pass ciphertext into our Smart Contracts.
 
+### 4. Live Arbitrum CoFHE Deployments
+Our startup-grade smart contracts are officially deployed and verifiable on the Arbitrum CoFHE (Fhenix) testnet:
+- **LegalContractFHE (Multi-Sig):** `0x8290345C33fCD2592Cc805CDfdB5d8350A3e221f`
+- **ConfidentialEscrow (Privara SDK FHERC20):** `0x0b4fCC77FEc1D09f138437fc6793748260670640`
+
 ### 2. Multi-Agent AI (Azure OpenAI)
 Built heavily on Azure's `gpt-5.4` model.
 * **Citizen Pillar**: Analyzes user issues, scores severity, and generates localized advice.
