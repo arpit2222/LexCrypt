@@ -52,24 +52,28 @@ export default function Home() {
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pt-32 pb-24 text-center max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-indigo-300 mb-8 backdrop-blur-sm">
           <span className="flex w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-           न्याय — Justice Within Reach
+           Powered by Fhenix Fully Homomorphic Encryption
         </div>
         
         <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-200 to-neutral-500 mb-8 leading-tight">
-          Multilingual Legal AI <br /> for India.
+          Privacy-First Smart Contracts for Legal.
         </h1>
         
-        <p className="text-lg md:text-xl text-neutral-400 max-w-2xl mb-12 leading-relaxed">
-          Describe your legal issues in plain language. Get instant, precedent-backed guidance across Indian languages. Draft notices, analyze documents, and connect with verified lawyers seamlessly.
+        <p className="text-lg md:text-xl text-neutral-400 max-w-3xl mb-12 leading-relaxed">
+          The $200B legal industry can't use public blockchains due to confidentiality conflicts. LexCrypt solves this by executing legal logic—like M&A earnouts and blind auctions—on <strong>encrypted data</strong> without ever decrypting it on-chain.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Button size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all">
-            Consult AI Now <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
-          <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium">
-            Join as a Lawyer
-          </Button>
+          <Link href="/composer">
+            <Button size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all">
+              Launch Contract Composer <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+          </Link>
+          <Link href="/docs/whitepaper.md">
+            <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium">
+              Read FHE Whitepaper
+            </Button>
+          </Link>
         </div>
       </main>
 
@@ -85,18 +89,18 @@ export default function Home() {
             {[
               {
                 icon: <Shield className="w-8 h-8 text-blue-400" />,
-                title: "Citizen AI Layer",
-                desc: "Natural language legal intake, plain-language rights explanation, and multi-language support."
+                title: "Confidential M&A Agreements",
+                desc: "Store purchase prices and earnout formulas as euint32. Smart contracts release payments automatically without ever exposing the reserve price."
               },
               {
                 icon: <FileText className="w-8 h-8 text-purple-400" />,
-                title: "Smart Drafting & OCR",
-                desc: "Auto-draft legal notices, complaints, and RTI. Upload documents for instant intelligent analysis."
+                title: "Sealed-Bid Procurements",
+                desc: "Government RFPs where bids are encrypted. The contract compares bids and selects the winner using FHE, maintaining absolute secrecy of losing bids."
               },
               {
                 icon: <Users className="w-8 h-8 text-indigo-400" />,
-                title: "Lawyer Copilot",
-                desc: "Receive AI-prepared case briefs before consultations. Generate chronologies and research precedents."
+                title: "Enterprise Payroll Compliance",
+                desc: "Process payroll on-chain while keeping salaries encrypted. 100% GDPR and CCPA compliant privacy-by-design."
               }
             ].map((feat, i) => (
               <div key={i} className="p-8 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors backdrop-blur-sm group">
