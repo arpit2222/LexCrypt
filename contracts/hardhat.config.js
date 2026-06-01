@@ -1,4 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("fhenix-hardhat-plugin");
+require("fhenix-hardhat-docker");
 
 const ARBITRUM_SEPOLIA_RPC = process.env.ARBITRUM_SEPOLIA_RPC || "";
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
