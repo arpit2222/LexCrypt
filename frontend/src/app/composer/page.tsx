@@ -3,14 +3,11 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Lock, Eye, FileText, Send, CheckCircle2 } from 'lucide-react';
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ChevronLeft, FileText, Send, CheckCircle2 } from 'lucide-react';
 
 type ContractTerm = {
   fieldName: string;
   value: string;
-  encrypted: boolean;
-  type: string;
 };
 
 export default function ContractComposer() {
@@ -19,21 +16,21 @@ export default function ContractComposer() {
   const [deploying, setDeploying] = useState(false);
   const [deployed, setDeployed] = useState(false);
 
-  // Hardcoded templates from Wave 4 Requirements
+  // Standard Web2 Templates
   const templates: Record<string, ContractTerm[]> = {
     MergersAcquisition: [
-      { fieldName: 'Purchase Price (USD)', value: '50000000', encrypted: true, type: 'euint32' },
-      { fieldName: 'Earnout Threshold (EBITDA)', value: '20000000', encrypted: true, type: 'euint32' },
-      { fieldName: 'Closing Date (Unix Timestamp)', value: '1735689600', encrypted: false, type: 'uint32' },
+      { fieldName: 'Purchase Price (USD)', value: '50000000' },
+      { fieldName: 'Earnout Threshold (EBITDA)', value: '20000000' },
+      { fieldName: 'Closing Date (Unix Timestamp)', value: '1735689600' },
     ],
     SoftwareEscrow: [
-      { fieldName: 'Release Condition Threshold', value: '100', encrypted: true, type: 'euint32' },
-      { fieldName: 'Penalty if Unreleased', value: '50000', encrypted: true, type: 'euint32' },
-      { fieldName: 'Term Length (Months)', value: '24', encrypted: false, type: 'uint32' }
+      { fieldName: 'Release Condition Threshold', value: '100' },
+      { fieldName: 'Penalty if Unreleased', value: '50000' },
+      { fieldName: 'Term Length (Months)', value: '24' }
     ],
     GovernmentRFP: [
-      { fieldName: 'Sealed Bid Amount', value: '1500000', encrypted: true, type: 'euint32' },
-      { fieldName: 'Completion Deadline', value: '1735689600', encrypted: false, type: 'uint32' }
+      { fieldName: 'Bid Amount', value: '1500000' },
+      { fieldName: 'Completion Deadline', value: '1735689600' }
     ]
   };
 
@@ -45,27 +42,19 @@ export default function ContractComposer() {
     setDeployed(false);
   };
 
-  const toggleEncryption = (index: number) => {
-    const newClauses = [...clauses];
-    newClauses[index].encrypted = !newClauses[index].encrypted;
-    setClauses(newClauses);
-  };
-
   const handleDeploy = async () => {
     if (!counterparty) {
-      alert("Please enter a counterparty wallet address.");
+      alert("Please enter a counterparty email address.");
       return;
     }
     
     setDeploying(true);
     
-    // Simulate Fhenix FHE Encryption & Smart Contract Deployment using @cofhe/sdk
+    // Simulate standard DB save and email dispatch
     setTimeout(() => {
-      console.log("[FHE] Executing useEncrypt() from @cofhe/sdk...");
-      console.log("[WEB3] Calling useWrite() to deploy LegalContractFHE.sol to Arbitrum CoFHE...");
       setDeploying(false);
       setDeployed(true);
-    }, 3000);
+    }, 2000);
   };
 
   return (
@@ -78,11 +67,10 @@ export default function ContractComposer() {
             </Button>
           </Link>
           <div className="flex items-center gap-2">
-            <Lock className="w-6 h-6 text-indigo-400" />
-            <span className="text-lg font-bold">Confidential Contract Composer</span>
+            <FileText className="w-6 h-6 text-indigo-400" />
+            <span className="text-lg font-bold">Standard Contract Composer</span>
           </div>
         </div>
-        <ConnectButton />
       </header>
 
       <main className="flex-1 max-w-6xl w-full mx-auto p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -111,15 +99,8 @@ export default function ContractComposer() {
                 variant={activeTemplate === 'GovernmentRFP' ? 'default' : 'outline'}
                 className={`w-full justify-start ${activeTemplate === 'GovernmentRFP' ? 'bg-indigo-600' : 'border-white/10 hover:bg-white/5'}`}
               >
-                Sealed-Bid Gov Procurement
+                Government Procurement
               </Button>
-            </div>
-            
-            <div className="mt-8 p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-              <h3 className="text-sm font-semibold text-indigo-300 mb-2">FHE Privacy Model</h3>
-              <p className="text-xs text-neutral-400">
-                Variables marked as <Lock className="inline w-3 h-3 mx-1"/> Encrypted are stored as <code className="text-indigo-300">euint32</code> on-chain. The smart contract logic executes mathematically on the ciphertext without ever decrypting it.
-              </p>
             </div>
           </div>
         </div>
@@ -130,11 +111,12 @@ export default function ContractComposer() {
             <h2 className="text-2xl font-bold mb-6">Agreement Terms</h2>
             
             <div className="mb-6">
-              <label className="block text-sm font-medium text-neutral-400 mb-2">Counterparty Wallet Address (Party B)</label>
+              <label className="block text-sm font-medium text-neutral-400 mb-2">Counterparty Email Address (Party B)</label>
               <input 
+                type="email"
                 value={counterparty} 
                 onChange={(e) => setCounterparty(e.target.value)}
-                placeholder="0x..."
+                placeholder="counterparty@example.com"
                 className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500/50"
               />
             </div>
@@ -152,17 +134,6 @@ export default function ContractComposer() {
                       className="w-full bg-transparent border-b border-white/10 p-2 text-white outline-none"
                     />
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-mono text-neutral-500 bg-white/5 px-2 py-1 rounded">{clause.type}</span>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => toggleEncryption(idx)}
-                      className={`min-w-[140px] border ${clause.encrypted ? 'border-green-500/30 text-green-400 hover:bg-green-500/10' : 'border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10'}`}
-                    >
-                      {clause.encrypted ? <><Lock className="w-4 h-4 mr-2" /> Encrypted</> : <><Eye className="w-4 h-4 mr-2" /> Public</>}
-                    </Button>
-                  </div>
                 </div>
               ))}
             </div>
@@ -170,10 +141,10 @@ export default function ContractComposer() {
             {deployed ? (
               <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 text-center flex flex-col items-center">
                 <CheckCircle2 className="w-12 h-12 text-green-400 mb-4" />
-                <h3 className="text-xl font-bold text-green-400 mb-2">Contract Deployed Successfully!</h3>
-                <p className="text-sm text-neutral-400 mb-4">The agreement terms have been FHE-encrypted and deployed to Arbitrum CoFHE using @cofhe/sdk.</p>
+                <h3 className="text-xl font-bold text-green-400 mb-2">Contract Sent Successfully!</h3>
+                <p className="text-sm text-neutral-400 mb-4">The agreement terms have been saved to the database and sent to the counterparty for review.</p>
                 <code className="bg-black/50 px-4 py-2 rounded-lg text-green-300 font-mono text-sm border border-green-500/20 mb-6">
-                  Contract Address: 0x8290345C33fCD2592Cc805CDfdB5d8350A3e221f
+                  Reference ID: AGR-{Math.floor(Math.random() * 10000)}
                 </code>
                 
                 <Button 
@@ -182,18 +153,18 @@ export default function ContractComposer() {
                       const res = await fetch("/api/fhe/audit", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ agreement_id: "AGR-101", contract_address: "0x8290345C33fCD2592Cc805CDfdB5d8350A3e221f" })
+                        body: JSON.stringify({ agreement_id: "AGR-101", contract_address: "DB-1" })
                       });
                       const data = await res.json();
-                      alert(`${data.message}\n\nAudit Hash: ${data.audit_verification_hash}\n\n${data.note}`);
+                      alert(`${data.message}\n\nIntegrity Hash: ${data.audit_verification_hash}\n\n${data.note}`);
                     } catch (err) {
-                      alert("Selective Disclosure ZK Proof Generated!\nAudit verification hash: 0x73bC...9f21\nTerms remain encrypted on-chain.");
+                      alert("Audit log generated successfully!");
                     }
                   }}
                   variant="outline" 
                   className="border-green-500/30 text-green-300 hover:bg-green-500/10 w-full max-w-sm"
                 >
-                  <FileText className="w-4 h-4 mr-2" /> Generate Selective Disclosure Proof (Audit)
+                  <FileText className="w-4 h-4 mr-2" /> Generate Integrity Audit Log
                 </Button>
               </div>
             ) : (
@@ -203,9 +174,9 @@ export default function ContractComposer() {
                 className="w-full bg-indigo-600 hover:bg-indigo-500 py-6 text-lg rounded-xl flex items-center justify-center gap-2"
               >
                 {deploying ? (
-                  <>Encrypting & Deploying... <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin ml-2"></div></>
+                  <>Saving & Sending... <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin ml-2"></div></>
                 ) : (
-                  <>Sign & Deploy to Arbitrum CoFHE <Send className="w-5 h-5" /></>
+                  <>Save & Send to Counterparty <Send className="w-5 h-5" /></>
                 )}
               </Button>
             )}

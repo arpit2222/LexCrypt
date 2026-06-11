@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Send, Scale, User, CheckCircle, RefreshCcw } from "lucide-react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 function PracticeArenaContent() {
   const searchParams = useSearchParams();
@@ -95,8 +94,6 @@ function PracticeArenaContent() {
             className="bg-indigo-600 hover:bg-indigo-500 text-white"
           >
             {isGrading ? "Grading..." : "Submit for Grading"}
-          </Button>
-          <ConnectButton />
         </div>
       </header>
 

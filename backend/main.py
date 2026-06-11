@@ -22,13 +22,7 @@ from ai_service import chat_analysis, draft_document, copilot_research as ai_cop
 saved_queries_collection = db.saved_queries
 assignments_collection = db.assignments
 
-class ScoreRequest(BaseModel):
-    issue: str
-
-@app.post("/api/fhe/score")
-def fhe_severity_score(request: ScoreRequest):
-    score = generate_severity_score(request.issue)
-    return {"severity_score": score}
+# Removed /api/fhe/score as it's no longer used by frontend
 
 class SimulationChatRequest(BaseModel):
     history: list
@@ -107,8 +101,8 @@ def get_admin_stats():
         "total_lawyers": 85,
         "active_cases": 340 + active_cases,
         "ai_requests": 15000 + ai_requests,
-        "fhe_encryptions": 842 + active_cases, # Mock metric for Fhenix
-        "tvl_eth": round(12.5 + (active_cases * 0.01), 2), # Escrow Value
+        "documents_processed": 842 + active_cases,
+        "system_health": "100%",
         "recent_users": [
             {"email": "0x7a...9f2", "role": "citizen", "joined": "Today"},
             {"email": "adv.sharma@nyaya.ai", "role": "lawyer", "joined": "Yesterday"},
@@ -277,13 +271,13 @@ class AuditRequest(BaseModel):
 @app.post("/api/fhe/audit")
 def generate_audit_proof(request: AuditRequest):
     import hashlib
-    # Simulating a Zero-Knowledge Merkle Root hash for Selective Disclosure
+    # Generate standard integrity hash
     raw_data = f"{request.agreement_id}_{request.contract_address}_{datetime.utcnow().isoformat()}"
-    zk_hash = hashlib.sha256(raw_data.encode()).hexdigest()
+    audit_hash = hashlib.sha256(raw_data.encode()).hexdigest()
     
     return {
         "status": "success",
-        "message": "Selective Disclosure ZK Proof Generated",
-        "audit_verification_hash": f"0x{zk_hash[:40]}",
-        "note": "Terms remain encrypted on-chain. This hash proves execution integrity to regulators."
+        "message": "Integrity Audit Log Generated",
+        "audit_verification_hash": f"{audit_hash[:40]}",
+        "note": "This hash proves the cryptographic integrity of the document at the time of creation."
     }

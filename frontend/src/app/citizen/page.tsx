@@ -3,13 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Lock } from "lucide-react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useWalletClient, useSignMessage } from 'wagmi';
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase } from "lucide-react";
 
 export default function CitizenDashboard() {
-  const { data: walletClient } = useWalletClient();
-  const { signMessageAsync } = useSignMessage();
   const [messages, setMessages] = useState([
     {
       role: "ai",
@@ -56,7 +52,7 @@ export default function CitizenDashboard() {
   };
 
   const fetchHistory = async () => {
-    const userIdentifier = walletClient?.account.address || localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+    const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
     try {
       const res = await fetch(`/api/chat/history?email=${userIdentifier}`);
       const data = await res.json();
@@ -70,29 +66,8 @@ export default function CitizenDashboard() {
   const handleSave = async (index: number) => {
     const ai_response = messages[index].content;
     const query = messages[index-1]?.content || "Document Upload / General Chat";
-    const userIdentifier = walletClient?.account.address || localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+    const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
     
-    // Deep FHE Web3 Integration
-    if (walletClient) {
-      try {
-        const scoreRes = await fetch("/api/fhe/score", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ issue: query })
-        });
-        const scoreData = await scoreRes.json();
-        
-        // Initialize Fhenix (Mocked for Vercel Build Compatibility)
-        // const fhenix = new fhenixjs({ provider: (window as any).ethereum });
-        // const encryptedScore = await fhenix.encrypt_uint8(severityScore);
-        const encryptedScore = { data: new Uint8Array([1, 2, 3, scoreData.severity_score]) }; // Mock ciphertext
-        console.log("Fhenix Encrypted Score Data:", encryptedScore);
-        alert(`Web3 Secured! Case severity encrypted via Fhenix FHE.\nEncrypted Data object generated for smart contract.`);
-      } catch (err) {
-        console.error("Fhenix encryption error", err);
-      }
-    }
-
     try {
       const res = await fetch("/api/chat/save", {
         method: "POST",
@@ -118,7 +93,7 @@ export default function CitizenDashboard() {
     ]);
 
     try {
-      const userIdentifier = walletClient?.account.address || localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+      const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -198,23 +173,11 @@ export default function CitizenDashboard() {
           <Button onClick={fetchHistory} variant="outline" className="border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/10 hidden md:flex">
             <History className="w-4 h-4 mr-2" /> Query History
           </Button>
-          <ConnectButton />
         </div>
       </header>
 
       {/* Chat Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 flex flex-col gap-6 overflow-y-auto pt-8">
-        
-        {/* Phase 2 Quick Actions */}
-        <div className="flex gap-4 mb-4">
-          <Link href="/citizen/rfp" className="flex-1">
-            <Button variant="outline" className="w-full border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/10 h-12">Sealed-Bid Legal RFP</Button>
-          </Link>
-          <Link href="/citizen/vault" className="flex-1">
-            <Button variant="outline" className="w-full border-red-500/30 text-red-400 hover:bg-red-500/10 h-12">Whistleblower Vault</Button>
-          </Link>
-        </div>
-
         {messages.map((msg, index) => (
           <div key={index} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
@@ -267,18 +230,8 @@ export default function CitizenDashboard() {
                     <p className="text-sm text-neutral-300 line-clamp-3">A: {item.ai_response}</p>
                     <Button 
                       onClick={async () => {
-                        const citizen = walletClient?.account.address || "citizen@nyaya.ai";
+                        const citizen = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
                         try {
-                          if (walletClient) {
-                            // Privara Confidential Payment Simulation
-                            const signature = await signMessageAsync({
-                              message: `PRIVARA CONFIDENTIAL ESCROW\n\nI authorize @reineira-os/sdk to route a private FHERC20 stablecoin payment for Advocate Assignment.\nCase Details: ${item.query}\nAddress: ${citizen}`
-                            });
-                            console.log("Initializing @reineira-os/sdk...");
-                            console.log("Privara Signature Verified:", signature);
-                            alert("Privara Confidential Escrow Locked! Private transaction routed successfully.");
-                          }
-                          
                           const res = await fetch("/api/cases/hire", {
                             method: "POST",
                             headers: {"Content-Type": "application/json"},
@@ -286,16 +239,12 @@ export default function CitizenDashboard() {
                           });
                           if(res.ok) alert("Case successfully sent to Advocate! They will review it shortly.");
                         } catch(e: any) {
-                          if (e.message?.includes("User rejected")) {
-                            alert("Escrow cancelled. You must sign the transaction to hire an advocate.");
-                          } else {
-                            alert("Failed to assign case: " + e.message);
-                          }
+                          alert("Failed to assign case: " + e.message);
                         }
                       }}
                       className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500" size="sm"
                     >
-                      <Lock className="w-3 h-3 mr-2" /> Privara Confidential Escrow
+                      <Briefcase className="w-3 h-3 mr-2" /> Assign to Advocate
                     </Button>
                   </div>
                 ))
@@ -322,9 +271,8 @@ export default function CitizenDashboard() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            disabled={!walletClient}
-            placeholder={walletClient ? "Type your legal problem or upload a document..." : "Connect your Web3 Wallet to chat with AI..."}
-            className="w-full bg-neutral-900/80 border border-white/10 rounded-full py-4 pl-16 pr-24 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-white placeholder-neutral-500 shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            placeholder={"Type your legal problem or upload a document..."}
+            className="w-full bg-neutral-900/80 border border-white/10 rounded-full py-4 pl-16 pr-24 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-white placeholder-neutral-500 shadow-xl"
           />
           
           <div className="absolute right-2 flex gap-1">
