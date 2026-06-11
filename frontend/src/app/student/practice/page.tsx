@@ -94,6 +94,7 @@ function PracticeArenaContent() {
             className="bg-indigo-600 hover:bg-indigo-500 text-white"
           >
             {isGrading ? "Grading..." : "Submit for Grading"}
+          </Button>
         </div>
       </header>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video, Bot } from "lucide-react";
@@ -29,6 +29,8 @@ export default function LawyerDashboard() {
     const interval = setInterval(fetchCases, 5000);
     return () => clearInterval(interval);
   }, []);
+
+  return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
       {/* Sidebar */}
       <aside className="w-64 border-r border-white/5 bg-neutral-900/30 flex flex-col hidden md:flex">

@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Scale, Shield, FileText, Users } from "lucide-react";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Home() {
   return (
@@ -43,7 +42,6 @@ export default function Home() {
                 Supreme Court
               </Button>
             </Link>
-            <ConnectButton />
           </div>
         </div>
       </nav>
@@ -52,15 +50,15 @@ export default function Home() {
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pt-32 pb-24 text-center max-w-5xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-indigo-300 mb-8 backdrop-blur-sm">
           <span className="flex w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-           Powered by Fhenix Fully Homomorphic Encryption
+           Powered by Enterprise-Grade Proprietary AI
         </div>
         
         <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-neutral-200 to-neutral-500 mb-8 leading-tight">
-          Privacy-First Smart Contracts for Legal.
+          Intelligent Legal Workflows.
         </h1>
         
         <p className="text-lg md:text-xl text-neutral-400 max-w-3xl mb-12 leading-relaxed">
-          The $200B legal industry can't use public blockchains due to confidentiality conflicts. LexCrypt solves this by executing legal logic—like M&A earnouts and blind auctions—on <strong>encrypted data</strong> without ever decrypting it on-chain.
+          The legal industry runs on data. LexCrypt transforms your firm's historical documents into an exclusive, highly-secure AI Copilot that automatically triages cases, drafts contracts, and speeds up research.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -69,9 +67,9 @@ export default function Home() {
               Launch Contract Composer <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </Link>
-          <Link href="/docs/whitepaper.md">
+          <Link href="/docs/features">
             <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium">
-              Read FHE Whitepaper
+              Read Enterprise Docs
             </Button>
           </Link>
         </div>
@@ -89,18 +87,18 @@ export default function Home() {
             {[
               {
                 icon: <Shield className="w-8 h-8 text-blue-400" />,
-                title: "Confidential M&A Agreements",
-                desc: "Store purchase prices and earnout formulas as euint32. Smart contracts release payments automatically without ever exposing the reserve price."
+                title: "Proprietary Data Moats",
+                desc: "Your data is your firm's biggest asset. We train private AI models entirely on your historical case files and templates."
               },
               {
                 icon: <FileText className="w-8 h-8 text-purple-400" />,
-                title: "Sealed-Bid Procurements",
-                desc: "Government RFPs where bids are encrypted. The contract compares bids and selects the winner using FHE, maintaining absolute secrecy of losing bids."
+                title: "Automated Intake",
+                desc: "A multilingual citizen-facing portal that triages issues and hands them directly to your associates, saving hours of manual work."
               },
               {
                 icon: <Users className="w-8 h-8 text-indigo-400" />,
-                title: "Enterprise Payroll Compliance",
-                desc: "Process payroll on-chain while keeping salaries encrypted. 100% GDPR and CCPA compliant privacy-by-design."
+                title: "Clinical Education",
+                desc: "An advanced Moot Court Arena where students can practice arguments against an AI judge in real-time."
               }
             ].map((feat, i) => (
               <div key={i} className="p-8 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-colors backdrop-blur-sm group">
@@ -118,7 +116,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative z-10 py-12 border-t border-white/5 text-center text-neutral-500 text-sm">
         <p>© 2026 Nyaya AI. All rights reserved.</p>
-        <p className="mt-2">Built on Arbitrum & Fhenix with ❤️</p>
+        <p className="mt-2">Built with Next.js & OpenAI ❤️</p>
       </footer>
     </div>
   );
