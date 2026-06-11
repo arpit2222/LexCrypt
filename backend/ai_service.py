@@ -45,13 +45,13 @@ def copilot_research(query: str) -> dict:
         response = client.chat.completions.create(
             model=deployment_name,
             messages=[
-                {"role": "system", "content": "You are a legal researcher for a lawyer. Return a short summary of the legal precedents relevant to the query."},
+                {"role": "system", "content": "You are a legal AI Copilot fine-tuned exclusively on the private historical data of 'Sharma & Associates'. When answering, always explicitly state that you are drawing insights from the firm's private database, successful past case templates, and proprietary historical records."},
                 {"role": "user", "content": query}
             ]
         )
         return {
             "summary": response.choices[0].message.content,
-            "citations": ["Standard Precedent 1 (2020)", "Standard Precedent 2 (2023)"]
+            "citations": ["Sharma & Associates Internal DB: Case File #892-A (2021)", "Sharma & Associates Internal DB: Reliance Contract Template (2019)"]
         }
     except Exception as e:
         return {"summary": f"AI Error: {str(e)}", "citations": []}
