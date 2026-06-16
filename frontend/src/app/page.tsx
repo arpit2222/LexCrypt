@@ -113,6 +113,53 @@ export default function Home() {
         </div>
       </section>
       
+      {/* How it Works Section */}
+      <section id="how-it-works" className="relative z-10 py-24 bg-neutral-950">
+        <div className="max-w-5xl mx-auto px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">The End-to-End Workflow</h2>
+            <p className="text-neutral-400 max-w-xl mx-auto">See how LexCrypt connects citizens with your law firm seamlessly.</p>
+          </div>
+          
+          <div className="relative">
+            {/* Connecting Line */}
+            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2" />
+            
+            <div className="space-y-12">
+              {/* Step 1 */}
+              <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                <div className="md:w-1/2 text-center md:text-right">
+                  <h3 className="text-2xl font-bold text-white mb-2">1. Citizen Intake</h3>
+                  <p className="text-neutral-400">A potential client visits your website and chats with the AI in their native language (Hindi, Marathi, etc.) to explain their legal problem.</p>
+                </div>
+                <div className="absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-indigo-600 border-4 border-neutral-950 flex items-center justify-center font-bold text-white z-10 hidden md:flex">1</div>
+                <div className="md:w-1/2" />
+              </div>
+              
+              {/* Step 2 */}
+              <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                <div className="md:w-1/2" />
+                <div className="absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-purple-600 border-4 border-neutral-950 flex items-center justify-center font-bold text-white z-10 hidden md:flex">2</div>
+                <div className="md:w-1/2 text-center md:text-left">
+                  <h3 className="text-2xl font-bold text-white mb-2">2. AI Triage & Translation</h3>
+                  <p className="text-neutral-400">The platform automatically translates the query into formal English, assesses the severity of the case, and prepares an initial legal brief.</p>
+                </div>
+              </div>
+              
+              {/* Step 3 */}
+              <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-16">
+                <div className="md:w-1/2 text-center md:text-right">
+                  <h3 className="text-2xl font-bold text-white mb-2">3. Lawyer Handoff</h3>
+                  <p className="text-neutral-400">The triaged lead instantly appears on your firm's private Lawyer Dashboard. You can review the AI-generated brief and jump on a video call with one click.</p>
+                </div>
+                <div className="absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-emerald-600 border-4 border-neutral-950 flex items-center justify-center font-bold text-white z-10 hidden md:flex">3</div>
+                <div className="md:w-1/2" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
       {/* Footer */}
       <footer className="relative z-10 py-12 border-t border-white/5 text-center text-neutral-500 text-sm">
         <p>© 2026 Nyaya AI. All rights reserved.</p>
