@@ -21,27 +21,19 @@ export default function Home() {
         <div className="flex items-center gap-6 text-sm font-medium">
           <Link href="#features" className="text-neutral-400 hover:text-white transition-colors">Features</Link>
           <Link href="#how-it-works" className="text-neutral-400 hover:text-white transition-colors">How it works</Link>
-          <div className="flex items-center gap-4 ml-4">
-            <Link href="/citizen">
-              <Button variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
-                Citizen Login
-              </Button>
-            </Link>
-            <Link href="/student">
-              <Button variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
-                Student Login
-              </Button>
-            </Link>
-            <Link href="/lawyer">
-              <Button variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
-                Lawyer Login
-              </Button>
-            </Link>
-            <Link href="/admin">
-              <Button variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
-                Supreme Court
-              </Button>
-            </Link>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 ml-4">
+            <Button asChild variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
+              <Link href="/citizen">Citizen Login</Link>
+            </Button>
+            <Button asChild variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex">
+              <Link href="/student">Student Login</Link>
+            </Button>
+            <Button asChild variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex">
+              <Link href="/lawyer">Lawyer Login</Link>
+            </Button>
+            <Button asChild variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
+              <Link href="/login">Supreme Court</Link>
+            </Button>
           </div>
         </div>
       </nav>
@@ -62,16 +54,16 @@ export default function Home() {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Link href="/composer">
-            <Button size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all">
-              Launch Contract Composer <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </Link>
-          <Link href="/docs/features">
-            <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium">
-              Read Enterprise Docs
-            </Button>
-          </Link>
+          <Button asChild size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all">
+            <Link href="/login">
+              Launch Venture Console <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium">
+            <Link href="#features">
+              Explore Platform
+            </Link>
+          </Button>
         </div>
       </main>
 
