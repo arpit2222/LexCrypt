@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [quota, setQuota] = useState(500);
+  const [isUnlimited, setIsUnlimited] = useState(false);
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ export default function AdminDashboard() {
           name: "Admin User",
           role: "lawyer",
           firm_name: firmName,
-          tokens_remaining: parseInt(quota.toString())
+          tokens_remaining: isUnlimited ? 999999 : parseInt(quota.toString())
         })
       });
       if (!res.ok) {
@@ -154,9 +155,15 @@ export default function AdminDashboard() {
                     </div>
                     <div>
                       <label className="block text-sm text-neutral-400 mb-1">AI Quota (Tokens)</label>
-                      <div className="relative">
-                        <Coins className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
-                        <input type="number" required value={quota} onChange={e=>setQuota(parseInt(e.target.value))} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="500" />
+                      <div className="flex gap-4 items-center">
+                        <div className="relative flex-1">
+                          <Coins className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                          <input type="number" required={!isUnlimited} disabled={isUnlimited} value={isUnlimited ? '' : quota} onChange={e=>setQuota(parseInt(e.target.value))} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500 disabled:opacity-50" placeholder={isUnlimited ? "∞" : "500"} />
+                        </div>
+                        <label className="flex items-center gap-2 text-sm text-neutral-300 whitespace-nowrap cursor-pointer">
+                          <input type="checkbox" checked={isUnlimited} onChange={e=>setIsUnlimited(e.target.checked)} className="rounded border-white/10 bg-neutral-800" />
+                          Unlimited
+                        </label>
                       </div>
                     </div>
                     <div>
@@ -212,7 +219,7 @@ export default function AdminDashboard() {
                             </td>
                             <td className="px-6 py-4 text-right">
                               <div className="inline-flex items-center gap-2">
-                                <span className="font-mono text-white">{u.tokens_remaining ?? '∞'}</span>
+                                <span className="font-mono text-white">{(u.tokens_remaining ?? 0) >= 900000 ? '∞' : u.tokens_remaining}</span>
                                 <Coins className="w-4 h-4 text-emerald-400" />
                               </div>
                             </td>

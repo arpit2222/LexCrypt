@@ -32,6 +32,7 @@ export default function Login() {
       localStorage.setItem("nyaya_token", data.access_token);
       localStorage.setItem("nyaya_role", data.role);
       localStorage.setItem("nyaya_name", data.name);
+      localStorage.setItem("nyaya_email", email);
 
       switch(data.role) {
         case "citizen": router.push("/citizen"); break;

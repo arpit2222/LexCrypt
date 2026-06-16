@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function CitizenDashboard() {
@@ -22,10 +22,27 @@ export default function CitizenDashboard() {
   const isHome = messages.length === 1;
 
   useEffect(() => {
+    // Enforce Login
+    const token = localStorage.getItem("nyaya_token");
+    if (!token && window.location.pathname === "/citizen") {
+       window.location.href = "/login";
+       return;
+    }
+
     if (!isHome) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages, isHome]);
+
+  const handleNewCase = () => {
+    setMessages([
+      {
+        role: "ai",
+        content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",
+      },
+    ]);
+    setInput("");
+  };
 
   const handleMicClick = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -176,6 +193,9 @@ export default function CitizenDashboard() {
           </Link>
         </div>
         <div className="flex items-center gap-4 text-sm font-medium">
+          <button onClick={handleNewCase} className="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
+            <Plus className="w-4 h-4" /> New Case
+          </button>
           <button onClick={fetchHistory} className="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
             <History className="w-4 h-4" /> History
           </button>
@@ -302,6 +322,27 @@ export default function CitizenDashboard() {
           <div className="text-center mt-3 hidden md:block">
             <span className="text-xs text-neutral-600">Nyaya AI can make mistakes. Consider verifying important information.</span>
           </div>
+
+          {isHome && (
+            <div className="flex flex-wrap justify-center gap-3 mt-8">
+              {[
+                "My tenant is refusing to vacate my property.",
+                "Review this employment contract.",
+                "How do I file for a mutual divorce?"
+              ].map((suggestion, i) => (
+                <button 
+                  key={i}
+                  onClick={() => {
+                    setInput(suggestion);
+                  }}
+                  className="px-4 py-2 rounded-full border border-white/10 bg-neutral-900/50 hover:bg-white/10 text-neutral-400 hover:text-white text-sm transition-all animate-in fade-in slide-in-from-bottom-2"
+                  style={{ animationDelay: `${i * 150}ms` }}
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
