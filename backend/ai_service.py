@@ -19,7 +19,7 @@ def chat_analysis(user_message: str) -> str:
         response = client.chat.completions.create(
             model=deployment_name,
             messages=[
-                {"role": "system", "content": "You are Nyaya AI, an expert legal assistant in Indian law. Provide accurate, clear, and actionable legal advice to citizens. Keep answers under 2 paragraphs."},
+                {"role": "system", "content": "You are Nyaya AI, an expert legal assistant in Indian law. Provide accurate, clear, and actionable legal advice to citizens. Use bullet points, bold text, and numbered lists to make your answer highly structured and readable. Avoid long walls of text. Keep answers under 3 short sections."},
                 {"role": "user", "content": user_message}
             ]
         )

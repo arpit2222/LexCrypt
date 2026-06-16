@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
 
 export default function CitizenDashboard() {
   const [messages, setMessages] = useState([
@@ -192,8 +193,18 @@ export default function CitizenDashboard() {
               </div>
             ) : (
               <div className="flex flex-col items-start max-w-[80%]">
-                <div className="rounded-2xl p-4 whitespace-pre-wrap bg-neutral-900 border border-white/5 rounded-tl-none text-neutral-200">
-                  {msg.content}
+                <div className="rounded-2xl p-4 bg-neutral-900 border border-white/5 rounded-tl-none text-neutral-200 text-sm md:text-base">
+                  <ReactMarkdown
+                    components={{
+                      p: ({node, ...props}) => <p className="mb-3 leading-relaxed" {...props} />,
+                      ul: ({node, ...props}) => <ul className="list-disc ml-5 mb-3 space-y-1" {...props} />,
+                      ol: ({node, ...props}) => <ol className="list-decimal ml-5 mb-3 space-y-1" {...props} />,
+                      li: ({node, ...props}) => <li className="pl-1" {...props} />,
+                      strong: ({node, ...props}) => <strong className="text-white font-semibold" {...props} />
+                    }}
+                  >
+                    {msg.content}
+                  </ReactMarkdown>
                 </div>
                 {msg.content !== "Analyzing document... Please wait." && !msg.content.includes("give me a moment") && (
                   <div className="flex gap-2 mt-1">
@@ -202,6 +213,9 @@ export default function CitizenDashboard() {
                     </Button>
                     <Button variant="ghost" size="sm" onClick={() => handleSpeak(msg.content)} className="text-neutral-500 h-6 hover:text-indigo-400 px-2">
                       <Volume2 className="w-3 h-3 mr-1" /> Listen
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => { navigator.clipboard.writeText(msg.content); alert("Copied to clipboard!"); }} className="text-neutral-500 h-6 hover:text-indigo-400 px-2">
+                      <Copy className="w-3 h-3 mr-1" /> Copy
                     </Button>
                   </div>
                 )}
