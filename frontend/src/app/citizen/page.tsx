@@ -1,22 +1,31 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function CitizenDashboard() {
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      content: "Namaste! I am Nyaya AI. Please describe your legal issue in plain language. You can type in English, Hindi, Marathi, or Gujarati.",
+      content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",
     },
   ]);
   const [input, setInput] = useState("");
   const [showHistory, setShowHistory] = useState(false);
   const [historyList, setHistoryList] = useState<any[]>([]);
   const [isListening, setIsListening] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const isHome = messages.length === 1;
+
+  useEffect(() => {
+    if (!isHome) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isHome]);
 
   const handleMicClick = () => {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -32,7 +41,7 @@ export default function CitizenDashboard() {
     recognition.onstart = () => setIsListening(true);
     recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
-        setInput((prev) => prev + " " + transcript);
+        setInput((prev) => prev + (prev ? " " : "") + transcript);
     };
     recognition.onerror = () => setIsListening(false);
     recognition.onend = () => setIsListening(false);
@@ -87,10 +96,9 @@ export default function CitizenDashboard() {
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
     setInput("");
     
-    // Show typing state
     setMessages(prev => [
       ...prev, 
-      { role: "ai", content: "I am analyzing your issue against Indian legal precedents. Please give me a moment..." }
+      { role: "ai", content: "Analyzing your issue against Indian legal precedents..." }
     ]);
 
     try {
@@ -106,19 +114,19 @@ export default function CitizenDashboard() {
       if (!response.ok && response.status === 429) {
           setMessages(prev => [
             ...prev.slice(0, -1),
-            { role: "ai", content: "🚨 **Weekly Limit Reached** 🚨\n\nYou have reached your limit of 1 case per week on the free tier. Please wait 7 days to initiate a new case, or upgrade to Nyaya Premium." }
+            { role: "ai", content: "**Weekly Limit Reached**\n\nYou have reached your limit of 1 case per week on the free tier. Please wait 7 days to initiate a new case, or upgrade to Nyaya Premium." }
           ]);
           return;
       }
       
       setMessages(prev => [
-        ...prev.slice(0, -1), // remove typing state
+        ...prev.slice(0, -1),
         { role: "ai", content: data.reply }
       ]);
     } catch (error) {
       setMessages(prev => [
         ...prev.slice(0, -1),
-        { role: "ai", content: "Error connecting to Nyaya AI backend. Please ensure the FastAPI server is running." }
+        { role: "ai", content: "Error connecting to Nyaya AI backend. Please ensure the server is running." }
       ]);
     }
   };
@@ -129,8 +137,8 @@ export default function CitizenDashboard() {
 
     setMessages(prev => [
       ...prev,
-      { role: "user", content: `📎 Uploaded Document: ${file.name}` },
-      { role: "ai", content: "Analyzing document... Please wait." }
+      { role: "user", content: `Uploaded Document: ${file.name}` },
+      { role: "ai", content: "Analyzing document..." }
     ]);
 
     const formData = new FormData();
@@ -145,7 +153,7 @@ export default function CitizenDashboard() {
       
       setMessages(prev => [
         ...prev.slice(0, -1),
-        { role: "ai", content: `Document Analyzed:\n- Type: ${data.document_type}\n- Summary: ${data.summary}` }
+        { role: "ai", content: `**Document Analyzed:**\n- **Type:** ${data.document_type}\n- **Summary:** ${data.summary}` }
       ]);
     } catch (error) {
       setMessages(prev => [
@@ -156,93 +164,166 @@ export default function CitizenDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="flex items-center gap-4">
+    <div className="min-h-screen bg-[#0a0a0a] text-neutral-50 flex flex-col font-sans selection:bg-neutral-800">
+      {/* Header - Minimalist */}
+      <header className="flex items-center justify-between px-8 py-6 z-50">
+        <div className="flex items-center gap-6">
           <Link href="/">
-            <Button variant="ghost" size="icon" className="hover:bg-white/10 rounded-full">
-              <ChevronLeft className="w-5 h-5 text-neutral-400" />
-            </Button>
+            <div className="flex items-center gap-2 cursor-pointer group">
+              <Scale className="w-5 h-5 text-neutral-400 group-hover:text-white transition-colors" />
+              <span className="text-sm font-semibold tracking-widest text-neutral-400 group-hover:text-white transition-colors uppercase">Nyaya</span>
+            </div>
           </Link>
-          <div className="flex items-center gap-2">
-            <Scale className="w-6 h-6 text-indigo-400" />
-            <span className="text-lg font-bold">Nyaya Citizen</span>
-          </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Button onClick={fetchHistory} variant="outline" className="border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/10 hidden md:flex">
-            <History className="w-4 h-4 mr-2" /> Query History
-          </Button>
+        <div className="flex items-center gap-4 text-sm font-medium">
+          <button onClick={fetchHistory} className="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
+            <History className="w-4 h-4" /> History
+          </button>
         </div>
       </header>
 
-      {/* Chat Area */}
-      <main className="flex-1 max-w-4xl w-full mx-auto p-4 flex flex-col gap-6 overflow-y-auto pt-8">
-        {messages.map((msg, index) => (
-          <div key={index} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-              msg.role === "ai" ? "bg-indigo-900/50 border border-indigo-500/30" : "bg-neutral-800"
-            }`}>
-              {msg.role === "ai" ? <Bot className="w-5 h-5 text-indigo-400" /> : <User className="w-5 h-5 text-neutral-300" />}
-            </div>
-            
-            {msg.role === "user" ? (
-              <div className="max-w-[80%] rounded-2xl p-4 whitespace-pre-wrap bg-indigo-600 text-white rounded-tr-none shadow-[0_4px_20px_rgba(79,70,229,0.2)]">
-                {msg.content}
-              </div>
-            ) : (
-              <div className="flex flex-col items-start max-w-[80%]">
-                <div className="rounded-2xl p-4 bg-neutral-900 border border-white/5 rounded-tl-none text-neutral-200 text-sm md:text-base">
-                  <ReactMarkdown
-                    components={{
-                      p: ({node, ...props}) => <p className="mb-3 leading-relaxed" {...props} />,
-                      ul: ({node, ...props}) => <ul className="list-disc ml-5 mb-3 space-y-1" {...props} />,
-                      ol: ({node, ...props}) => <ol className="list-decimal ml-5 mb-3 space-y-1" {...props} />,
-                      li: ({node, ...props}) => <li className="pl-1" {...props} />,
-                      strong: ({node, ...props}) => <strong className="text-white font-semibold" {...props} />
-                    }}
-                  >
-                    {msg.content}
-                  </ReactMarkdown>
-                </div>
-                {msg.content !== "Analyzing document... Please wait." && !msg.content.includes("give me a moment") && (
-                  <div className="flex gap-2 mt-1">
-                    <Button variant="ghost" size="sm" onClick={() => handleSave(index)} className="text-neutral-500 h-6 hover:text-indigo-400 px-2">
-                      <Bookmark className="w-3 h-3 mr-1" /> Save
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleSpeak(msg.content)} className="text-neutral-500 h-6 hover:text-indigo-400 px-2">
-                      <Volume2 className="w-3 h-3 mr-1" /> Listen
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => { navigator.clipboard.writeText(msg.content); alert("Copied to clipboard!"); }} className="text-neutral-500 h-6 hover:text-indigo-400 px-2">
-                      <Copy className="w-3 h-3 mr-1" /> Copy
-                    </Button>
-                  </div>
-                )}
-              </div>
-            )}
+      {/* Main Container */}
+      <main className={`flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 transition-all duration-700 ease-in-out ${isHome ? 'justify-center pb-32' : 'justify-start pt-8 pb-40'}`}>
+        
+        {/* Home State Greeting */}
+        {isHome && (
+          <div className="text-center mb-12 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <h1 className="text-4xl md:text-5xl font-semibold tracking-tight text-white mb-4 leading-tight">
+              What legal matter can we assist you with?
+            </h1>
+            <p className="text-lg text-neutral-500">
+              Describe your issue securely. Nyaya AI will triage your case and prepare it for our advocates.
+            </p>
           </div>
-        ))}
+        )}
+
+        {/* Chat Interface (Hidden on Home) */}
+        {!isHome && (
+          <div className="flex flex-col gap-10 overflow-y-auto">
+            {messages.map((msg, index) => {
+              // Skip the welcome message if not in home state
+              if (index === 0) return null;
+
+              const isUser = msg.role === "user";
+
+              return (
+                <div key={index} className={`flex flex-col ${isUser ? "items-end" : "items-start"} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
+                  
+                  {/* Avatar / Role Indicator */}
+                  <div className="flex items-center gap-2 mb-2 text-xs font-semibold tracking-wider text-neutral-500 uppercase">
+                    {isUser ? (
+                      <>You <User className="w-3 h-3" /></>
+                    ) : (
+                      <><Scale className="w-3 h-3" /> Nyaya AI</>
+                    )}
+                  </div>
+
+                  {/* Message Content */}
+                  {isUser ? (
+                    <div className="bg-neutral-800/50 text-neutral-200 px-6 py-4 rounded-2xl rounded-tr-sm max-w-[85%] leading-relaxed border border-white/5">
+                      {msg.content}
+                    </div>
+                  ) : (
+                    <div className="text-neutral-300 w-full leading-relaxed text-[15px]">
+                      <ReactMarkdown
+                        components={{
+                          p: ({node, ...props}) => <p className="mb-4" {...props} />,
+                          ul: ({node, ...props}) => <ul className="list-disc ml-6 mb-4 space-y-2 marker:text-neutral-600" {...props} />,
+                          ol: ({node, ...props}) => <ol className="list-decimal ml-6 mb-4 space-y-2 marker:text-neutral-600" {...props} />,
+                          li: ({node, ...props}) => <li className="pl-1" {...props} />,
+                          strong: ({node, ...props}) => <strong className="text-white font-semibold" {...props} />
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  )}
+
+                  {/* Action Buttons (Only for AI) */}
+                  {!isUser && msg.content !== "Analyzing your issue against Indian legal precedents..." && (
+                    <div className="flex gap-4 mt-2 opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity">
+                      <button onClick={() => handleSave(index)} className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-white transition-colors">
+                        <Bookmark className="w-3 h-3" /> Save
+                      </button>
+                      <button onClick={() => handleSpeak(msg.content)} className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-white transition-colors">
+                        <Volume2 className="w-3 h-3" /> Listen
+                      </button>
+                      <button onClick={() => { navigator.clipboard.writeText(msg.content); alert("Copied to clipboard!"); }} className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-white transition-colors">
+                        <Copy className="w-3 h-3" /> Copy
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <div ref={messagesEndRef} />
+          </div>
+        )}
       </main>
 
-      {/* History Sidebar Modal Overlay */}
+      {/* Floating Input Bar */}
+      <div className={`fixed left-0 right-0 z-40 transition-all duration-700 ease-in-out px-4 ${isHome ? 'bottom-1/3 translate-y-1/2' : 'bottom-8'}`}>
+        <div className="max-w-3xl mx-auto relative group">
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-800/20 rounded-2xl blur-xl transition-opacity opacity-0 group-hover:opacity-100" />
+          
+          <div className="relative flex items-center bg-[#111111]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 transition-all">
+            
+            <label className="cursor-pointer p-3 text-neutral-500 hover:text-white transition-colors">
+              <input type="file" className="hidden" onChange={handleFileUpload} />
+              <Paperclip className="w-5 h-5" />
+            </label>
+            
+            <input 
+              type="text" 
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder="Message Nyaya AI..."
+              className="flex-1 bg-transparent border-none py-3 px-2 text-white placeholder-neutral-600 focus:outline-none focus:ring-0 text-[15px]"
+            />
+            
+            <div className="flex items-center gap-1 pr-1">
+              <button 
+                onClick={handleMicClick}
+                className={`p-3 rounded-xl transition-all ${isListening ? 'bg-red-500/20 text-red-400' : 'text-neutral-500 hover:text-white hover:bg-white/5'}`}
+              >
+                <Mic className="w-5 h-5" />
+              </button>
+              <button 
+                onClick={handleSend}
+                disabled={!input.trim()}
+                className="p-3 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:hover:bg-white rounded-xl transition-all"
+              >
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+          
+          <div className="text-center mt-3 hidden md:block">
+            <span className="text-xs text-neutral-600">Nyaya AI can make mistakes. Consider verifying important information.</span>
+          </div>
+        </div>
+      </div>
+
+      {/* History Sidebar */}
       {showHistory && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex justify-end">
-          <div className="w-full max-w-md bg-neutral-900 h-full border-l border-white/10 p-6 overflow-y-auto flex flex-col">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold flex items-center gap-2"><History className="w-5 h-5 text-indigo-400" /> Saved Queries</h2>
-              <Button variant="ghost" onClick={() => setShowHistory(false)}>Close</Button>
+          <div className="w-full max-w-md bg-[#111111] h-full border-l border-white/10 p-6 overflow-y-auto flex flex-col">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-lg font-semibold text-white tracking-wide">Case History</h2>
+              <button onClick={() => setShowHistory(false)} className="text-neutral-500 hover:text-white text-sm font-medium">Close</button>
             </div>
-            <div className="space-y-4 flex-1">
+            
+            <div className="space-y-6 flex-1">
               {historyList.length === 0 ? (
-                <p className="text-neutral-500 text-center mt-10">No saved queries yet.</p>
+                <p className="text-neutral-500 text-center mt-10">No history found.</p>
               ) : (
                 historyList.map((item, idx) => (
-                  <div key={idx} className="bg-neutral-800/50 p-4 rounded-xl border border-white/5 flex flex-col gap-3">
-                    <p className="text-xs text-neutral-500">{new Date(item.timestamp).toLocaleString()}</p>
-                    <p className="text-sm text-indigo-300 font-medium border-b border-white/5 pb-2">Q: {item.query}</p>
-                    <p className="text-sm text-neutral-300 line-clamp-3">A: {item.ai_response}</p>
-                    <Button 
+                  <div key={idx} className="group border border-white/5 hover:border-white/10 bg-neutral-900/30 rounded-2xl p-5 transition-all">
+                    <p className="text-[10px] uppercase tracking-widest text-neutral-600 mb-3">{new Date(item.timestamp).toLocaleDateString()}</p>
+                    <p className="text-sm text-white font-medium mb-2">{item.query}</p>
+                    <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed mb-4">{item.ai_response}</p>
+                    <button 
                       onClick={async () => {
                         const citizen = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
                         try {
@@ -253,13 +334,13 @@ export default function CitizenDashboard() {
                           });
                           if(res.ok) alert("Case successfully sent to Advocate! They will review it shortly.");
                         } catch(e: any) {
-                          alert("Failed to assign case: " + e.message);
+                          alert("Failed to assign case.");
                         }
                       }}
-                      className="w-full mt-2 bg-indigo-600 hover:bg-indigo-500" size="sm"
+                      className="w-full bg-white text-black hover:bg-neutral-200 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
                     >
-                      <Briefcase className="w-3 h-3 mr-2" /> Assign to Advocate
-                    </Button>
+                      <Briefcase className="w-3 h-3" /> Assign to Legal Team
+                    </button>
                   </div>
                 ))
               )}
@@ -267,49 +348,6 @@ export default function CitizenDashboard() {
           </div>
         </div>
       )}
-
-      {/* Input Area */}
-      <div className="p-4 bg-gradient-to-t from-neutral-950 to-transparent sticky bottom-0">
-        <div className="max-w-4xl mx-auto relative flex items-center">
-          <div className="absolute left-4 flex gap-2">
-            <label className="cursor-pointer">
-              <input type="file" className="hidden" onChange={handleFileUpload} />
-              <div className="text-neutral-400 hover:text-white hover:bg-white/5 rounded-full h-8 w-8 flex items-center justify-center transition-colors">
-                <Paperclip className="w-4 h-4" />
-              </div>
-            </label>
-          </div>
-          
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-            placeholder={"Type your legal problem or upload a document..."}
-            className="w-full bg-neutral-900/80 border border-white/10 rounded-full py-4 pl-16 pr-24 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-white placeholder-neutral-500 shadow-xl"
-          />
-          
-          <div className="absolute right-2 flex gap-1">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={handleMicClick}
-              className={`rounded-full h-10 w-10 ${isListening ? 'text-red-400 bg-red-400/10 animate-pulse' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}
-            >
-              <Mic className="w-5 h-5" />
-            </Button>
-            <Button 
-              onClick={handleSend}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-full h-10 w-10 p-0 shadow-lg"
-            >
-              <Send className="w-4 h-4 ml-0.5" />
-            </Button>
-          </div>
-        </div>
-        <p className="text-center text-xs text-neutral-500 mt-4 pb-2">
-          Nyaya AI is an AI tool and not a substitute for professional legal advice. Responses are generated based on Indian legal precedents.
-        </p>
-      </div>
     </div>
   );
 }
