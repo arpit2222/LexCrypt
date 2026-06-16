@@ -3,18 +3,32 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video, Bot } from "lucide-react";
+import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video, Bot, Coins } from "lucide-react";
 
 export default function LawyerDashboard() {
   const [activeCall, setActiveCall] = useState<string | null>(null);
   const [liveCases, setLiveCases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [whiteLabel, setWhiteLabel] = useState(true);
+  const [tokens, setTokens] = useState<number | null>(null);
 
   useEffect(() => {
-    const fetchCases = async () => {
+    // Auth Check
+    const token = localStorage.getItem("nyaya_token");
+    const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai"; // fallback for demo if skipped
+    if (!token && window.location.pathname === "/lawyer") {
+       window.location.href = "/login";
+       return;
+    }
+
+    const fetchData = async () => {
       try {
-        // Fetch cases for lawyer_id "1" (the default advocate we assign to)
+        const userRes = await fetch(`/api/user/me?email=${email}`);
+        if(userRes.ok) {
+           const userData = await userRes.json();
+           setTokens(userData.tokens_remaining);
+        }
+
         const res = await fetch("/api/cases/lawyer?lawyer_id=1");
         const data = await res.json();
         setLiveCases(data);
@@ -24,9 +38,9 @@ export default function LawyerDashboard() {
         setLoading(false);
       }
     };
-    fetchCases();
+    fetchData();
     // Poll every 5 seconds for live demo effect
-    const interval = setInterval(fetchCases, 5000);
+    const interval = setInterval(fetchData, 5000);
     return () => clearInterval(interval);
   }, []);
 
@@ -52,7 +66,17 @@ export default function LawyerDashboard() {
             <FileText className="w-5 h-5" /> Drafts & Documents
           </Link>
         </nav>
-        <div className="p-4 border-t border-white/5">
+        <div className="p-4 border-t border-white/5 space-y-4">
+          {/* Token Display */}
+          <div className="px-4 py-3 bg-neutral-900 rounded-xl border border-white/5">
+            <p className="text-xs text-neutral-400 mb-1 font-semibold uppercase tracking-wider">AI Quota</p>
+            <div className="flex items-center gap-2">
+               <Coins className="w-4 h-4 text-emerald-400" />
+               <span className="font-mono text-sm text-white">{tokens !== null ? tokens : '...'}</span>
+               <span className="text-xs text-neutral-500">remaining</span>
+            </div>
+          </div>
+          
           <div className="flex items-center gap-3 px-4 py-3">
             <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold">A</div>
             <div>

@@ -3,30 +3,75 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database } from "lucide-react";
+import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database, Plus, Mail, Key, Building2, Coins } from "lucide-react";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Form State
+  const [firmName, setFirmName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [quota, setQuota] = useState(500);
+  const [creating, setCreating] = useState(false);
+
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch("/api/admin/stats");
-        const data = await res.json();
-        setStats(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
-    
-    // Simulate real-time updates
-    const interval = setInterval(fetchStats, 10000);
+    fetchData();
+    const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const [statsRes, usersRes] = await Promise.all([
+        fetch("/api/admin/stats"),
+        fetch("/api/admin/users")
+      ]);
+      const statsData = await statsRes.json();
+      const usersData = await usersRes.json();
+      setStats(statsData);
+      setUsers(usersData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateFirm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreating(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          name: "Admin User",
+          role: "lawyer",
+          firm_name: firmName,
+          tokens_remaining: parseInt(quota.toString())
+        })
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.detail || "Failed to create firm");
+      }
+      alert(`Firm ${firmName} provisioned successfully!`);
+      setFirmName("");
+      setEmail("");
+      setPassword("");
+      setQuota(500);
+      fetchData(); // Refresh users list
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
@@ -36,7 +81,7 @@ export default function AdminDashboard() {
             <ChevronLeft className="w-5 h-5 text-neutral-400" />
           </Button>
         </Link>
-        <h1 className="text-xl font-bold flex items-center gap-2"><Scale className="w-6 h-6 text-indigo-400"/> Supreme Court Command Center</h1>
+        <h1 className="text-xl font-bold flex items-center gap-2"><Scale className="w-6 h-6 text-indigo-400"/> Venture Studio Console</h1>
       </header>
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-8">
@@ -59,7 +104,7 @@ export default function AdminDashboard() {
         ) : (
           <>
             {/* Top Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
               <div className="bg-gradient-to-br from-indigo-900/40 to-neutral-900/50 border border-indigo-500/20 rounded-2xl p-6 relative overflow-hidden">
                 <Users className="absolute -right-4 -bottom-4 w-24 h-24 text-indigo-500/10" />
                 <h3 className="text-sm font-medium text-indigo-300 mb-1">Total Citizens</h3>
@@ -68,10 +113,10 @@ export default function AdminDashboard() {
               </div>
               
               <div className="bg-gradient-to-br from-blue-900/40 to-neutral-900/50 border border-blue-500/20 rounded-2xl p-6 relative overflow-hidden">
-                <ShieldCheck className="absolute -right-4 -bottom-4 w-24 h-24 text-blue-500/10" />
-                <h3 className="text-sm font-medium text-blue-300 mb-1">Registered Lawyers</h3>
-                <p className="text-4xl font-black">{stats.total_lawyers}</p>
-                <p className="text-xs text-green-400 mt-2 flex items-center">↑ 3 pending verification</p>
+                <Building2 className="absolute -right-4 -bottom-4 w-24 h-24 text-blue-500/10" />
+                <h3 className="text-sm font-medium text-blue-300 mb-1">Partner Law Firms</h3>
+                <p className="text-4xl font-black">{users.filter(u => u.role === 'lawyer').length}</p>
+                <p className="text-xs text-green-400 mt-2 flex items-center">↑ Enterprise Tier</p>
               </div>
               
               <div className="bg-gradient-to-br from-purple-900/40 to-neutral-900/50 border border-purple-500/20 rounded-2xl p-6 relative overflow-hidden">
@@ -82,58 +127,107 @@ export default function AdminDashboard() {
               </div>
 
               <div className="bg-gradient-to-br from-emerald-900/40 to-neutral-900/50 border border-emerald-500/20 rounded-2xl p-6 relative overflow-hidden">
-                <Lock className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-500/10" />
-                <h3 className="text-sm font-medium text-emerald-300 mb-1">Escrow TVL (ETH)</h3>
-                <p className="text-4xl font-black">{stats.tvl_eth} Ξ</p>
-                <p className="text-xs text-emerald-400 mt-2">Locked in Smart Contracts</p>
+                <Activity className="absolute -right-4 -bottom-4 w-24 h-24 text-emerald-500/10" />
+                <h3 className="text-sm font-medium text-emerald-300 mb-1">AI Tokens Processed</h3>
+                <p className="text-4xl font-black">{(stats.ai_requests / 1000).toFixed(1)}k</p>
+                <p className="text-xs text-emerald-400 mt-2">Azure OpenAI GPT-5.4</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Left Column: AI & Security Stats */}
+              {/* Left Column: Organization Management */}
               <div className="lg:col-span-2 space-y-8">
+                
+                {/* Firm Provisioning Form */}
                 <div className="bg-neutral-900/50 border border-white/10 rounded-2xl p-8">
                   <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold flex items-center gap-2"><Activity className="w-5 h-5 text-indigo-400" /> Infrastructure Usage</h3>
+                    <h3 className="text-xl font-bold flex items-center gap-2"><Plus className="w-5 h-5 text-indigo-400" /> Provision New Firm</h3>
                   </div>
                   
-                  <div className="space-y-6">
+                  <form onSubmit={handleCreateFirm} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-neutral-400">Azure AI Tokens Processed</span>
-                        <span className="font-mono">{stats.ai_requests.toLocaleString()}</span>
-                      </div>
-                      <div className="h-2 w-full bg-neutral-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-indigo-500 w-[78%] rounded-full"></div>
+                      <label className="block text-sm text-neutral-400 mb-1">Firm Name</label>
+                      <div className="relative">
+                        <Building2 className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                        <input type="text" required value={firmName} onChange={e=>setFirmName(e.target.value)} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="e.g. Khaitan & Co" />
                       </div>
                     </div>
-                    
                     <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-neutral-400">Fhenix FHE Encryptions</span>
-                        <span className="font-mono">{stats.fhe_encryptions.toLocaleString()}</span>
-                      </div>
-                      <div className="h-2 w-full bg-neutral-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-purple-500 w-[42%] rounded-full"></div>
+                      <label className="block text-sm text-neutral-400 mb-1">AI Quota (Tokens)</label>
+                      <div className="relative">
+                        <Coins className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                        <input type="number" required value={quota} onChange={e=>setQuota(parseInt(e.target.value))} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="500" />
                       </div>
                     </div>
-                    
                     <div>
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-neutral-400">Arbitrum Transactions (Settlements)</span>
-                        <span className="font-mono">{(stats.active_cases * 2).toLocaleString()}</span>
-                      </div>
-                      <div className="h-2 w-full bg-neutral-800 rounded-full overflow-hidden">
-                        <div className="h-full bg-blue-500 w-[60%] rounded-full"></div>
+                      <label className="block text-sm text-neutral-400 mb-1">Admin Email</label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                        <input type="email" required value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="admin@khaitan.com" />
                       </div>
                     </div>
+                    <div>
+                      <label className="block text-sm text-neutral-400 mb-1">Password</label>
+                      <div className="relative">
+                        <Key className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
+                        <input type="password" required value={password} onChange={e=>setPassword(e.target.value)} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="••••••••" />
+                      </div>
+                    </div>
+                    <div className="md:col-span-2 mt-2">
+                      <Button type="submit" disabled={creating} className="w-full bg-indigo-600 hover:bg-indigo-500 text-white">
+                        {creating ? "Provisioning..." : "Create Firm Credential"}
+                      </Button>
+                    </div>
+                  </form>
+                </div>
+
+                {/* User Directory */}
+                <div className="bg-neutral-900/50 border border-white/10 rounded-2xl overflow-hidden">
+                  <div className="p-6 border-b border-white/5">
+                     <h3 className="text-xl font-bold flex items-center gap-2"><Database className="w-5 h-5 text-indigo-400" /> Registered Organizations</h3>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-neutral-800/50 text-neutral-400">
+                        <tr>
+                          <th className="px-6 py-3 font-medium">Firm / Name</th>
+                          <th className="px-6 py-3 font-medium">Email</th>
+                          <th className="px-6 py-3 font-medium">Role</th>
+                          <th className="px-6 py-3 font-medium text-right">Quota Remaining</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/5">
+                        {users.map((u, i) => (
+                          <tr key={i} className="hover:bg-white/5 transition-colors">
+                            <td className="px-6 py-4 font-medium">{u.firm_name || u.name}</td>
+                            <td className="px-6 py-4 text-neutral-400">{u.email}</td>
+                            <td className="px-6 py-4">
+                              <span className={`px-2 py-1 rounded text-xs font-semibold uppercase ${
+                                u.role === 'admin' ? 'bg-red-500/20 text-red-400' :
+                                u.role === 'lawyer' ? 'bg-purple-500/20 text-purple-400' :
+                                'bg-indigo-500/20 text-indigo-400'
+                              }`}>
+                                {u.role}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <div className="inline-flex items-center gap-2">
+                                <span className="font-mono text-white">{u.tokens_remaining ?? '∞'}</span>
+                                <Coins className="w-4 h-4 text-emerald-400" />
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
+
               </div>
 
               {/* Right Column: Live Feed */}
-              <div className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col">
-                <h3 className="text-lg font-bold flex items-center gap-2 mb-6"><Database className="w-5 h-5 text-indigo-400" /> Recent Network Activity</h3>
+              <div className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col h-fit sticky top-24">
+                <h3 className="text-lg font-bold flex items-center gap-2 mb-6"><Activity className="w-5 h-5 text-indigo-400" /> Recent Network Activity</h3>
                 <div className="space-y-4 flex-1">
                   {stats.recent_users.map((u: any, i: number) => (
                     <div key={i} className="flex gap-4 items-start p-3 rounded-xl hover:bg-white/5 transition-colors">
@@ -150,13 +244,6 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   ))}
-                  <div className="flex gap-4 items-start p-3 rounded-xl hover:bg-white/5 transition-colors">
-                     <div className="w-8 h-8 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center shrink-0"><Lock className="w-4 h-4"/></div>
-                     <div>
-                        <p className="text-sm font-medium">Escrow Locked</p>
-                        <p className="text-xs text-neutral-500">0.01 ETH locked for Case #902</p>
-                     </div>
-                  </div>
                 </div>
               </div>
             </div>

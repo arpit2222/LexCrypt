@@ -70,7 +70,9 @@ def register_user(user: UserRegister):
             "email": user.email,
             "password": hashed_password,
             "name": user.name,
-            "role": user.role
+            "role": user.role,
+            "firm_name": user.firm_name,
+            "tokens_remaining": user.tokens_remaining
         }
         users_collection.insert_one(new_user)
         return {"message": "User registered successfully"}
@@ -88,6 +90,18 @@ def login_user(user: UserLogin):
         return {"access_token": access_token, "token_type": "bearer", "role": db_user["role"], "name": db_user["name"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database connection error: {str(e)}")
+
+@app.get("/api/user/me")
+def get_current_user(email: str):
+    user = users_collection.find_one({"email": email}, {"_id": 0, "password": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@app.get("/api/admin/users")
+def get_all_users():
+    users = list(users_collection.find({}, {"_id": 0, "password": 0}))
+    return users
 
 @app.get("/api/admin/stats")
 def get_admin_stats():
@@ -195,9 +209,17 @@ def generate_draft(request: DraftRequest):
 
 class CopilotRequest(BaseModel):
     query: str
+    email: str = ""
 
 @app.post("/api/copilot/research")
-def copilot_research(request: CopilotRequest):
+def copilot_research_api(request: CopilotRequest):
+    if request.email:
+        user = users_collection.find_one({"email": request.email})
+        if user and user.get("tokens_remaining", 0) <= 0:
+            raise HTTPException(status_code=402, detail="Quota Exceeded. Please contact support to upgrade your plan.")
+        if user:
+            users_collection.update_one({"email": request.email}, {"$inc": {"tokens_remaining": -1}})
+            
     result = ai_copilot(request.query)
     return result
 

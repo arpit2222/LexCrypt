@@ -21,6 +21,8 @@ class UserRegister(BaseModel):
     password: str
     name: str
     role: str
+    firm_name: str = ""
+    tokens_remaining: int = 50
 
 class UserLogin(BaseModel):
     email: str
