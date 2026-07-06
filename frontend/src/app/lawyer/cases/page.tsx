@@ -76,7 +76,7 @@ export default function LawyerCases() {
                   <p className="text-sm text-neutral-400"><span className="text-neutral-300 font-semibold">Client Wallet/Email:</span> {c.citizen}</p>
                   <div className="bg-black/30 p-4 rounded-xl border border-white/5 text-sm text-neutral-300">
                     <p className="font-semibold text-indigo-300 mb-2">Case Summary (AI Generated):</p>
-                    {c.query}
+                    <div className="whitespace-pre-wrap">{c.query}</div>
                   </div>
                 </div>
                 

@@ -410,17 +410,24 @@ export default function CitizenDashboard() {
                     <button 
                       onClick={async (e) => {
                         e.stopPropagation();
+                        const target = e.currentTarget;
                         const citizen = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
                         try {
                           const res = await fetch("/api/cases/hire", {
                             method: "POST",
                             headers: {"Content-Type": "application/json"},
-                            body: JSON.stringify({ citizen_wallet: citizen, lawyer_id: "1", query_details: item.query })
+                            body: JSON.stringify({ 
+                              citizen_wallet: citizen, 
+                              lawyer_id: "1", 
+                              query_details: `Citizen Query:\n${item.query}\n\nAI Preliminary Brief:\n${item.ai_response}` 
+                            })
                           });
                           if(res.ok) {
-                             e.currentTarget.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team';
-                             e.currentTarget.classList.add('bg-green-500', 'text-white');
-                             e.currentTarget.classList.remove('bg-white', 'text-black');
+                             target.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team';
+                             target.classList.add('bg-green-500', 'text-white');
+                             target.classList.remove('bg-white', 'text-black');
+                          } else {
+                             alert("Failed to assign case.");
                           }
                         } catch(err) {
                           alert("Failed to assign case.");
