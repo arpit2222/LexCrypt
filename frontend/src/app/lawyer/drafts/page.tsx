@@ -8,12 +8,14 @@ import { ChevronLeft, FileText, Send, Download, History } from "lucide-react";
 export default function LawyerDrafts() {
   const [prompt, setPrompt] = useState("");
   const [draft, setDraft] = useState<string | null>(null);
+  const [instructions, setInstructions] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleLoad = (e: any) => {
       setPrompt(e.detail.details);
-      setDraft(e.detail.draft_content);
+      setDraft(e.detail.draft_content || e.detail.draft);
+      setInstructions(e.detail.instructions || null);
     };
     window.addEventListener('load-history', handleLoad);
     return () => window.removeEventListener('load-history', handleLoad);
@@ -35,13 +37,28 @@ export default function LawyerDrafts() {
         })
       });
       const data = await res.json();
-      setDraft(data.draft_content);
+      setDraft(data.draft || data.draft_content);
+      setInstructions(data.instructions || null);
       window.dispatchEvent(new Event('refresh-history'));
     } catch(err) {
       setDraft("Error generating draft. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleExport = () => {
+    if (!draft) return;
+    const contentToExport = instructions ? `INSTRUCTIONS / CONTEXT:\n${instructions}\n\n---\n\nLEGAL DRAFT:\n\n${draft}` : draft;
+    const blob = new Blob([contentToExport], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Nyaya_Legal_Draft.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -81,8 +98,8 @@ export default function LawyerDrafts() {
             <div className="bg-neutral-200 border-b border-neutral-300 p-4 flex justify-between items-center">
               <span className="font-semibold text-neutral-600">Preview</span>
               {draft && (
-                <Button variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
-                  <Download className="w-4 h-4 mr-2"/> Export PDF
+                <Button onClick={handleExport} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
+                  <Download className="w-4 h-4 mr-2"/> Export Draft
                 </Button>
               )}
             </div>
@@ -94,7 +111,17 @@ export default function LawyerDrafts() {
                   <p>AI is drafting the document...</p>
                 </div>
               ) : draft ? (
-                draft
+                <div className="flex flex-col gap-6">
+                  {instructions && (
+                    <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-300 font-sans text-sm">
+                      <p className="font-semibold mb-2">AI Instructions & Context:</p>
+                      {instructions}
+                    </div>
+                  )}
+                  <div className="text-neutral-200">
+                    {draft}
+                  </div>
+                </div>
               ) : (
                 <div className="flex items-center justify-center h-full text-neutral-400 text-center italic">
                   Your generated draft will appear here.

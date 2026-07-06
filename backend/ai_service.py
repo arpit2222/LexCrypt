@@ -28,19 +28,21 @@ def chat_analysis(user_message: str) -> str:
     except Exception as e:
         return f"AI Error: {str(e)}"
 
-def draft_document(doc_type: str, details: str) -> str:
+def draft_document(doc_type: str, details: str) -> dict:
+    import json
     try:
         response = client.chat.completions.create(
             model=deployment_name,
+            response_format={ "type": "json_object" },
             messages=[
-                {"role": "system", "content": "You are Nyaya AI, an expert legal drafter. Draft highly professional legal documents based on user input. Include standard boilerplates."},
+                {"role": "system", "content": "You are Nyaya AI, an expert legal drafter. Respond with a JSON object containing two keys: 'instructions' (for advice/context) and 'draft' (for the pure legal document)."},
                 {"role": "user", "content": f"Draft a {doc_type} based on these details:\n{details}"}
             ],
             max_completion_tokens=2000
         )
-        return response.choices[0].message.content
+        return json.loads(response.choices[0].message.content)
     except Exception as e:
-        return f"AI Error: {str(e)}"
+        return {"instructions": "", "draft": f"AI Error: {str(e)}"}
 
 def copilot_research(query: str) -> dict:
     try:

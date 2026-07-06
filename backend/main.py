@@ -216,18 +216,19 @@ class DraftRequest(BaseModel):
 
 @app.post("/api/draft")
 def generate_draft(request: DraftRequest):
-    draft_content = draft_document(request.document_type, request.details)
+    result = draft_document(request.document_type, request.details)
     
     if request.email:
         lawyer_drafts_collection.insert_one({
             "email": request.email,
             "document_type": request.document_type,
             "details": request.details,
-            "draft_content": draft_content,
+            "draft_content": result.get("draft", ""),
+            "instructions": result.get("instructions", ""),
             "timestamp": datetime.utcnow().isoformat()
         })
         
-    return {"draft_content": draft_content}
+    return result
 
 @app.get("/api/draft/history")
 def get_draft_history(email: str):
