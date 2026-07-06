@@ -5,15 +5,17 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Send, Scale, User, CheckCircle, RefreshCcw, GraduationCap, FileText, Menu } from "lucide-react";
+import { mockCases } from "@/lib/cases";
 
 function PracticeArenaContent() {
   const searchParams = useSearchParams();
-  const caseId = searchParams.get("case") || "C-001";
+  const caseId = searchParams.get("case") || "kesavananda-1973";
+  const caseData = mockCases.find(c => c.id === caseId) || mockCases[0];
   
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      content: `Welcome Counselor. I am the presiding judge for Case ${caseId}. Please state your appearance and present your opening arguments.`,
+      content: `Welcome Counselor. We are hearing the matter of **${caseData.title}**. Please state your appearance and present your opening arguments regarding this issue.`,
     },
   ]);
   const [input, setInput] = useState("");
@@ -37,7 +39,7 @@ function PracticeArenaContent() {
       const response = await fetch("/api/simulation/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ history: newHistory }),
+        body: JSON.stringify({ history: newHistory, case_context: caseData.context }),
       });
       const data = await response.json();
       

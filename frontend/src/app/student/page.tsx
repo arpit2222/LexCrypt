@@ -4,33 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, GraduationCap, Gavel, FileText, ArrowRight, Menu, Scale, LayoutDashboard } from "lucide-react";
+import { mockCases } from "@/lib/cases";
 
 export default function StudentDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-
-  const mockCases = [
-    {
-      id: "C-001",
-      title: "Constitutional Law: Freedom of Speech",
-      description: "A journalist has been arrested for a controversial tweet. Defend their fundamental rights under Article 19(1)(a).",
-      difficulty: "Intermediate",
-      tag: "Constitutional Law"
-    },
-    {
-      id: "C-002",
-      title: "Corporate Law: Breach of Contract",
-      description: "A tech startup failed to deliver software on time due to a server crash. Argue Force Majeure on behalf of the startup.",
-      difficulty: "Advanced",
-      tag: "Corporate Law"
-    },
-    {
-      id: "C-003",
-      title: "Criminal Law: Self Defense",
-      description: "A shop owner used force to stop a robbery. Argue the limits of private defense under the Indian Penal Code.",
-      difficulty: "Beginner",
-      tag: "Criminal Law"
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">

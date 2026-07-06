@@ -28,10 +28,11 @@ lawyer_research_collection = db.lawyer_research
 
 class SimulationChatRequest(BaseModel):
     history: list
+    case_context: str = ""
 
 @app.post("/api/simulation/chat")
 def simulation_chat(request: SimulationChatRequest):
-    reply = simulation_chat_analysis(request.history)
+    reply = simulation_chat_analysis(request.history, request.case_context)
     return {"reply": reply}
 
 class SaveQueryRequest(BaseModel):

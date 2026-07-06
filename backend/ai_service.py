@@ -114,10 +114,16 @@ def generate_severity_score(issue: str) -> int:
     except Exception as e:
         return 50 # Default fallback
 
-def simulation_chat_analysis(history: list[dict]) -> str:
+def simulation_chat_analysis(history: list[dict], case_context: str = "") -> str:
     try:
+        system_prompt = "You are a multi-agent simulation in an Indian Courtroom. The user is a law student playing the Defense or Petitioner."
+        if case_context:
+            system_prompt += f"\n\nThe case being argued is:\n{case_context}\n\nYou must act as the opposing counsel and judge specifically for this case."
+        
+        system_prompt += "\n\nYou play TWO roles. 1) The OPPOSING COUNSEL (Prosecution/Respondent) generating a legal counter-argument using real legal precedents and facts relevant to this case. 2) The JUDGE providing a quick 1-sentence ruling or critique of the student's argument. Format EXACTLY like this:\n\n[OPPOSING COUNSEL]: <counter-argument>\n\n[JUDGE]: <ruling>"
+
         messages = [
-            {"role": "system", "content": "You are a multi-agent simulation in an Indian Courtroom. The user is a law student playing the Defense. You play TWO roles. 1) The PROSECUTION generating a legal counter-argument. 2) The JUDGE providing a quick 1-sentence ruling/critique of the student's argument. Format EXACTLY like this:\n\n[PROSECUTION]: <counter-argument>\n\n[JUDGE]: <ruling>"}
+            {"role": "system", "content": system_prompt}
         ]
         
         for msg in history:
