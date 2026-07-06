@@ -321,11 +321,11 @@ export default function CitizenDashboard() {
         <div className="max-w-3xl mx-auto relative group">
           <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-800/20 rounded-2xl blur-xl transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none" />
           
-          <div className="relative flex items-center bg-[#111111]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 transition-all">
+          <div className="relative flex items-center bg-[#111111]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-1.5 md:p-2 transition-all">
             
-            <label className="cursor-pointer p-3 text-neutral-500 hover:text-white transition-colors">
+            <label className="cursor-pointer p-2 md:p-3 text-neutral-500 hover:text-white transition-colors shrink-0">
               <input type="file" className="hidden" onChange={handleFileUpload} />
-              <Paperclip className="w-5 h-5" />
+              <Paperclip className="w-4 h-4 md:w-5 md:h-5" />
             </label>
             
             <input 
@@ -334,20 +334,20 @@ export default function CitizenDashboard() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="Message Nyaya AI..."
-              className="flex-1 bg-transparent border-none py-3 px-2 text-white placeholder-neutral-600 focus:outline-none focus:ring-0 text-[15px]"
+              className="flex-1 bg-transparent border-none py-3 px-1 md:px-2 text-white placeholder-neutral-600 focus:outline-none focus:ring-0 text-sm md:text-[15px] min-w-0"
             />
             
-            <div className="flex items-center gap-1 pr-1">
+            <div className="flex items-center shrink-0 pr-1">
               <button 
                 onClick={handleMicClick}
-                className={`p-3 rounded-xl transition-all ${isListening ? 'bg-red-500/20 text-red-400' : 'text-neutral-500 hover:text-white hover:bg-white/5'}`}
+                className={`p-2 md:p-3 rounded-xl transition-all ${isListening ? 'bg-red-500/20 text-red-400' : 'text-neutral-500 hover:text-white hover:bg-white/5'}`}
               >
-                <Mic className="w-5 h-5" />
+                <Mic className="w-4 h-4 md:w-5 md:h-5" />
               </button>
               <button 
                 onClick={handleSend}
                 disabled={!input.trim()}
-                className="p-3 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:hover:bg-white rounded-xl transition-all"
+                className="p-2.5 md:p-3 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:hover:bg-white rounded-xl transition-all ml-1"
               >
                 <Send className="w-4 h-4" />
               </button>
