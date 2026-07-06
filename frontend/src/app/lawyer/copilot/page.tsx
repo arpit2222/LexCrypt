@@ -4,25 +4,20 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Bot, Send, BookOpen, History } from "lucide-react";
+import ReactMarkdown from 'react-markdown';
 
 export default function LawyerCopilot() {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [history, setHistory] = useState<any[]>([]);
-
-  const fetchHistory = async () => {
-    const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
-    try {
-      const res = await fetch(`/api/copilot/history?email=${email}`);
-      if(res.ok) {
-        setHistory(await res.json());
-      }
-    } catch(err) {}
-  };
 
   useEffect(() => {
-    fetchHistory();
+    const handleLoad = (e: any) => {
+      setQuery(e.detail.query);
+      setResponse(e.detail);
+    };
+    window.addEventListener('load-history', handleLoad);
+    return () => window.removeEventListener('load-history', handleLoad);
   }, []);
 
   const handleResearch = async () => {
@@ -38,7 +33,7 @@ export default function LawyerCopilot() {
       });
       const data = await res.json();
       setResponse(data);
-      fetchHistory();
+      window.dispatchEvent(new Event('refresh-history'));
     } catch(err) {
       setResponse({ summary: "Error connecting to backend.", citations: [] });
     } finally {
@@ -52,8 +47,8 @@ export default function LawyerCopilot() {
         <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><Bot className="w-6 h-6 text-indigo-400"/> AI Legal Copilot</h1>
       </header>
 
-      <main className="flex-1 w-full mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 flex flex-col">
+      <main className="flex-1 w-full max-w-4xl mx-auto flex flex-col">
+        <div className="flex flex-col">
         <div className="bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/20 rounded-2xl p-8 mb-8 text-center">
           <h2 className="text-2xl font-bold mb-4">What do you need to research?</h2>
           <div className="relative max-w-2xl mx-auto">
@@ -79,9 +74,9 @@ export default function LawyerCopilot() {
 
         {response && !loading && (
           <div className="space-y-6">
-            <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6">
-              <h3 className="font-semibold text-lg flex items-center gap-2 mb-4"><BookOpen className="w-5 h-5 text-indigo-400" /> AI Summary</h3>
-              <p className="text-neutral-300 leading-relaxed">{response.summary}</p>
+            <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6 prose prose-invert max-w-none">
+              <h3 className="font-semibold text-lg flex items-center gap-2 mb-4 not-prose"><BookOpen className="w-5 h-5 text-indigo-400" /> AI Summary</h3>
+              <ReactMarkdown>{response.summary}</ReactMarkdown>
             </div>
             
             <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6">
@@ -97,29 +92,6 @@ export default function LawyerCopilot() {
             </div>
           </div>
         )}
-        </div>
-
-        {/* History Panel */}
-        <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6 flex flex-col h-[600px] overflow-hidden">
-          <h3 className="font-semibold text-lg flex items-center gap-2 mb-6 text-white">
-            <History className="w-5 h-5 text-indigo-400" /> Research History
-          </h3>
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
-            {history.length === 0 ? (
-              <p className="text-neutral-500 text-sm italic">No past research found.</p>
-            ) : (
-              history.map((item, idx) => (
-                <div key={idx} className="p-4 bg-black/40 rounded-xl border border-white/5 hover:border-white/10 cursor-pointer transition-colors" onClick={() => {
-                  setQuery(item.query);
-                  setResponse(item);
-                }}>
-                  <p className="text-[10px] text-neutral-500 mb-1 uppercase tracking-widest">{new Date(item.timestamp).toLocaleDateString()}</p>
-                  <p className="text-sm font-medium text-indigo-100 mb-2">{item.query}</p>
-                  <p className="text-xs text-neutral-400 line-clamp-2">{item.summary}</p>
-                </div>
-              ))
-            )}
-          </div>
         </div>
       </main>
     </div>

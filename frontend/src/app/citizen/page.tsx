@@ -229,7 +229,7 @@ export default function CitizenDashboard() {
         </div>
 
       {/* Main Container */}
-      <main className={`flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 transition-all duration-700 ease-in-out ${isHome ? 'justify-center pb-32' : 'justify-start pt-8 pb-40'}`}>
+      <main className={`flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 overflow-y-auto transition-all duration-700 ease-in-out ${isHome ? 'justify-center pb-32' : 'justify-start pt-8 pb-40'}`}>
         
         {/* Home State Greeting */}
         {isHome && (

@@ -9,7 +9,30 @@ export default function LawyerLayoutClient({ children }: { children: React.React
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [tokens, setTokens] = useState<number | null>(null);
   const [whiteLabel, setWhiteLabel] = useState(true);
+  const [history, setHistory] = useState<any[]>([]);
   const pathname = usePathname();
+
+  const fetchHistory = async () => {
+    const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
+    try {
+      if (pathname === '/lawyer/copilot') {
+        const res = await fetch(`/api/copilot/history?email=${email}`);
+        if(res.ok) setHistory(await res.json());
+      } else if (pathname === '/lawyer/drafts') {
+        const res = await fetch(`/api/draft/history?email=${email}`);
+        if(res.ok) setHistory(await res.json());
+      } else {
+        setHistory([]);
+      }
+    } catch(err) {}
+  };
+
+  useEffect(() => {
+    fetchHistory();
+    const handleRefresh = () => fetchHistory();
+    window.addEventListener('refresh-history', handleRefresh);
+    return () => window.removeEventListener('refresh-history', handleRefresh);
+  }, [pathname]);
 
   useEffect(() => {
     const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
@@ -55,6 +78,24 @@ export default function LawyerLayoutClient({ children }: { children: React.React
           <Link href="/lawyer/drafts" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/drafts' ? 'bg-indigo-600/10 text-indigo-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
             <FileText className="w-5 h-5" /> Drafts & Documents
           </Link>
+
+          {(pathname === '/lawyer/copilot' || pathname === '/lawyer/drafts') && (
+             <div className="mt-8 pt-4 border-t border-white/5">
+                <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4 px-2">History</h3>
+                <div className="space-y-2">
+                  {history.map((item, idx) => (
+                    <button key={idx} className="w-full text-left p-3 rounded-lg hover:bg-white/5 text-sm transition-colors text-neutral-300" onClick={() => {
+                        window.dispatchEvent(new CustomEvent('load-history', { detail: item }));
+                        if(window.innerWidth < 768) setIsSidebarOpen(false);
+                    }}>
+                      <div className="text-[10px] text-neutral-500 mb-1">{new Date(item.timestamp).toLocaleDateString()}</div>
+                      <div className="font-medium line-clamp-2">{pathname === '/lawyer/copilot' ? item.query : item.document_type}</div>
+                    </button>
+                  ))}
+                  {history.length === 0 && <p className="text-xs text-neutral-500 px-2 italic">No history found.</p>}
+                </div>
+             </div>
+           )}
         </nav>
         <div className="p-4 border-t border-white/5 space-y-4">
           <div className="px-4 py-3 bg-neutral-900 rounded-xl border border-white/5">
