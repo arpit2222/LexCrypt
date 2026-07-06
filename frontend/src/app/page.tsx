@@ -90,7 +90,7 @@ export default function Home() {
           <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all")}>
               Launch Venture Console <ArrowRight className="w-5 h-5 ml-2" />
           </Link>
-          <Link href="#features" className={cn(buttonVariants({ size: "lg", variant: "outline" }), "h-14 px-8 text-lg border-white/10 text-white hover:bg-white/5 rounded-full font-medium")}>
+          <Link href="#features" className={cn(buttonVariants({ size: "lg" }), "bg-transparent h-14 px-8 text-lg border border-white/20 text-white hover:bg-white/10 hover:text-white rounded-full font-medium transition-all")}>
               Explore Platform
           </Link>
         </div>
