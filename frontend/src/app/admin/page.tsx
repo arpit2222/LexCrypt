@@ -76,13 +76,20 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
-      <header className="flex items-center px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-50">
-        <Link href="/">
-          <Button variant="ghost" size="icon" className="mr-4 hover:bg-white/10 rounded-full">
-            <ChevronLeft className="w-5 h-5 text-neutral-400" />
-          </Button>
-        </Link>
-        <h1 className="text-xl font-bold flex items-center gap-2"><Scale className="w-6 h-6 text-indigo-400"/> Venture Studio Console</h1>
+      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-50">
+        <div className="flex items-center">
+          <Link href="/">
+            <Button variant="ghost" size="icon" className="mr-4 hover:bg-white/10 rounded-full">
+              <ChevronLeft className="w-5 h-5 text-neutral-400" />
+            </Button>
+          </Link>
+          <h1 className="text-xl font-bold flex items-center gap-2"><Scale className="w-6 h-6 text-indigo-400"/> Venture Studio Console</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/lawyer" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">Lawyer View</Link>
+          <Link href="/citizen" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">Citizen View</Link>
+          <Link href="/student" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors hidden md:block">Student View</Link>
+        </div>
       </header>
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-8">
@@ -167,7 +174,7 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm text-neutral-400 mb-1">Admin Email</label>
+                      <label className="block text-sm text-neutral-400 mb-1">Company Email</label>
                       <div className="relative">
                         <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
                         <input type="email" required value={email} onChange={e=>setEmail(e.target.value)} className="w-full bg-neutral-800 border border-white/10 rounded-lg py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-indigo-500" placeholder="admin@khaitan.com" />

@@ -106,22 +106,25 @@ def get_all_users():
 @app.get("/api/admin/stats")
 def get_admin_stats():
     # Dynamic counts from DB
-    active_cases = assignments_collection.count_documents({"status": "PENDING"}) + assignments_collection.count_documents({"status": "ACCEPTED"})
-    total_citizens = saved_queries_collection.count_documents({}) # Approx based on unique queries or just total queries as proxy
-    ai_requests = saved_queries_collection.count_documents({}) * 3 # rough multiplier for demo
+    active_cases = assignments_collection.count_documents({"status": {"$in": ["PENDING", "ACCEPTED"]}})
+    total_citizens = users_collection.count_documents({"role": "citizen"})
+    total_lawyers = users_collection.count_documents({"role": "lawyer"})
+    ai_requests = saved_queries_collection.count_documents({})
     
+    # Get recent users
+    recent_users_cursor = users_collection.find({}, {"_id": 0, "password": 0}).sort("_id", -1).limit(5)
+    recent_users = list(recent_users_cursor)
+    for u in recent_users:
+        u["joined"] = "Recently"
+        
     return {
-        "total_citizens": 1250 + total_citizens, # Baseline + real growth
-        "total_lawyers": 85,
-        "active_cases": 340 + active_cases,
-        "ai_requests": 15000 + ai_requests,
+        "total_citizens": total_citizens,
+        "total_lawyers": total_lawyers,
+        "active_cases": active_cases,
+        "ai_requests": ai_requests * 12, # just a multiplier for visual demo impact
         "documents_processed": 842 + active_cases,
         "system_health": "100%",
-        "recent_users": [
-            {"email": "0x7a...9f2", "role": "citizen", "joined": "Today"},
-            {"email": "adv.sharma@nyaya.ai", "role": "lawyer", "joined": "Yesterday"},
-            {"email": "student.nlu@nyaya.ai", "role": "student", "joined": "2 days ago"}
-        ]
+        "recent_users": recent_users
     }
 
 class ChatRequest(BaseModel):

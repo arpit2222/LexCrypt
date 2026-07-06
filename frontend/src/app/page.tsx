@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { ArrowRight, Scale, Shield, FileText, Users } from "lucide-react";
 
 export default function Home() {
@@ -22,18 +23,18 @@ export default function Home() {
           <Link href="#features" className="text-neutral-400 hover:text-white transition-colors">Features</Link>
           <Link href="#how-it-works" className="text-neutral-400 hover:text-white transition-colors">How it works</Link>
           <div className="flex flex-wrap items-center gap-2 sm:gap-4 ml-4">
-            <Button asChild variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5">
-              <Link href="/citizen">Citizen Login</Link>
-            </Button>
-            <Button asChild variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex">
-              <Link href="/student">Student Login</Link>
-            </Button>
-            <Button asChild variant="ghost" className="text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex">
-              <Link href="/lawyer">Lawyer Login</Link>
-            </Button>
-            <Button asChild variant="outline" className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10">
-              <Link href="/login">Supreme Court</Link>
-            </Button>
+            <Link href="/citizen" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5")}>
+              Citizen Login
+            </Link>
+            <Link href="/student" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex")}>
+              Student Login
+            </Link>
+            <Link href="/lawyer" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex")}>
+              Lawyer Login
+            </Link>
+            <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10")}>
+              Supreme Court
+            </Link>
           </div>
         </div>
       </nav>
@@ -54,16 +55,12 @@ export default function Home() {
         </p>
         
         <div className="flex flex-col sm:flex-row items-center gap-4">
-          <Button asChild size="lg" className="h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all">
-            <Link href="/login">
+          <Link href="/login" className={cn(buttonVariants({ size: "lg" }), "h-14 px-8 text-lg bg-white text-black hover:bg-neutral-200 rounded-full font-semibold transition-all")}>
               Launch Venture Console <ArrowRight className="w-5 h-5 ml-2" />
-            </Link>
-          </Button>
-          <Button asChild size="lg" variant="outline" className="h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium">
-            <Link href="#features">
+          </Link>
+          <Link href="#features" className={cn(buttonVariants({ size: "lg", variant: "outline" }), "h-14 px-8 text-lg border-white/10 hover:bg-white/5 rounded-full font-medium")}>
               Explore Platform
-            </Link>
-          </Button>
+          </Link>
         </div>
       </main>
 
