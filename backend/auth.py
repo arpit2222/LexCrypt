@@ -1,7 +1,7 @@
 import os
 import jwt
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
+import bcrypt
 from pydantic import BaseModel
 from pymongo import MongoClient
 
@@ -9,7 +9,6 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY", "nyaya_super_secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
 client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
@@ -29,10 +28,10 @@ class UserLogin(BaseModel):
     password: str
 
 def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password[:72], hashed_password)
+    return bcrypt.checkpw(plain_password[:72].encode('utf-8'), hashed_password.encode('utf-8'))
 
 def get_password_hash(password):
-    return pwd_context.hash(password[:72])
+    return bcrypt.hashpw(password[:72].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def create_access_token(data: dict):
     to_encode = data.copy()
