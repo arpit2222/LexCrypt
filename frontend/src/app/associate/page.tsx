@@ -3,40 +3,53 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Users, FileSearch, Inbox, ArrowRight, ShieldCheck } from "lucide-react";
+import { Scale, Users, FileSearch, Inbox, ArrowRight, ShieldCheck, Menu } from "lucide-react";
 
 export default function AssociateDashboard() {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 border-r border-white/5 bg-neutral-900/30 flex flex-col">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
-          <Scale className="w-8 h-8 text-blue-400" />
-          <span className="font-bold tracking-wide">Nyaya Connect</span>
+          <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
+            <Scale className="w-8 h-8 text-blue-400" />
+            <span className="font-bold text-xl tracking-wide">Nyaya Connect</span>
+          </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 bg-blue-600/10 text-blue-300 rounded-xl font-medium">
+          <Link href="#" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-blue-600/10 text-blue-300 rounded-xl font-medium">
             <Inbox className="w-5 h-5" /> Intake Queue
           </Link>
-          <Link href="#" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium">
+          <Link href="#" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium">
             <Users className="w-5 h-5" /> Client Directory
           </Link>
         </nav>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8">
-        <header className="flex justify-between items-center mb-10">
-          <div>
-            <h1 className="text-2xl font-bold">Intake Review Queue</h1>
-            <p className="text-neutral-400">Review AI summaries and assign to relevant lawyers.</p>
-          </div>
-          <div className="flex items-center gap-2 bg-blue-500/10 text-blue-400 px-4 py-2 rounded-full text-sm font-medium border border-blue-500/20">
-            <ShieldCheck className="w-4 h-4" /> 12 Pending Reviews
+      <main className="flex-1 flex flex-col max-h-screen overflow-y-auto">
+        <header className="flex items-center px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-30 backdrop-blur-md mb-8">
+          <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5 mr-4" onClick={() => setIsSidebarOpen(true)}>
+            <Menu className="w-6 h-6" />
+          </button>
+          <div className="flex-1 flex justify-between items-center">
+            <div>
+              <h1 className="text-xl md:text-2xl font-bold">Intake Review Queue</h1>
+              <p className="text-sm md:text-base text-neutral-400 hidden sm:block">Review AI summaries and assign to relevant lawyers.</p>
+            </div>
+            <div className="flex items-center gap-2 bg-blue-500/10 text-blue-400 px-3 md:px-4 py-2 rounded-full text-xs md:text-sm font-medium border border-blue-500/20">
+              <ShieldCheck className="w-4 h-4" /> <span className="hidden sm:inline">12 Pending Reviews</span><span className="sm:hidden">12</span>
+            </div>
           </div>
         </header>
 
-        <div className="space-y-6">
+        <div className="px-4 md:px-8 space-y-6">
           {[
             { id: "C-1049", user: "Ramesh K.", issue: "Property encroachment dispute in rural Maharashtra", lang: "Marathi", urgency: "High" },
             { id: "C-1050", user: "Sneha M.", issue: "Workplace harassment complaint formulation", lang: "English", urgency: "Medium" },

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus, Menu } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function CitizenDashboard() {
@@ -17,6 +17,7 @@ export default function CitizenDashboard() {
   const [showHistory, setShowHistory] = useState(false);
   const [historyList, setHistoryList] = useState<any[]>([]);
   const [isListening, setIsListening] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const isHome = messages.length === 1;
@@ -181,18 +182,44 @@ export default function CitizenDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-neutral-50 flex flex-col font-sans selection:bg-neutral-800">
-      {/* Header - Minimalist */}
-      <header className="flex items-center justify-between px-8 py-6 z-50">
-        <div className="flex items-center gap-6">
-          <Link href="/">
-            <div className="flex items-center gap-2 cursor-pointer group">
-              <Scale className="w-5 h-5 text-neutral-400 group-hover:text-white transition-colors" />
-              <span className="text-sm font-semibold tracking-widest text-neutral-400 group-hover:text-white transition-colors uppercase">Nyaya</span>
-            </div>
+    <div className="min-h-screen bg-[#0a0a0a] text-neutral-50 flex font-sans selection:bg-neutral-800">
+      
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+        <div className="p-6 flex items-center gap-3 border-b border-white/5">
+          <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-2 cursor-pointer group">
+            <Scale className="w-6 h-6 text-indigo-400 group-hover:text-white transition-colors" />
+            <span className="text-xl font-bold tracking-widest text-neutral-200 group-hover:text-white transition-colors uppercase">Nyaya</span>
           </Link>
         </div>
-        <div className="flex items-center gap-4 text-sm font-medium">
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          <button onClick={() => { handleNewCase(); setIsSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+            <Plus className="w-5 h-5" /> New Case
+          </button>
+          <button onClick={() => { fetchHistory(); setIsSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+            <History className="w-5 h-5" /> Case History
+          </button>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header className="md:hidden flex items-center justify-between px-6 py-4 z-50 border-b border-white/5">
+           <div className="flex items-center gap-4">
+             <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-neutral-400 hover:text-white">
+               <Menu className="w-6 h-6" />
+             </button>
+             <span className="text-lg font-bold">Nyaya Citizen</span>
+           </div>
+        </header>
+
+        {/* Desktop Header Top Links (Optional now that we have a sidebar) */}
+        <div className="hidden md:flex absolute top-6 right-8 z-50 gap-4 text-sm font-medium">
           <button onClick={handleNewCase} className="text-neutral-400 hover:text-white transition-colors flex items-center gap-2">
             <Plus className="w-4 h-4" /> New Case
           </button>
@@ -200,7 +227,6 @@ export default function CitizenDashboard() {
             <History className="w-4 h-4" /> History
           </button>
         </div>
-      </header>
 
       {/* Main Container */}
       <main className={`flex-1 flex flex-col w-full max-w-4xl mx-auto px-4 transition-all duration-700 ease-in-out ${isHome ? 'justify-center pb-32' : 'justify-start pt-8 pb-40'}`}>
@@ -284,7 +310,7 @@ export default function CitizenDashboard() {
       {/* Floating Input Bar */}
       <div className={`fixed left-0 right-0 z-40 transition-all duration-700 ease-in-out px-4 ${isHome ? 'bottom-1/3 translate-y-1/2' : 'bottom-8'}`}>
         <div className="max-w-3xl mx-auto relative group">
-          <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-800/20 rounded-2xl blur-xl transition-opacity opacity-0 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-800/20 rounded-2xl blur-xl transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none" />
           
           <div className="relative flex items-center bg-[#111111]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-2 transition-all">
             
@@ -324,7 +350,7 @@ export default function CitizenDashboard() {
           </div>
 
           {isHome && (
-            <div className="flex flex-wrap justify-center gap-3 mt-8">
+            <div className="flex flex-wrap justify-center gap-3 mt-8 relative z-50">
               {[
                 "My tenant is refusing to vacate my property.",
                 "Review this employment contract.",
@@ -332,6 +358,7 @@ export default function CitizenDashboard() {
               ].map((suggestion, i) => (
                 <button 
                   key={i}
+                  type="button"
                   onClick={() => {
                     setInput(suggestion);
                   }}
@@ -389,6 +416,7 @@ export default function CitizenDashboard() {
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 }

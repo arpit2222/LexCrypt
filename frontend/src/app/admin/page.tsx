@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database, Plus, Mail, Key, Building2, Coins } from "lucide-react";
+import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database, Plus, Mail, Key, Building2, Coins, Menu, LayoutDashboard } from "lucide-react";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<any>(null);
@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [quota, setQuota] = useState(500);
   const [isUnlimited, setIsUnlimited] = useState(false);
   const [creating, setCreating] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -75,24 +76,50 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-50">
-        <div className="flex items-center">
-          <Link href="/">
-            <Button variant="ghost" size="icon" className="mr-4 hover:bg-white/10 rounded-full">
-              <ChevronLeft className="w-5 h-5 text-neutral-400" />
-            </Button>
-          </Link>
-          <h1 className="text-xl font-bold flex items-center gap-2"><Scale className="w-6 h-6 text-indigo-400"/> Venture Studio Console</h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/lawyer" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">Lawyer View</Link>
-          <Link href="/citizen" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">Citizen View</Link>
-          <Link href="/student" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors hidden md:block">Student View</Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
 
-      <main className="flex-1 max-w-7xl w-full mx-auto p-8">
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+        <div className="p-6 flex items-center gap-3 border-b border-white/5">
+          <Link href="/" className="flex items-center gap-3">
+            <Scale className="w-8 h-8 text-indigo-400" />
+            <span className="font-bold text-xl tracking-wide">Nyaya AI</span>
+          </Link>
+        </div>
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+            <LayoutDashboard className="w-5 h-5" /> Network Overview
+          </Link>
+          <a href="#users" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+            <Users className="w-5 h-5" /> User Directory
+          </a>
+          <a href="#provision" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+            <Plus className="w-5 h-5" /> Provision Firm
+          </a>
+        </nav>
+      </aside>
+
+      <main className="flex-1 flex flex-col max-h-screen overflow-y-auto">
+        <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-30 backdrop-blur-md">
+          <div className="flex items-center gap-4">
+            <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="text-xl font-bold flex items-center gap-2 hidden md:flex"><Scale className="w-6 h-6 text-indigo-400"/> Venture Studio Console</h1>
+            <span className="font-bold text-lg md:hidden">Venture Studio</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link href="/lawyer" className="text-xs md:text-sm font-medium text-neutral-400 hover:text-white px-2 md:px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">Lawyer</Link>
+            <Link href="/citizen" className="text-xs md:text-sm font-medium text-neutral-400 hover:text-white px-2 md:px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors">Citizen</Link>
+            <Link href="/student" className="text-sm font-medium text-neutral-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/5 transition-colors hidden md:block">Student</Link>
+          </div>
+        </header>
+
+        <div className="max-w-7xl w-full mx-auto p-4 md:p-8">
         <div className="mb-12 flex justify-between items-end">
           <div>
             <h2 className="text-4xl font-bold mb-2">Network Overview</h2>

@@ -4,7 +4,7 @@ import React, { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Send, Scale, User, CheckCircle, RefreshCcw } from "lucide-react";
+import { ChevronLeft, Send, Scale, User, CheckCircle, RefreshCcw, GraduationCap, FileText, Menu } from "lucide-react";
 
 function PracticeArenaContent() {
   const searchParams = useSearchParams();
@@ -22,6 +22,7 @@ function PracticeArenaContent() {
   // Grading Modal State
   const [scoreData, setScoreData] = useState<any>(null);
   const [isGrading, setIsGrading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSend = async () => {
     if (!input.trim() || loading || isGrading) return;
@@ -72,31 +73,59 @@ function PracticeArenaContent() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-40">
-        <div className="flex items-center gap-4">
-          <Link href="/student">
-            <Button variant="ghost" size="icon" className="hover:bg-white/10 rounded-full">
-              <ChevronLeft className="w-5 h-5 text-neutral-400" />
-            </Button>
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+        <div className="p-6 flex items-center gap-3 border-b border-white/5">
+          <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
+            <Scale className="w-8 h-8 text-indigo-400" />
+            <span className="font-bold text-xl tracking-wide">Nyaya AI</span>
           </Link>
-          <div className="flex items-center gap-2">
-            <Scale className="w-6 h-6 text-indigo-400" />
-            <span className="text-lg font-bold">Moot Court Arena</span>
-            <span className="ml-2 px-2 py-0.5 rounded-full bg-white/10 text-xs text-neutral-400">Case {caseId}</span>
+        </div>
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          <Link href="/student" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+            <GraduationCap className="w-5 h-5" /> Moot Court Arena
+          </Link>
+          <a href="#" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+            <FileText className="w-5 h-5" /> My Scores
+          </a>
+        </nav>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Header */}
+        <header className="flex items-center justify-between px-4 md:px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-30 backdrop-blur-md">
+          <div className="flex items-center gap-3 md:gap-4">
+            <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
+            <Link href="/student" className="hidden md:block">
+              <Button variant="ghost" size="icon" className="hover:bg-white/10 rounded-full">
+                <ChevronLeft className="w-5 h-5 text-neutral-400" />
+              </Button>
+            </Link>
+            <div className="flex items-center gap-2">
+              <Scale className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
+              <span className="text-base md:text-lg font-bold">Moot Court Arena</span>
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-white/10 text-[10px] md:text-xs text-neutral-400">Case {caseId}</span>
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <Button 
-            onClick={handleSubmitForGrading}
-            disabled={messages.length < 3 || isGrading || !!scoreData}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white"
-          >
-            {isGrading ? "Grading..." : "Submit for Grading"}
-          </Button>
-        </div>
-      </header>
+          <div className="flex items-center gap-4">
+            <Button 
+              onClick={handleSubmitForGrading}
+              disabled={messages.length < 3 || isGrading || !!scoreData}
+              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs md:text-sm px-3 py-1.5 md:px-4 md:py-2"
+            >
+              {isGrading ? "Grading..." : "Submit"}
+            </Button>
+          </div>
+        </header>
 
       {/* Main Chat Area */}
       <main className="flex-1 max-w-4xl w-full mx-auto p-4 flex flex-col gap-6 overflow-y-auto pt-8 pb-32">
@@ -192,6 +221,7 @@ function PracticeArenaContent() {
           </div>
         </div>
       )}
+      </main>
     </div>
   );
 }

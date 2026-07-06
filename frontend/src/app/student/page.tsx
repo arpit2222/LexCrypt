@@ -3,9 +3,10 @@
 import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, GraduationCap, Gavel, FileText, ArrowRight } from "lucide-react";
+import { ChevronLeft, GraduationCap, Gavel, FileText, ArrowRight, Menu, Scale, LayoutDashboard } from "lucide-react";
 
 export default function StudentDashboard() {
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   const mockCases = [
     {
@@ -31,23 +32,42 @@ export default function StudentDashboard() {
     }
   ];
 
-  return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-50">
-        <div className="flex items-center gap-4">
-          <Link href="/">
-            <Button variant="ghost" size="icon" className="hover:bg-white/10 rounded-full">
-              <ChevronLeft className="w-5 h-5 text-neutral-400" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <GraduationCap className="w-6 h-6 text-indigo-400" />
-            <span className="text-lg font-bold">Nyaya Student Hub</span>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
 
-      <main className="flex-1 max-w-5xl w-full mx-auto p-8">
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+        <div className="p-6 flex items-center gap-3 border-b border-white/5">
+          <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
+            <Scale className="w-8 h-8 text-indigo-400" />
+            <span className="font-bold text-xl tracking-wide">Nyaya AI</span>
+          </Link>
+        </div>
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          <Link href="/student" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+            <GraduationCap className="w-5 h-5" /> Moot Court Arena
+          </Link>
+          <a href="#" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+            <FileText className="w-5 h-5" /> My Scores
+          </a>
+        </nav>
+      </aside>
+
+      <main className="flex-1 flex flex-col max-h-screen overflow-y-auto">
+        <header className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-30 backdrop-blur-md">
+          <div className="flex items-center gap-4">
+            <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="text-xl font-bold flex items-center gap-2 hidden md:flex"><GraduationCap className="w-6 h-6 text-indigo-400"/> Nyaya Student Hub</h1>
+            <span className="font-bold text-lg md:hidden">Student Hub</span>
+          </div>
+        </header>
+
+        <div className="max-w-5xl w-full mx-auto p-4 md:p-8">
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-4">Welcome to Moot Court</h1>
           <p className="text-neutral-400 text-lg">Select a mock case below to enter the practice arena. Argue your case against an AI Judge and receive an instant score.</p>
@@ -74,6 +94,7 @@ export default function StudentDashboard() {
               </Link>
             </div>
           ))}
+        </div>
         </div>
       </main>
     </div>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video, Bot, Coins } from "lucide-react";
+import { Scale, Search, Bell, LayoutDashboard, Briefcase, FileText, CheckCircle2, ChevronRight, MessageSquare, Clock, Video, Bot, Coins, Menu } from "lucide-react";
 
 export default function LawyerDashboard() {
   const [activeCall, setActiveCall] = useState<string | null>(null);
@@ -11,6 +11,7 @@ export default function LawyerDashboard() {
   const [loading, setLoading] = useState(true);
   const [whiteLabel, setWhiteLabel] = useState(true);
   const [tokens, setTokens] = useState<number | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Auth Check
@@ -46,23 +47,30 @@ export default function LawyerDashboard() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
+      {/* Mobile Backdrop */}
+      {isSidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 border-r border-white/5 bg-neutral-900/30 flex flex-col hidden md:flex">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
-          {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400" /> : <Scale className="w-8 h-8 text-indigo-400" />}
-          <span className="font-bold tracking-wide">{whiteLabel ? "Sharma & Associates" : "Nyaya Hub"}</span>
+          <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
+            {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400" /> : <Scale className="w-8 h-8 text-indigo-400" />}
+            <span className="font-bold tracking-wide">{whiteLabel ? "Sharma & Associates" : "Nyaya Hub"}</span>
+          </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/lawyer" className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+          <Link href="/lawyer" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
             <LayoutDashboard className="w-5 h-5" /> Dashboard
           </Link>
-          <Link href="/lawyer/cases" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+          <Link href="/lawyer/cases" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <Briefcase className="w-5 h-5" /> Active Cases
           </Link>
-          <Link href="/lawyer/copilot" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+          <Link href="/lawyer/copilot" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <MessageSquare className="w-5 h-5" /> AI Copilot
           </Link>
-          <Link href="/lawyer/drafts" className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
+          <Link href="/lawyer/drafts" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
             <FileText className="w-5 h-5" /> Drafts & Documents
           </Link>
         </nav>
@@ -88,10 +96,15 @@ export default function LawyerDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col max-h-screen overflow-y-auto">
         {/* Header */}
-        <header className="h-20 border-b border-white/5 px-8 flex items-center justify-between sticky top-0 bg-neutral-950/80 backdrop-blur-md z-10">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+        <header className="h-20 border-b border-white/5 px-4 md:px-8 flex items-center justify-between sticky top-0 bg-neutral-950/80 backdrop-blur-md z-10">
+          <div className="flex items-center gap-3">
+            <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5" onClick={() => setIsSidebarOpen(true)}>
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
+          </div>
           <div className="flex items-center gap-6">
             <Button 
               variant="outline" 
