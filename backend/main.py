@@ -150,16 +150,16 @@ def health_check():
 
 @app.post("/api/chat")
 def chat_with_ai(request: ChatRequest):
-    # Check rate limit: 1 case per week
-    if request.user_id:
-        seven_days_ago = datetime.utcnow().timestamp() - (7 * 24 * 60 * 60)
-        recent_cases = saved_queries_collection.count_documents({
-            "email": request.user_id,
-            "timestamp": {"$gte": datetime.fromtimestamp(seven_days_ago).isoformat()}
-        })
-        if recent_cases >= 1:
-            raise HTTPException(status_code=429, detail="You have reached your limit of 1 case per week. Please wait before creating a new case.")
-            
+    # Check rate limit: 1 case per week (TEMPORARILY DISABLED)
+    # if request.user_id:
+    #     seven_days_ago = datetime.utcnow().timestamp() - (7 * 24 * 60 * 60)
+    #     recent_cases = saved_queries_collection.count_documents({
+    #         "email": request.user_id,
+    #         "timestamp": {"$gte": datetime.fromtimestamp(seven_days_ago).isoformat()}
+    #     })
+    #     if recent_cases >= 1:
+    #         raise HTTPException(status_code=429, detail="You have reached your limit of 1 case per week. Please wait before creating a new case.")
+    
     reply = chat_analysis(request.message)
     return {
         "reply": reply
