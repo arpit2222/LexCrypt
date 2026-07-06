@@ -47,18 +47,47 @@ export default function LawyerDrafts() {
     }
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     if (!draft) return;
-    const contentToExport = instructions ? `INSTRUCTIONS / CONTEXT:\n${instructions}\n\n---\n\nLEGAL DRAFT:\n\n${draft}` : draft;
-    const blob = new Blob([contentToExport], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "Nyaya_Legal_Draft.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const { jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
+      
+      const margin = 15;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const maxLineWidth = pageWidth - margin * 2;
+      
+      doc.setFont("times", "normal");
+      doc.setFontSize(12);
+      
+      const textLines = doc.splitTextToSize(draft, maxLineWidth);
+      
+      let cursorY = margin;
+      const pageHeight = doc.internal.pageSize.getHeight();
+      
+      for (let i = 0; i < textLines.length; i++) {
+        if (cursorY > pageHeight - margin) {
+          doc.addPage();
+          cursorY = margin;
+        }
+        doc.text(textLines[i], margin, cursorY);
+        cursorY += 7; // line height
+      }
+      
+      doc.save("Nyaya_Legal_Draft.pdf");
+    } catch (e) {
+      console.error("PDF generation error", e);
+      alert("Failed to generate PDF. Falling back to text file.");
+      const blob = new Blob([draft], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Nyaya_Legal_Draft.txt";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
   };
 
   return (
@@ -99,7 +128,7 @@ export default function LawyerDrafts() {
               <span className="font-semibold text-neutral-600">Preview</span>
               {draft && (
                 <Button onClick={handleExport} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
-                  <Download className="w-4 h-4 mr-2"/> Export Draft
+                  <Download className="w-4 h-4 mr-2"/> Export PDF
                 </Button>
               )}
             </div>
@@ -118,7 +147,7 @@ export default function LawyerDrafts() {
                       {instructions}
                     </div>
                   )}
-                  <div className="text-neutral-200">
+                  <div className="text-black">
                     {draft}
                   </div>
                 </div>
