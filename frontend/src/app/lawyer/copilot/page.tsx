@@ -49,21 +49,21 @@ export default function LawyerCopilot() {
 
       <main className="flex-1 w-full max-w-4xl mx-auto flex flex-col">
         <div className="flex flex-col">
-        <div className="bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/20 rounded-2xl p-8 mb-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">What do you need to research?</h2>
-          <div className="relative max-w-2xl mx-auto">
+        <div className="bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/20 rounded-2xl p-4 md:p-8 mb-8 text-center">
+          <h2 className="text-xl md:text-2xl font-bold mb-4">What do you need to research?</h2>
+          <div className="relative max-w-2xl mx-auto w-full">
             <input 
               type="text" 
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleResearch()}
               placeholder="e.g. Latest Supreme Court ruling on Section 138 NI Act..."
-              className="w-full bg-neutral-900 border border-white/10 rounded-full py-4 pl-6 pr-16 text-white focus:outline-none focus:border-indigo-500/50 shadow-xl"
+              className="w-full bg-neutral-900 border border-white/10 rounded-full py-3 md:py-4 pl-4 md:pl-6 pr-12 md:pr-16 text-sm md:text-base text-white focus:outline-none focus:border-indigo-500/50 shadow-xl"
             />
             <Button 
               onClick={handleResearch}
               disabled={loading || !query}
-              className="absolute right-2 top-2 rounded-full h-10 w-10 p-0 bg-indigo-600 hover:bg-indigo-500"
+              className="absolute right-1.5 md:right-2 top-1.5 md:top-2 rounded-full h-9 w-9 md:h-10 md:w-10 p-0 bg-indigo-600 hover:bg-indigo-500"
             >
               <Send className="w-4 h-4 ml-0.5" />
             </Button>

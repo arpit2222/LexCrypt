@@ -54,11 +54,11 @@ export default function LawyerLayoutClient({ children }: { children: React.React
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex font-sans selection:bg-indigo-500/30">
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/50 z-[50] md:hidden" onClick={() => setIsSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+      <aside className={`fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 group">
             {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400 group-hover:text-emerald-300 transition-colors" /> : <Scale className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors" />}

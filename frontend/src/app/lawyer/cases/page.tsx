@@ -81,7 +81,7 @@ export default function LawyerCases() {
                 </div>
                 
                 {c.status === "PENDING" && (
-                  <div className="flex flex-col gap-3 min-w-[140px]">
+                  <div className="flex flex-col gap-3 w-full md:w-auto md:min-w-[140px]">
                     <Button 
                       onClick={() => handleAction(c._id, "ACCEPT")}
                       className="bg-green-600 hover:bg-green-500 w-full flex items-center gap-2"

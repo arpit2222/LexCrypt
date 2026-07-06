@@ -62,7 +62,7 @@ export default function LawyerDrafts() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="e.g. Draft a legal notice on behalf of my client Mr. Sharma against his tenant Mr. Verma for non-payment of rent for 3 months..."
-              className="w-full flex-1 bg-neutral-950 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500/50 resize-none min-h-[300px]"
+              className="w-full flex-1 bg-neutral-950 border border-white/10 rounded-xl p-4 text-sm md:text-base text-white focus:outline-none focus:border-indigo-500/50 resize-none min-h-[200px] md:min-h-[300px]"
             />
             
             <Button 
@@ -76,7 +76,7 @@ export default function LawyerDrafts() {
         </div>
 
         {/* Right Side: Output */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full min-h-[50vh] md:min-h-0">
           <div className="bg-white text-neutral-950 rounded-2xl flex flex-col h-full overflow-hidden shadow-2xl relative">
             <div className="bg-neutral-200 border-b border-neutral-300 p-4 flex justify-between items-center">
               <span className="font-semibold text-neutral-600">Preview</span>
