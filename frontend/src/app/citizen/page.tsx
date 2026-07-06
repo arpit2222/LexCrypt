@@ -21,6 +21,7 @@ export default function CitizenDashboard() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const isHome = messages.length === 1;
+  const isReadOnly = messages.length === 2 && messages[0].role === "user";
 
   useEffect(() => {
     // Enforce Login
@@ -137,6 +138,13 @@ export default function CitizenDashboard() {
           return;
       }
       
+      // Auto save chat
+      fetch("/api/chat/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_email: userIdentifier, query: userMessage, ai_response: data.reply })
+      }).catch(console.error);
+
       setMessages(prev => [
         ...prev.slice(0, -1),
         { role: "ai", content: data.reply }
@@ -308,7 +316,8 @@ export default function CitizenDashboard() {
       </main>
 
       {/* Floating Input Bar */}
-      <div className={`fixed left-0 right-0 z-40 transition-all duration-700 ease-in-out px-4 ${isHome ? 'bottom-1/3 translate-y-1/2' : 'bottom-8'}`}>
+      {!isReadOnly && (
+      <div className={`absolute left-0 right-0 z-40 transition-all duration-700 ease-in-out px-4 ${isHome ? 'bottom-1/3 translate-y-1/2' : 'bottom-8'}`}>
         <div className="max-w-3xl mx-auto relative group">
           <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-800/20 rounded-2xl blur-xl transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none" />
           
@@ -372,6 +381,7 @@ export default function CitizenDashboard() {
           )}
         </div>
       </div>
+      )}
 
       {/* History Sidebar */}
       {showHistory && (
@@ -387,12 +397,19 @@ export default function CitizenDashboard() {
                 <p className="text-neutral-500 text-center mt-10">No history found.</p>
               ) : (
                 historyList.map((item, idx) => (
-                  <div key={idx} className="group border border-white/5 hover:border-white/10 bg-neutral-900/30 rounded-2xl p-5 transition-all">
+                  <div key={idx} className="group border border-white/5 hover:border-white/10 bg-neutral-900/30 rounded-2xl p-5 transition-all cursor-pointer" onClick={() => {
+                    setMessages([
+                      { role: "user", content: item.query },
+                      { role: "ai", content: item.ai_response }
+                    ]);
+                    setShowHistory(false);
+                  }}>
                     <p className="text-[10px] uppercase tracking-widest text-neutral-600 mb-3">{new Date(item.timestamp).toLocaleDateString()}</p>
                     <p className="text-sm text-white font-medium mb-2">{item.query}</p>
                     <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed mb-4">{item.ai_response}</p>
                     <button 
-                      onClick={async () => {
+                      onClick={async (e) => {
+                        e.stopPropagation();
                         const citizen = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
                         try {
                           const res = await fetch("/api/cases/hire", {
@@ -400,8 +417,12 @@ export default function CitizenDashboard() {
                             headers: {"Content-Type": "application/json"},
                             body: JSON.stringify({ citizen_wallet: citizen, lawyer_id: "1", query_details: item.query })
                           });
-                          if(res.ok) alert("Case successfully sent to Advocate! They will review it shortly.");
-                        } catch(e: any) {
+                          if(res.ok) {
+                             e.currentTarget.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team';
+                             e.currentTarget.classList.add('bg-green-500', 'text-white');
+                             e.currentTarget.classList.remove('bg-white', 'text-black');
+                          }
+                        } catch(err) {
                           alert("Failed to assign case.");
                         }
                       }}
