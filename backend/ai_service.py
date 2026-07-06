@@ -119,7 +119,10 @@ def simulation_chat_analysis(history: list[dict]) -> str:
         messages = [
             {"role": "system", "content": "You are a multi-agent simulation in an Indian Courtroom. The user is a law student playing the Defense. You play TWO roles. 1) The PROSECUTION generating a legal counter-argument. 2) The JUDGE providing a quick 1-sentence ruling/critique of the student's argument. Format EXACTLY like this:\n\n[PROSECUTION]: <counter-argument>\n\n[JUDGE]: <ruling>"}
         ]
-        messages.extend(history)
+        
+        for msg in history:
+            role = "assistant" if msg.get("role") == "ai" else msg.get("role", "user")
+            messages.append({"role": role, "content": msg.get("content", "")})
         
         response = client.chat.completions.create(
             model=deployment_name,
