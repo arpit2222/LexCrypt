@@ -3,7 +3,7 @@ uvicorn==0.28.0
 PyJWT==2.8.0
 bcrypt==4.1.2
 pymongo==4.6.2
-openai==1.14.2
+openai>=1.50.0
 python-dotenv==1.0.1
 PyMuPDF==1.24.0
 python-multipart==0.0.9
