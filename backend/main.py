@@ -21,6 +21,8 @@ from ai_service import chat_analysis, draft_document, copilot_research as ai_cop
 
 saved_queries_collection = db.saved_queries
 assignments_collection = db.assignments
+lawyer_drafts_collection = db.lawyer_drafts
+lawyer_research_collection = db.lawyer_research
 
 # Removed /api/fhe/score as it's no longer used by frontend
 
@@ -209,11 +211,30 @@ def book_consultation(request: BookingRequest):
 class DraftRequest(BaseModel):
     document_type: str
     details: str
+    email: str = ""
 
 @app.post("/api/draft")
 def generate_draft(request: DraftRequest):
     draft_content = draft_document(request.document_type, request.details)
+    
+    if request.email:
+        lawyer_drafts_collection.insert_one({
+            "email": request.email,
+            "document_type": request.document_type,
+            "details": request.details,
+            "draft_content": draft_content,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
     return {"draft_content": draft_content}
+
+@app.get("/api/draft/history")
+def get_draft_history(email: str):
+    try:
+        drafts = list(lawyer_drafts_collection.find({"email": email}, {"_id": 0}).sort("timestamp", -1))
+        return drafts
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 class CopilotRequest(BaseModel):
     query: str
@@ -229,7 +250,25 @@ def copilot_research_api(request: CopilotRequest):
             users_collection.update_one({"email": request.email}, {"$inc": {"tokens_remaining": -1}})
             
     result = ai_copilot(request.query)
+    
+    if request.email:
+        lawyer_research_collection.insert_one({
+            "email": request.email,
+            "query": request.query,
+            "summary": result.get("summary", ""),
+            "citations": result.get("citations", []),
+            "timestamp": datetime.utcnow().isoformat()
+        })
+        
     return result
+
+@app.get("/api/copilot/history")
+def get_copilot_history(email: str):
+    try:
+        researches = list(lawyer_research_collection.find({"email": email}, {"_id": 0}).sort("timestamp", -1))
+        return researches
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
 
 class SimulationRequest(BaseModel):
     case_id: str

@@ -46,17 +46,12 @@ export default function LawyerCases() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex flex-col">
-      <header className="flex items-center px-6 py-4 border-b border-white/5 bg-neutral-950/80 sticky top-0 z-50">
-        <Link href="/lawyer">
-          <Button variant="ghost" size="icon" className="mr-4 hover:bg-white/10 rounded-full">
-            <ChevronLeft className="w-5 h-5 text-neutral-400" />
-          </Button>
-        </Link>
-        <h1 className="text-xl font-bold flex items-center gap-2"><Briefcase className="w-6 h-6 text-indigo-400"/> Active & Pending Cases</h1>
+    <div className="flex flex-col h-full p-4 md:p-8">
+      <header className="mb-8 pt-4 md:pt-0">
+        <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><Briefcase className="w-6 h-6 text-indigo-400"/> Active & Pending Cases</h1>
       </header>
 
-      <main className="flex-1 max-w-5xl w-full mx-auto p-8">
+      <main className="flex-1 max-w-5xl w-full mx-auto">
         {loading ? (
           <p className="text-neutral-400 text-center mt-10">Loading cases...</p>
         ) : cases.length === 0 ? (

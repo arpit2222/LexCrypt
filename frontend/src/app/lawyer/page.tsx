@@ -11,7 +11,6 @@ export default function LawyerDashboard() {
   const [loading, setLoading] = useState(true);
   const [whiteLabel, setWhiteLabel] = useState(true);
   const [tokens, setTokens] = useState<number | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Auth Check
@@ -46,65 +45,9 @@ export default function LawyerDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
-      {/* Mobile Backdrop */}
-      {isSidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
-      )}
-
-      {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
-        <div className="p-6 flex items-center gap-3 border-b border-white/5">
-          <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
-            {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400" /> : <Scale className="w-8 h-8 text-indigo-400" />}
-            <span className="font-bold tracking-wide">{whiteLabel ? "Sharma & Associates" : "Nyaya Hub"}</span>
-          </Link>
-        </div>
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/lawyer" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
-            <LayoutDashboard className="w-5 h-5" /> Dashboard
-          </Link>
-          <Link href="/lawyer/cases" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
-            <Briefcase className="w-5 h-5" /> Active Cases
-          </Link>
-          <Link href="/lawyer/copilot" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
-            <MessageSquare className="w-5 h-5" /> AI Copilot
-          </Link>
-          <Link href="/lawyer/drafts" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
-            <FileText className="w-5 h-5" /> Drafts & Documents
-          </Link>
-        </nav>
-        <div className="p-4 border-t border-white/5 space-y-4">
-          {/* Token Display */}
-          <div className="px-4 py-3 bg-neutral-900 rounded-xl border border-white/5">
-            <p className="text-xs text-neutral-400 mb-1 font-semibold uppercase tracking-wider">AI Quota</p>
-            <div className="flex items-center gap-2">
-               <Coins className="w-4 h-4 text-emerald-400" />
-               <span className="font-mono text-sm text-white">{tokens !== null ? tokens : '...'}</span>
-               <span className="text-xs text-neutral-500">remaining</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold">A</div>
-            <div>
-              <p className="text-sm font-medium text-white">Adv. Sharma</p>
-              <p className="text-xs text-neutral-500">Corporate Law</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col max-h-screen overflow-y-auto">
-        {/* Header */}
-        <header className="h-20 border-b border-white/5 px-4 md:px-8 flex items-center justify-between sticky top-0 bg-neutral-950/80 backdrop-blur-md z-10">
-          <div className="flex items-center gap-3">
-            <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5" onClick={() => setIsSidebarOpen(true)}>
-              <Menu className="w-6 h-6" />
-            </button>
-            <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
-          </div>
+    <div className="flex flex-col h-full p-4 md:p-8">
+        <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 pt-4 md:pt-0">
+          <h1 className="text-xl md:text-2xl font-bold">Dashboard</h1>
           <div className="flex items-center gap-6">
             <Button 
               variant="outline" 
@@ -129,7 +72,7 @@ export default function LawyerDashboard() {
         </header>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto">
+        <div className="overflow-y-auto">
           {/* Welcome & Stats */}
           <div className="mb-10">
             <h2 className="text-xl text-neutral-400 mb-6">Welcome back, <span className="text-white font-medium">Advocate Sharma</span></h2>
@@ -219,7 +162,6 @@ export default function LawyerDashboard() {
             </div>
           </div>
         </div>
-      </main>
 
       {/* Video Call Modal (Jitsi Iframe) */}
       {activeCall && (

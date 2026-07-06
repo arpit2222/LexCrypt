@@ -32,6 +32,7 @@ export default function StudentDashboard() {
     }
   ];
 
+  return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 flex">
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
