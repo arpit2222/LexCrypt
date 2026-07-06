@@ -1,10 +1,14 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Scale, Shield, FileText, Users } from "lucide-react";
+import { ArrowRight, Scale, Shield, FileText, Users, Menu, X } from "lucide-react";
 
 export default function Home() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-50 selection:bg-indigo-500/30">
       {/* Background gradients */}
@@ -14,22 +18,24 @@ export default function Home() {
       </div>
 
       {/* Navbar */}
-      <nav className="relative z-10 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto border-b border-white/5">
+      <nav className="relative z-20 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto border-b border-white/5">
         <div className="flex items-center gap-2">
           <Scale className="w-8 h-8 text-indigo-400" />
           <span className="text-xl font-bold tracking-wider">NYAYA AI</span>
         </div>
-        <div className="flex items-center gap-6 text-sm font-medium">
+        
+        {/* Desktop Menu */}
+        <div className="hidden lg:flex items-center gap-6 text-sm font-medium">
           <Link href="#features" className="text-neutral-400 hover:text-white transition-colors">Features</Link>
           <Link href="#how-it-works" className="text-neutral-400 hover:text-white transition-colors">How it works</Link>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-4 ml-4">
+          <div className="flex items-center gap-4 ml-4">
             <Link href="/citizen" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5")}>
               Citizen Login
             </Link>
-            <Link href="/student" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex")}>
+            <Link href="/student" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5")}>
               Student Login
             </Link>
-            <Link href="/lawyer" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5 hidden md:inline-flex")}>
+            <Link href="/lawyer" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5")}>
               Lawyer Login
             </Link>
             <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10")}>
@@ -37,7 +43,33 @@ export default function Home() {
             </Link>
           </div>
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button className="lg:hidden p-2 text-neutral-400 hover:text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </nav>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden absolute top-[85px] left-0 right-0 bg-neutral-950/95 backdrop-blur-xl border-b border-white/10 z-50 p-6 flex flex-col gap-4 shadow-2xl">
+          <Link href="#features" onClick={() => setIsMobileMenuOpen(false)} className="text-neutral-300 font-medium py-2">Features</Link>
+          <Link href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="text-neutral-300 font-medium py-2">How it works</Link>
+          <hr className="border-white/5 my-2" />
+          <Link href="/citizen" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "secondary" }), "w-full justify-center")}>
+            Citizen Login
+          </Link>
+          <Link href="/student" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "secondary" }), "w-full justify-center")}>
+            Student Login
+          </Link>
+          <Link href="/lawyer" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "secondary" }), "w-full justify-center")}>
+            Lawyer Login
+          </Link>
+          <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "default" }), "w-full justify-center bg-indigo-600 hover:bg-indigo-500")}>
+            Supreme Court
+          </Link>
+        </div>
+      )}
 
       {/* Hero Section */}
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pt-32 pb-24 text-center max-w-5xl mx-auto">

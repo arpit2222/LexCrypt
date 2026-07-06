@@ -194,11 +194,11 @@ export default function CitizenDashboard() {
       
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/50 z-[50] md:hidden" onClick={() => setIsSidebarOpen(false)} />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
+      <aside className={`fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-2 cursor-pointer group">
             <Scale className="w-6 h-6 text-indigo-400 group-hover:text-white transition-colors" />
