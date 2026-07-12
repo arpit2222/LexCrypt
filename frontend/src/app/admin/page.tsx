@@ -283,11 +283,11 @@ export default function AdminDashboard() {
                         u.role === 'lawyer' ? 'bg-purple-500/20 text-purple-400' :
                         'bg-blue-500/20 text-blue-400'
                       }`}>
-                        {u.role.charAt(0).toUpperCase()}
+                        {(u.role || 'U').charAt(0).toUpperCase()}
                       </div>
                       <div>
                         <p className="text-sm font-medium">{u.email}</p>
-                        <p className="text-xs text-neutral-500">Joined {u.joined} as {u.role}</p>
+                        <p className="text-xs text-neutral-500">Joined {u.joined} as {u.role || 'User'}</p>
                       </div>
                     </div>
                   ))}
