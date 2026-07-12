@@ -86,18 +86,19 @@ def register_user(user: UserRegister):
 def login_user(user: UserLogin):
     try:
         db_user = users_collection.find_one({"email": user.email})
-        if not db_user:
-            raise HTTPException(status_code=400, detail="Incorrect email or password")
-            
-        # Demo Master Password Override
-        if user.password != "Master@Nyaya2026":
-            if not verify_password(user.password, db_user["password"]):
-                raise HTTPException(status_code=400, detail="Incorrect email or password")
-        
-        access_token = create_access_token(data={"sub": db_user["email"], "role": db_user["role"]})
-        return {"access_token": access_token, "token_type": "bearer", "role": db_user["role"], "name": db_user["name"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database connection error: {str(e)}")
+        
+    if not db_user:
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        
+    # Demo Master Password Override
+    if user.password != "Master@Nyaya2026":
+        if not verify_password(user.password, db_user["password"]):
+            raise HTTPException(status_code=400, detail="Incorrect email or password")
+    
+    access_token = create_access_token(data={"sub": db_user["email"], "role": db_user["role"]})
+    return {"access_token": access_token, "token_type": "bearer", "role": db_user["role"], "name": db_user["name"]}
 
 @app.get("/api/user/me")
 def get_current_user(email: str):
