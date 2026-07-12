@@ -31,12 +31,18 @@ export default function AdminDashboard() {
         fetch("/api/admin/stats"),
         fetch("/api/admin/users")
       ]);
+      
+      if (!statsRes.ok || !usersRes.ok) {
+        throw new Error("Failed to fetch admin data");
+      }
+      
       const statsData = await statsRes.json();
       const usersData = await usersRes.json();
       setStats(statsData);
-      setUsers(usersData);
+      setUsers(Array.isArray(usersData) ? usersData : []);
     } catch (err) {
       console.error(err);
+      // Optional: Set some default so it doesn't crash if stats is missing
     } finally {
       setLoading(false);
     }
