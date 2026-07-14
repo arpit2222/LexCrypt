@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database, Plus, Mail, Key, Building2, Coins, Menu, LayoutDashboard } from "lucide-react";
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [stats, setStats] = useState<any>(null);
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +22,11 @@ export default function AdminDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
+    const role = localStorage.getItem("nyaya_role");
+    if (role !== "admin") {
+      router.push("/login");
+      return;
+    }
     fetchData();
     const interval = setInterval(fetchData, 10000);
     return () => clearInterval(interval);
@@ -27,9 +34,11 @@ export default function AdminDashboard() {
 
   const fetchData = async () => {
     try {
+      const token = localStorage.getItem("nyaya_token");
+      const headers = { "Authorization": `Bearer ${token}` };
       const [statsRes, usersRes] = await Promise.all([
-        fetch("/api/admin/stats"),
-        fetch("/api/admin/users")
+        fetch("/api/admin/stats", { headers }),
+        fetch("/api/admin/users", { headers })
       ]);
       
       if (!statsRes.ok || !usersRes.ok) {
