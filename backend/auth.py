@@ -4,6 +4,22 @@ from datetime import datetime, timedelta
 import bcrypt
 from pydantic import BaseModel
 from pymongo import MongoClient
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+
+security = HTTPBearer()
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    try:
+        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+def verify_admin(payload: dict = Depends(verify_token)):
+    if payload.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return payload
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY", "nyaya_super_secret_key")
 ALGORITHM = "HS256"
