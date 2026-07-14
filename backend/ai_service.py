@@ -309,6 +309,16 @@ If the document references judgments, explain their legal significance.
 Maintain professional legal language suitable for advocates."""
 
 
+def _parse_json_response(content: str) -> dict:
+    content = content.strip()
+    if content.startswith("```json"):
+        content = content[7:]
+    elif content.startswith("```"):
+        content = content[3:]
+    if content.endswith("```"):
+        content = content[:-3]
+    return json.loads(content.strip())
+
 def chat_analysis(user_message: str) -> str:
     try:
         response = client.chat.completions.create(
@@ -334,9 +344,10 @@ def draft_document(doc_type: str, details: str) -> dict:
             ],
             max_completion_tokens=3500
         )
-        return json.loads(response.choices[0].message.content)
+        content = response.choices[0].message.content
+        return _parse_json_response(content)
     except Exception as e:
-        return {"instructions": {"summary": f"AI Error: {str(e)}"}, "draft": ""}
+        return {"instructions": {"summary": "Failed to generate"}, "draft": f"AI Error: {str(e)}"}
 
 def copilot_research(query: str) -> dict:
     try:
@@ -407,7 +418,7 @@ def generate_severity_score(issue: str) -> int:
             ],
             max_completion_tokens=1000
         )
-        data = json.loads(response.choices[0].message.content)
+        data = _parse_json_response(response.choices[0].message.content)
         return int(data.get("urgency", 50))
     except Exception as e:
         return 50 # Default fallback
