@@ -184,7 +184,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="relative z-10 py-12 border-t border-white/5 text-center text-neutral-500 text-sm">
         <p>© 2026 Nyaya AI. All rights reserved.</p>
-        <p className="mt-2">Built with Next.js & OpenAI ❤️</p>
+        
       </footer>
     </div>
   );
