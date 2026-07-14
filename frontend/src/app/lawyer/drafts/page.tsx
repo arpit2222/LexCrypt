@@ -8,7 +8,7 @@ import { ChevronLeft, FileText, Send, Download, History } from "lucide-react";
 export default function LawyerDrafts() {
   const [prompt, setPrompt] = useState("");
   const [draft, setDraft] = useState<string | null>(null);
-  const [instructions, setInstructions] = useState<string | null>(null);
+  const [instructions, setInstructions] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -142,9 +142,13 @@ export default function LawyerDrafts() {
               ) : draft ? (
                 <div className="flex flex-col gap-6">
                   {instructions && (
-                    <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-300 font-sans text-sm">
+                    <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-300 font-sans text-sm overflow-x-auto">
                       <p className="font-semibold mb-2">AI Instructions & Context:</p>
-                      {instructions}
+                      {typeof instructions === "string" ? (
+                        <p>{instructions}</p>
+                      ) : (
+                        <pre className="text-xs whitespace-pre-wrap font-mono">{JSON.stringify(instructions, null, 2)}</pre>
+                      )}
                     </div>
                   )}
                   <div className="text-black">
