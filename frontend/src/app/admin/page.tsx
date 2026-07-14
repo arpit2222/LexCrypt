@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database, Plus, Mail, Key, Building2, Coins, Menu, LayoutDashboard } from "lucide-react";
+import { ChevronLeft, Scale, Users, FileText, Lock, Activity, ShieldCheck, Database, Plus, Mail, Key, Building2, Coins, Menu, LayoutDashboard, LogOut } from "lucide-react";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -20,6 +20,13 @@ export default function AdminDashboard() {
   const [isUnlimited, setIsUnlimited] = useState(false);
   const [creating, setCreating] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("nyaya_token");
+    localStorage.removeItem("nyaya_email");
+    localStorage.removeItem("nyaya_role");
+    router.push("/login");
+  };
 
   useEffect(() => {
     const role = localStorage.getItem("nyaya_role");
@@ -116,6 +123,11 @@ export default function AdminDashboard() {
             <Plus className="w-5 h-5" /> Provision Firm
           </a>
         </nav>
+        <div className="p-4 border-t border-white/5 mt-auto">
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-xl font-medium transition-colors">
+            <LogOut className="w-5 h-5" /> Sign Out
+          </button>
+        </div>
       </aside>
 
       <main className="flex-1 flex flex-col max-h-screen overflow-y-auto">
