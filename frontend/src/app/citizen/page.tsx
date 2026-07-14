@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus, Menu } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus, Menu, LogOut } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function CitizenDashboard() {
@@ -19,6 +20,14 @@ export default function CitizenDashboard() {
   const [isListening, setIsListening] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("nyaya_token");
+    localStorage.removeItem("nyaya_email");
+    localStorage.removeItem("nyaya_role");
+    router.push("/login");
+  };
 
   const isHome = messages.length === 1;
   const isReadOnly = messages.length === 2 && messages[0].role === "user";
@@ -213,6 +222,11 @@ export default function CitizenDashboard() {
             <History className="w-5 h-5" /> Case History
           </button>
         </nav>
+        <div className="p-4 border-t border-white/5 mt-auto">
+          <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-xl font-medium transition-colors">
+            <LogOut className="w-5 h-5" /> Sign Out
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
