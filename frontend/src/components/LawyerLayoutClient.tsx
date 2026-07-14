@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Scale, Briefcase, LayoutDashboard, MessageSquare, FileText, Coins, Menu } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Scale, Briefcase, LayoutDashboard, MessageSquare, FileText, Coins, Menu, LogOut } from "lucide-react";
 
 export default function LawyerLayoutClient({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -11,6 +11,14 @@ export default function LawyerLayoutClient({ children }: { children: React.React
   const [whiteLabel, setWhiteLabel] = useState(true);
   const [history, setHistory] = useState<any[]>([]);
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("nyaya_token");
+    localStorage.removeItem("nyaya_email");
+    localStorage.removeItem("nyaya_role");
+    router.push("/login");
+  };
 
   const fetchHistory = async () => {
     const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
@@ -106,12 +114,17 @@ export default function LawyerLayoutClient({ children }: { children: React.React
                <span className="text-xs text-neutral-500">remaining</span>
             </div>
           </div>
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold">A</div>
-            <div>
-              <p className="text-sm font-medium text-white">Adv. Sharma</p>
-              <p className="text-xs text-neutral-500">Corporate Law</p>
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold">A</div>
+              <div>
+                <p className="text-sm font-medium text-white">Adv. Sharma</p>
+                <p className="text-xs text-neutral-500">Corporate Law</p>
+              </div>
             </div>
+            <button onClick={handleLogout} className="text-neutral-500 hover:text-white transition-colors" title="Log out">
+              <LogOut className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </aside>
