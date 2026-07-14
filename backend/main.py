@@ -13,8 +13,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from auth import users_collection, db, UserRegister, UserLogin, verify_password, get_password_hash, create_access_token
-from fastapi import HTTPException
+from auth import users_collection, db, UserRegister, UserLogin, verify_password, get_password_hash, create_access_token, verify_admin
+from fastapi import HTTPException, Depends
 from datetime import datetime
 import fitz
 from ai_service import chat_analysis, draft_document, copilot_research as ai_copilot, score_student, summarize_document, generate_severity_score, simulation_chat_analysis
@@ -108,12 +108,12 @@ def get_current_user(email: str):
     return user
 
 @app.get("/api/admin/users")
-def get_all_users():
+def get_all_users(admin: dict = Depends(verify_admin)):
     users = list(users_collection.find({}, {"_id": 0, "password": 0}))
     return users
 
 @app.get("/api/admin/stats")
-def get_admin_stats():
+def get_admin_stats(admin: dict = Depends(verify_admin)):
     # Dynamic counts from DB
     active_cases = assignments_collection.count_documents({"status": {"$in": ["PENDING", "ACCEPTED"]}})
     total_citizens = users_collection.count_documents({"role": "citizen"})
