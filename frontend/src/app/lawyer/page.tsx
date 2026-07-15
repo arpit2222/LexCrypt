@@ -80,9 +80,9 @@ export default function LawyerDashboard() {
             <h2 className="text-xl text-neutral-400 mb-6">Welcome back, <span className="text-white font-medium">Advocate Sharma</span></h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
-                { label: "Pending Consultations", value: "4", icon: <Clock className="w-6 h-6 text-yellow-400" /> },
-                { label: "Active Cases", value: "12", icon: <Briefcase className="w-6 h-6 text-blue-400" /> },
-                { label: "AI Briefs Ready", value: "3", icon: <CheckCircle2 className="w-6 h-6 text-green-400" /> }
+                { label: "Pending Consultations", value: liveCases.filter(c => c.status === "PENDING").length.toString(), icon: <Clock className="w-6 h-6 text-yellow-400" /> },
+                { label: "Active Cases", value: liveCases.filter(c => c.status === "ACCEPTED").length.toString(), icon: <Briefcase className="w-6 h-6 text-blue-400" /> },
+                { label: "AI Briefs Ready", value: liveCases.length.toString(), icon: <CheckCircle2 className="w-6 h-6 text-green-400" /> }
               ].map((stat, i) => (
                 <div key={i} className="p-6 rounded-2xl bg-neutral-900/50 border border-white/5 flex items-center gap-4">
                   <div className="p-3 bg-white/5 rounded-xl">{stat.icon}</div>
