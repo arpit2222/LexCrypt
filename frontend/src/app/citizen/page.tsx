@@ -189,6 +189,8 @@ export default function CitizenDashboard() {
       }
     } catch (error) {
       alert("Error uploading document.");
+    } finally {
+      e.target.value = "";
     }
   };
 
@@ -354,7 +356,7 @@ export default function CitizenDashboard() {
               type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              onKeyDown={(e) => e.key === "Enter" && (input.trim() || attachedDoc) && handleSend()}
               placeholder="Message Nyaya AI..."
               className="flex-1 bg-transparent border-none py-3 px-1 md:px-2 text-white placeholder-neutral-600 focus:outline-none focus:ring-0 text-sm md:text-[15px] min-w-0"
             />
@@ -368,7 +370,7 @@ export default function CitizenDashboard() {
               </button>
               <button 
                 onClick={handleSend}
-                disabled={!input.trim()}
+                disabled={!input.trim() && !attachedDoc}
                 className="p-2.5 md:p-3 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:hover:bg-white rounded-xl transition-all ml-1"
               >
                 <Send className="w-4 h-4" />
