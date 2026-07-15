@@ -89,3 +89,5 @@ def login_user(user: UserLogin):
         return {"access_token": access_token, "token_type": "bearer", "role": db_user["role"], "name": db_user["name"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database connection error: {str(e)}")
+
+

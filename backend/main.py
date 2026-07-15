@@ -92,6 +92,19 @@ def get_chat_history(email: str):
     cursor = citizen_chat_collection.find({"email": email}).sort("timestamp", -1)
     return list(cursor)
 
+@app.get("/api/user/me")
+def get_user_me(email: str):
+    from auth import users_collection
+    user = users_collection.find_one({"email": email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "email": user.get("email"),
+        "name": user.get("name"),
+        "role": user.get("role"),
+        "firm_name": user.get("firm_name", "Nyaya Hub")
+    }
+
 @app.post("/api/copilot/research")
 def copilot_research(request: CopilotRequest):
     ai_result = copilot_research_ai(request.history)
