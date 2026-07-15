@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import time
@@ -33,6 +33,7 @@ client = MongoClient(uri, serverSelectionTimeoutMS=5000)
 db = client['nyaya_db']
 citizen_chat_collection = db['citizen_chats']
 lawyer_copilot_collection = db['lawyer_copilots']
+lawyer_drafts_collection = db['lawyer_drafts']
 cases_collection = db['cases']
 
 class CaseAssignRequest(BaseModel):
@@ -134,6 +135,13 @@ def get_copilot_history(email: str):
     cursor = lawyer_copilot_collection.find({"email": email}).sort("timestamp", -1)
     return list(cursor)
 
+@app.delete("/api/copilot/history/{session_id}")
+def delete_copilot_history(session_id: str):
+    result = lawyer_copilot_collection.delete_one({"_id": session_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="History not found")
+    return {"status": "success"}
+
 @app.post("/api/copilot/upload")
 async def copilot_upload(file: UploadFile = File(...)):
     if not file.filename.endswith(".pdf") and not file.filename.endswith(".txt"):
@@ -169,10 +177,34 @@ def get_citizen_cases(citizen_wallet: str):
 class DraftRequest(BaseModel):
     instructions: str
     document_type: str = "General Legal Document"
+    email: str = ""
 
 @app.post("/api/draft")
 def get_draft(request: DraftRequest):
-    return draft_document(request.document_type, request.instructions)
+    draft_content = draft_document(request.document_type, request.instructions)
+    if request.email:
+        lawyer_drafts_collection.insert_one({
+            "_id": str(uuid.uuid4()),
+            "email": request.email,
+            "document_type": request.document_type,
+            "instructions": request.instructions,
+            "details": request.instructions,
+            "draft_content": draft_content,
+            "timestamp": datetime.utcnow().isoformat()
+        })
+    return draft_content
+
+@app.get("/api/draft/history")
+def get_draft_history(email: str):
+    cursor = lawyer_drafts_collection.find({"email": email}).sort("timestamp", -1)
+    return list(cursor)
+
+@app.delete("/api/draft/history/{draft_id}")
+def delete_draft_history(draft_id: str):
+    result = lawyer_drafts_collection.delete_one({"_id": draft_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Draft not found")
+    return {"status": "success"}
 
 @app.get("/api/admin/stats")
 def get_admin_stats():
