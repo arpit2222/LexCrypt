@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus, Menu, LogOut } from "lucide-react";
+import { Scale, Send, Mic, Paperclip, Bot, User, ChevronLeft, Bookmark, History, Volume2, Briefcase, Copy, Search, Plus, Menu, LogOut, FileText, X } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function CitizenDashboard() {
@@ -19,6 +19,8 @@ export default function CitizenDashboard() {
   const [historyList, setHistoryList] = useState<any[]>([]);
   const [isListening, setIsListening] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [sessionId, setSessionId] = useState("");
+  const [attachedDoc, setAttachedDoc] = useState<{filename: string, text: string} | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -53,6 +55,8 @@ export default function CitizenDashboard() {
       },
     ]);
     setInput("");
+    setSessionId("");
+    setAttachedDoc(null);
   };
 
   const handleMicClick = () => {
@@ -119,10 +123,15 @@ export default function CitizenDashboard() {
   };
 
   const handleSend = async () => {
-    if (!input.trim()) return;
-    const userMessage = input;
-    setMessages(prev => [...prev, { role: "user", content: userMessage }]);
+    if (!input.trim() && !attachedDoc) return;
+    
+    const userContent = input;
+    const newMsg = { role: "user", content: userContent, file: attachedDoc };
+    const currentHistory = [...messages, newMsg];
+    
+    setMessages(currentHistory);
     setInput("");
+    setAttachedDoc(null);
     
     setMessages(prev => [
       ...prev, 
@@ -131,33 +140,26 @@ export default function CitizenDashboard() {
 
     try {
       const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+      
+      const payloadHistory = currentHistory.map(m => ({
+        role: m.role,
+        content: m.file ? `(Attached Document: ${m.file.filename})\\n\\n${m.file.text}\\n\\nUser Question: ${m.content}` : m.content
+      })).filter(m => m.content !== "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.");
+      
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMessage, user_id: userIdentifier }),
+        body: JSON.stringify({ history: payloadHistory, session_id: sessionId, user_id: userIdentifier }),
       });
       
       const data = await response.json();
       
-      if (!response.ok && response.status === 429) {
-          setMessages(prev => [
-            ...prev.slice(0, -1),
-            { role: "ai", content: "**Weekly Limit Reached**\n\nYou have reached your limit of 1 case per week on the free tier. Please wait 7 days to initiate a new case, or upgrade to Nyaya Premium." }
-          ]);
-          return;
-      }
-      
-      // Auto save chat
-      fetch("/api/chat/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_email: userIdentifier, query: userMessage, ai_response: data.reply })
-      }).catch(console.error);
-
       setMessages(prev => [
         ...prev.slice(0, -1),
         { role: "ai", content: data.reply }
       ]);
+      
+      if (data.session_id) setSessionId(data.session_id);
     } catch (error) {
       setMessages(prev => [
         ...prev.slice(0, -1),
@@ -170,31 +172,23 @@ export default function CitizenDashboard() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    setMessages(prev => [
-      ...prev,
-      { role: "user", content: `Uploaded Document: ${file.name}` },
-      { role: "ai", content: "Analyzing document..." }
-    ]);
-
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const response = await fetch("/api/upload", {
+      const response = await fetch("/api/copilot/upload", {
         method: "POST",
         body: formData,
       });
       const data = await response.json();
       
-      setMessages(prev => [
-        ...prev.slice(0, -1),
-        { role: "ai", content: `**Document Analyzed:**\n- **Type:** ${data.document_type}\n- **Summary:** ${data.summary}` }
-      ]);
+      if (response.ok) {
+        setAttachedDoc({ filename: data.filename, text: data.text.substring(0, 10000) });
+      } else {
+        alert("Failed to extract text from document.");
+      }
     } catch (error) {
-      setMessages(prev => [
-        ...prev.slice(0, -1),
-        { role: "ai", content: "Error uploading document." }
-      ]);
+      alert("Error uploading document.");
     }
   };
 
@@ -286,9 +280,14 @@ export default function CitizenDashboard() {
                     )}
                   </div>
 
-                  {/* Message Content */}
                   {isUser ? (
                     <div className="bg-neutral-800/50 text-neutral-200 px-6 py-4 rounded-2xl rounded-tr-sm max-w-[85%] leading-relaxed border border-white/5">
+                      {msg.file && (
+                        <div className="flex items-center gap-2 mb-3 bg-neutral-900/50 p-2 rounded-lg border border-white/5 w-fit">
+                          <FileText className="w-4 h-4 text-indigo-400" />
+                          <span className="text-xs font-medium text-neutral-300">{msg.file.filename}</span>
+                        </div>
+                      )}
                       {msg.content}
                     </div>
                   ) : (
@@ -310,9 +309,6 @@ export default function CitizenDashboard() {
                   {/* Action Buttons (Only for AI) */}
                   {!isUser && msg.content !== "Analyzing your issue against Indian legal precedents..." && (
                     <div className="flex gap-4 mt-2 opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity">
-                      <button onClick={() => handleSave(index)} className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-white transition-colors">
-                        <Bookmark className="w-3 h-3" /> Save
-                      </button>
                       <button onClick={() => handleSpeak(msg.content)} className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-white transition-colors">
                         <Volume2 className="w-3 h-3" /> Listen
                       </button>
@@ -333,6 +329,18 @@ export default function CitizenDashboard() {
       {!isReadOnly && (
       <div className={`absolute left-0 right-0 z-40 transition-all duration-700 ease-in-out px-4 ${isHome ? 'bottom-1/3 translate-y-1/2' : 'bottom-8'}`}>
         <div className="max-w-3xl mx-auto relative group">
+          {attachedDoc && (
+            <div className="absolute -top-12 left-0 animate-in slide-in-from-bottom-2 fade-in bg-indigo-500/10 border border-indigo-500/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-3 w-max max-w-[90%] z-50">
+              <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
+              <span className="text-sm text-indigo-200 truncate">{attachedDoc.filename}</span>
+              <button 
+                onClick={() => setAttachedDoc(null)} 
+                className="text-indigo-400 hover:text-white transition-colors ml-2"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
           <div className="absolute inset-0 bg-gradient-to-r from-neutral-800/20 to-neutral-800/20 rounded-2xl blur-xl transition-opacity opacity-0 group-hover:opacity-100 pointer-events-none" />
           
           <div className="relative flex items-center bg-[#111111]/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl p-1.5 md:p-2 transition-all">
@@ -413,14 +421,15 @@ export default function CitizenDashboard() {
                 historyList.map((item, idx) => (
                   <div key={idx} className="group border border-white/5 hover:border-white/10 bg-neutral-900/30 rounded-2xl p-5 transition-all cursor-pointer" onClick={() => {
                     setMessages([
-                      { role: "user", content: item.query },
-                      { role: "ai", content: item.ai_response }
+                      { role: "ai", content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief." },
+                      ...(item.history || [])
                     ]);
+                    setSessionId(item._id || "");
                     setShowHistory(false);
                   }}>
                     <p className="text-[10px] uppercase tracking-widest text-neutral-600 mb-3">{new Date(item.timestamp).toLocaleDateString()}</p>
-                    <p className="text-sm text-white font-medium mb-2">{item.query}</p>
-                    <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed mb-4">{item.ai_response}</p>
+                    <p className="text-sm text-white font-medium mb-2">{item.title || "Case Session"}</p>
+                    <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed mb-4">{item.history ? item.history[item.history.length-1].content : ""}</p>
                     <button 
                       onClick={async (e) => {
                         e.stopPropagation();
@@ -433,7 +442,7 @@ export default function CitizenDashboard() {
                             body: JSON.stringify({ 
                               citizen_wallet: citizen, 
                               lawyer_id: "1", 
-                              query_details: `Citizen Query:\n${item.query}\n\nAI Preliminary Brief:\n${item.ai_response}` 
+                              query_details: `Citizen Chat Session (${item.title || 'Case'}):\\n\\n` + (item.history || []).map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join('\\n\\n')
                             })
                           });
                           if(res.ok) {
