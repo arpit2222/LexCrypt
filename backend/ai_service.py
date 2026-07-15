@@ -327,7 +327,7 @@ def chat_analysis(user_message: str) -> str:
                 {"role": "system", "content": PROMPT_CITIZEN},
                 {"role": "user", "content": user_message}
             ],
-            max_completion_tokens=2500
+            max_tokens=2500
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -342,7 +342,7 @@ def draft_document(doc_type: str, details: str) -> dict:
                 {"role": "system", "content": PROMPT_DRAFTER},
                 {"role": "user", "content": f"Draft a {doc_type} based on these details:\n{details}"}
             ],
-            max_completion_tokens=3500
+            max_tokens=3500
         )
         content = response.choices[0].message.content
         return _parse_json_response(content)
@@ -357,7 +357,7 @@ def copilot_research(query: str) -> dict:
                 {"role": "system", "content": PROMPT_COPILOT},
                 {"role": "user", "content": query}
             ],
-            max_completion_tokens=3000
+            max_tokens=3000
         )
         return {
             "summary": response.choices[0].message.content,
@@ -374,7 +374,7 @@ def score_student(argument: str) -> dict:
                 {"role": "system", "content": PROMPT_PROFESSOR},
                 {"role": "user", "content": argument}
             ],
-            max_completion_tokens=2000
+            max_tokens=2000
         )
         text = response.choices[0].message.content
         parts = text.split('|')
@@ -401,7 +401,7 @@ def summarize_document(text: str) -> str:
                 {"role": "system", "content": PROMPT_ANALYZER},
                 {"role": "user", "content": text[:8000]} # Increased token window for robust analysis
             ],
-            max_completion_tokens=3000
+            max_tokens=3000
         )
         return response.choices[0].message.content
     except Exception as e:
@@ -416,7 +416,7 @@ def generate_severity_score(issue: str) -> int:
                 {"role": "system", "content": PROMPT_TRIAGE},
                 {"role": "user", "content": issue}
             ],
-            max_completion_tokens=1000
+            max_tokens=1000
         )
         data = _parse_json_response(response.choices[0].message.content)
         return int(data.get("urgency", 50))
