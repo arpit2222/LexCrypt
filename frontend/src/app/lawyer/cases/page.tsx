@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Briefcase, CheckCircle2, XCircle, Clock } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 export default function LawyerCases() {
   const [cases, setCases] = useState<any[]>([]);
@@ -76,7 +77,21 @@ export default function LawyerCases() {
                   <p className="text-sm text-neutral-400"><span className="text-neutral-300 font-semibold">Client Wallet/Email:</span> {c.citizen}</p>
                   <div className="bg-black/30 p-4 rounded-xl border border-white/5 text-sm text-neutral-300">
                     <p className="font-semibold text-indigo-300 mb-2">Case Summary (AI Generated):</p>
-                    <div className="whitespace-pre-wrap">{c.query}</div>
+                    <div className="text-sm text-neutral-300 leading-relaxed">
+                      <ReactMarkdown
+                        components={{
+                          h1: ({node, ...props}) => <h1 className="text-lg font-bold text-white mt-4 mb-2" {...props} />,
+                          h2: ({node, ...props}) => <h2 className="text-base font-bold text-white mt-3 mb-2" {...props} />,
+                          h3: ({node, ...props}) => <h3 className="text-sm font-bold text-white mt-2 mb-1" {...props} />,
+                          p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                          ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 mb-2" {...props} />,
+                          ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1 mb-2" {...props} />,
+                          strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                        }}
+                      >
+                        {c.query}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 </div>
                 
