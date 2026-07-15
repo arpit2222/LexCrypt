@@ -100,8 +100,8 @@ export default function CopilotChat() {
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)] bg-background rounded-lg border border-white/5 overflow-hidden relative shadow-2xl">
-      <div className="flex items-center justify-between px-6 py-4 bg-background/95 backdrop-blur-md border-b border-white/5 z-10 h-16 shrink-0">
+    <div className="flex flex-col h-[calc(100vh-80px)] bg-neutral-950 rounded-lg border border-white/5 overflow-hidden relative shadow-2xl">
+      <div className="flex items-center justify-between px-6 py-4 bg-neutral-950/95 backdrop-blur-md border-b border-white/5 z-10 h-16 shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-md bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
             <Bot className="w-4 h-4 text-blue-400" />
@@ -196,7 +196,7 @@ export default function CopilotChat() {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 sm:p-6 bg-background/95 border-t border-white/5 backdrop-blur-md relative z-20 shrink-0">
+      <div className="p-4 sm:p-6 bg-neutral-950/95 border-t border-white/5 backdrop-blur-md relative z-20 shrink-0">
         <div className="max-w-4xl mx-auto relative w-full">
           
           {attachedDoc && (
