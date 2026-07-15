@@ -112,10 +112,10 @@ export default function LawyerDashboard() {
                     <div key={consult._id} className="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all flex items-center justify-between group cursor-pointer">
                       <div className="flex gap-4 items-center">
                         <div className="w-12 h-12 rounded-full bg-neutral-800 flex items-center justify-center font-bold text-lg text-neutral-300 uppercase">
-                          {consult.citizen.charAt(0)}
+                          {(consult.citizen || "?").charAt(0)}
                         </div>
                         <div className="max-w-md">
-                          <p className="font-semibold text-white mb-1 truncate">{consult.citizen}</p>
+                          <p className="font-semibold text-white mb-1 truncate">{consult.citizen || "Unknown Client"}</p>
                           <div className="flex items-center gap-3 text-sm text-neutral-400">
                             <span className="flex items-center gap-1 shrink-0"><Clock className="w-4 h-4" /> {new Date(consult.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                             <span className="w-1 h-1 bg-neutral-600 rounded-full shrink-0"></span>
