@@ -1,27 +1,42 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Bot, Send, BookOpen, History } from "lucide-react";
+import { Bot, Send, User } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function LawyerCopilot() {
-  const [query, setQuery] = useState("");
-  const [response, setResponse] = useState<any>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, loading]);
 
   useEffect(() => {
     const handleLoad = (e: any) => {
-      setQuery(e.detail.query);
-      setResponse(e.detail);
+      setMessages(e.detail.history || []);
+      setSessionId(e.detail._id || "");
     };
     window.addEventListener('load-history', handleLoad);
     return () => window.removeEventListener('load-history', handleLoad);
   }, []);
 
   const handleResearch = async () => {
-    if (!query.trim()) return;
+    if (!input.trim()) return;
+    
+    const newMsg = { role: "user", content: input };
+    const currentHistory = [...messages, newMsg];
+    
+    setMessages(currentHistory);
+    setInput("");
     setLoading(true);
     
     try {
@@ -29,71 +44,102 @@ export default function LawyerCopilot() {
       const res = await fetch("/api/copilot/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, email })
+        body: JSON.stringify({ history: currentHistory, session_id: sessionId, email })
       });
       const data = await res.json();
-      setResponse(data);
+      
+      setMessages([...currentHistory, { role: "assistant", content: data.summary }]);
+      if (data.session_id) {
+        setSessionId(data.session_id);
+      }
       window.dispatchEvent(new Event('refresh-history'));
     } catch(err) {
-      setResponse({ summary: "Error connecting to backend.", citations: [] });
+      setMessages([...currentHistory, { role: "assistant", content: "Error connecting to backend." }]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-full p-4 md:p-8">
-      <header className="mb-8 pt-4 md:pt-0">
+    <div className="flex flex-col h-full relative">
+      <header className="p-4 md:p-8 md:pb-4 shrink-0">
         <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><Bot className="w-6 h-6 text-indigo-400"/> AI Legal Copilot</h1>
       </header>
 
-      <main className="flex-1 w-full max-w-4xl mx-auto flex flex-col">
-        <div className="flex flex-col">
-        <div className="bg-gradient-to-br from-indigo-900/20 to-transparent border border-indigo-500/20 rounded-2xl p-4 md:p-8 mb-8 text-center">
-          <h2 className="text-xl md:text-2xl font-bold mb-4">What do you need to research?</h2>
-          <div className="relative max-w-2xl mx-auto w-full">
-            <input 
-              type="text" 
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleResearch()}
-              placeholder="e.g. Latest Supreme Court ruling on Section 138 NI Act..."
-              className="w-full bg-neutral-900 border border-white/10 rounded-full py-3 md:py-4 pl-4 md:pl-6 pr-12 md:pr-16 text-sm md:text-base text-white focus:outline-none focus:border-indigo-500/50 shadow-xl"
-            />
-            <Button 
-              onClick={handleResearch}
-              disabled={loading || !query}
-              className="absolute right-1.5 md:right-2 top-1.5 md:top-2 rounded-full h-9 w-9 md:h-10 md:w-10 p-0 bg-indigo-600 hover:bg-indigo-500"
-            >
-              <Send className="w-4 h-4 ml-0.5" />
-            </Button>
+      <main className="flex-1 w-full max-w-4xl mx-auto flex flex-col overflow-hidden px-4 md:px-8 pb-32">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center opacity-50">
+            <Bot className="w-16 h-16 text-indigo-400 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">How can I help you today?</h2>
+            <p className="max-w-md text-sm">Ask any legal question, request case law summaries, or explore legal strategies. I specialize in Indian Law.</p>
           </div>
-        </div>
-
-        {loading && <div className="text-center text-indigo-400 my-10 animate-pulse">Running semantic search across Indian Kanoon...</div>}
-
-        {response && !loading && (
-          <div className="space-y-6">
-            <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6 prose prose-invert max-w-none">
-              <h3 className="font-semibold text-lg flex items-center gap-2 mb-4 not-prose"><BookOpen className="w-5 h-5 text-indigo-400" /> AI Summary</h3>
-              <ReactMarkdown>{response.summary}</ReactMarkdown>
-            </div>
-            
-            <div className="bg-neutral-900/50 border border-white/5 rounded-2xl p-6">
-              <h3 className="font-semibold text-lg mb-4">Cited Precedents</h3>
-              <ul className="space-y-3">
-                {response.citations.map((cit: string, i: number) => (
-                  <li key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl text-sm font-medium text-neutral-300 border border-white/5">
-                    <span className="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-xs">{i+1}</span>
-                    {cit}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto space-y-6 pr-2">
+            {messages.map((msg, i) => (
+              <div key={i} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${msg.role === "user" ? "bg-indigo-600" : "bg-neutral-800 border border-white/10"}`}>
+                  {msg.role === "user" ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-indigo-400" />}
+                </div>
+                <div className={`max-w-[85%] rounded-2xl p-4 ${msg.role === "user" ? "bg-indigo-600 text-white" : "bg-neutral-900/80 border border-white/5 prose prose-invert"}`}>
+                  {msg.role === "user" ? (
+                    <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
+                  ) : (
+                    <ReactMarkdown
+                       components={{
+                         h1: ({node, ...props}) => <h1 className="text-lg font-bold text-white mt-4 mb-2" {...props} />,
+                         h2: ({node, ...props}) => <h2 className="text-base font-bold text-white mt-3 mb-2" {...props} />,
+                         h3: ({node, ...props}) => <h3 className="text-sm font-bold text-white mt-2 mb-1" {...props} />,
+                         p: ({node, ...props}) => <p className="mb-2 last:mb-0 text-sm" {...props} />,
+                         ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 mb-2 text-sm" {...props} />,
+                         ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1 mb-2 text-sm" {...props} />,
+                         strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
+                       }}
+                    >{msg.content}</ReactMarkdown>
+                  )}
+                </div>
+              </div>
+            ))}
+            {loading && (
+              <div className="flex gap-4">
+                <div className="shrink-0 w-8 h-8 rounded-full bg-neutral-800 border border-white/10 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-indigo-400" />
+                </div>
+                <div className="bg-neutral-900/80 border border-white/5 rounded-2xl p-4 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.3s]" />
+                  <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:-.5s]" />
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
           </div>
         )}
-        </div>
       </main>
+
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent pt-10 pb-4 md:pb-8 px-4">
+        <div className="max-w-3xl mx-auto relative">
+          <textarea 
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleResearch();
+              }
+            }}
+            placeholder="Ask a legal question..."
+            className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-indigo-500/50 shadow-xl resize-none min-h-[52px] max-h-32"
+            rows={1}
+          />
+          <Button 
+            onClick={handleResearch}
+            disabled={loading || !input.trim()}
+            className="absolute right-2 bottom-2 rounded-xl h-9 w-9 p-0 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+          >
+            <Send className="w-4 h-4 ml-0.5" />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
