@@ -21,6 +21,7 @@ export default function CitizenDashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sessionId, setSessionId] = useState("");
   const [attachedDoc, setAttachedDoc] = useState<{filename: string, text: string} | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -132,11 +133,7 @@ export default function CitizenDashboard() {
     setMessages(currentHistory);
     setInput("");
     setAttachedDoc(null);
-    
-    setMessages(prev => [
-      ...prev, 
-      { role: "ai", content: "Analyzing your issue against Indian legal precedents..." }
-    ]);
+    setIsLoading(true);
 
     try {
       const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
@@ -154,17 +151,23 @@ export default function CitizenDashboard() {
       
       const data = await response.json();
       
+      if (!response.ok) {
+        throw new Error(data.detail || "Server error");
+      }
+
       setMessages(prev => [
-        ...prev.slice(0, -1),
+        ...prev,
         { role: "ai", content: data.reply }
       ]);
       
       if (data.session_id) setSessionId(data.session_id);
-    } catch (error) {
+    } catch (error: any) {
       setMessages(prev => [
-        ...prev.slice(0, -1),
-        { role: "ai", content: "Error connecting to Nyaya AI backend. Please ensure the server is running." }
+        ...prev,
+        { role: "ai", content: `API Error: ${error.message}` }
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -309,7 +312,7 @@ export default function CitizenDashboard() {
                   )}
 
                   {/* Action Buttons (Only for AI) */}
-                  {!isUser && msg.content !== "Analyzing your issue against Indian legal precedents..." && (
+                  {!isUser && (
                     <div className="flex gap-4 mt-2 opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity">
                       <button onClick={() => handleSpeak(msg.content)} className="flex items-center gap-1 text-xs font-medium text-neutral-500 hover:text-white transition-colors">
                         <Volume2 className="w-3 h-3" /> Listen
@@ -322,6 +325,18 @@ export default function CitizenDashboard() {
                 </div>
               );
             })}
+            {isLoading && (
+              <div className="flex flex-col items-start animate-in fade-in slide-in-from-bottom-2 duration-500">
+                <div className="flex items-center gap-2 mb-2 text-xs font-semibold tracking-wider text-neutral-500 uppercase">
+                  <Scale className="w-3 h-3" /> Nyaya AI
+                </div>
+                <div className="flex gap-1.5 items-center bg-neutral-900/50 px-5 py-4 rounded-2xl rounded-tl-sm border border-white/5 h-12 w-20">
+                  <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
         )}
