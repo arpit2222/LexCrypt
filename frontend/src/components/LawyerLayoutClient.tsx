@@ -111,7 +111,7 @@ export default function LawyerLayoutClient({ children }: { children: React.React
                         <div className="text-[10px] text-neutral-500 mb-1">{new Date(item.timestamp).toLocaleDateString()}</div>
                         <div className="font-medium line-clamp-2">{pathname === '/lawyer/copilot' ? item.query : item.document_type}</div>
                       </button>
-                      <button onClick={(e) => { e.stopPropagation(); handleDelete(item._id); }} className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all">
+                      <button onClick={(e) => { e.stopPropagation(); handleDelete(item._id); }} className="absolute right-2 top-1/2 -translate-y-1/2 opacity-100 md:opacity-0 group-hover:opacity-100 p-1.5 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
