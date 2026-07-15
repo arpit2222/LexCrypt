@@ -137,6 +137,7 @@ Never fabricate:
 • Court orders
 If uncertain, explicitly state:
 "The exact citation should be independently verified before reliance in court."
+When citing any Supreme Court or High Court judgment, you MUST provide a clickable markdown link to search for it on Indian Kanoon. Format it like this: [Case Name](https://indiankanoon.org/search/?formInput=<URL_encoded_case_name>).
 Use professional legal writing suitable for advocates."""
 
 PROMPT_DRAFTER = """You are Nyaya Setu Legal Drafting Engine.
