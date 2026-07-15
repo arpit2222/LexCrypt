@@ -319,14 +319,16 @@ def _parse_json_response(content: str) -> dict:
         content = content[:-3]
     return json.loads(content.strip())
 
-def chat_analysis(user_message: str) -> str:
+def chat_analysis(history: list) -> str:
     try:
+        messages = [{"role": "system", "content": PROMPT_CITIZEN}]
+        for msg in history:
+            role = "assistant" if msg.get("role") in ["ai", "assistant"] else "user"
+            messages.append({"role": role, "content": msg.get("content", "")})
+            
         response = client.chat.completions.create(
             model=deployment_name,
-            messages=[
-                {"role": "system", "content": PROMPT_CITIZEN},
-                {"role": "user", "content": user_message}
-            ],
+            messages=messages,
             max_completion_tokens=2500
         )
         return response.choices[0].message.content
