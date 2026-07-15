@@ -86,12 +86,13 @@ export default function LawyerCopilot() {
                   ) : (
                     <ReactMarkdown
                        components={{
-                         h1: ({node, ...props}) => <h1 className="text-lg font-bold text-white mt-4 mb-2" {...props} />,
-                         h2: ({node, ...props}) => <h2 className="text-base font-bold text-white mt-3 mb-2" {...props} />,
-                         h3: ({node, ...props}) => <h3 className="text-sm font-bold text-white mt-2 mb-1" {...props} />,
-                         p: ({node, ...props}) => <p className="mb-2 last:mb-0 text-sm" {...props} />,
-                         ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 mb-2 text-sm" {...props} />,
-                         ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1 mb-2 text-sm" {...props} />,
+                         h1: ({node, ...props}) => <h1 className="text-xl font-bold text-white mt-6 mb-3" {...props} />,
+                         h2: ({node, ...props}) => <h2 className="text-lg font-bold text-indigo-300 mt-5 mb-2 border-b border-white/10 pb-1" {...props} />,
+                         h3: ({node, ...props}) => <h3 className="text-base font-bold text-white mt-4 mb-2" {...props} />,
+                         p: ({node, ...props}) => <p className="mb-3 last:mb-0 text-sm leading-relaxed" {...props} />,
+                         ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-2 mb-3 text-sm" {...props} />,
+                         ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-2 mb-3 text-sm" {...props} />,
+                         li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
                          strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />
                        }}
                     >{msg.content}</ReactMarkdown>
