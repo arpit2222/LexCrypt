@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, FileText, Send, Download, History } from "lucide-react";
+import { ChevronLeft, FileText, Send, Download, History, Edit, Save } from "lucide-react";
 
 export default function LawyerDrafts() {
   const [prompt, setPrompt] = useState("");
   const [draft, setDraft] = useState<string | null>(null);
   const [instructions, setInstructions] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const handleLoad = (e: any) => {
@@ -127,9 +128,14 @@ export default function LawyerDrafts() {
             <div className="bg-neutral-200 border-b border-neutral-300 p-4 flex justify-between items-center">
               <span className="font-semibold text-neutral-600">Preview</span>
               {draft && (
-                <Button onClick={handleExport} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
-                  <Download className="w-4 h-4 mr-2"/> Export PDF
-                </Button>
+                <div className="flex gap-2">
+                  <Button onClick={() => setIsEditing(!isEditing)} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
+                    {isEditing ? <><Save className="w-4 h-4 mr-2"/> Save Edits</> : <><Edit className="w-4 h-4 mr-2"/> Edit Document</>}
+                  </Button>
+                  <Button onClick={handleExport} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
+                    <Download className="w-4 h-4 mr-2"/> Export PDF
+                  </Button>
+                </div>
               )}
             </div>
             
@@ -140,11 +146,17 @@ export default function LawyerDrafts() {
                   <p>AI is drafting the document...</p>
                 </div>
               ) : draft ? (
-                <textarea
-                  value={draft}
-                  onChange={(e) => setDraft(e.target.value)}
-                  className="w-full h-full min-h-[500px] text-black bg-transparent border-none resize-none focus:outline-none focus:ring-0 font-serif text-sm md:text-base leading-relaxed p-0"
-                />
+                isEditing ? (
+                  <textarea
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    className="w-full h-full min-h-[500px] text-black bg-white border-2 border-indigo-400 rounded-lg focus:outline-none focus:ring-0 font-serif text-sm md:text-base leading-relaxed p-4 shadow-inner"
+                  />
+                ) : (
+                  <div className="text-black whitespace-pre-wrap font-serif text-sm md:text-base leading-relaxed flex-1 w-full h-full">
+                    {draft}
+                  </div>
+                )
               ) : (
                 <div className="flex items-center justify-center h-full text-neutral-400 text-center italic">
                   Your generated draft will appear here.
