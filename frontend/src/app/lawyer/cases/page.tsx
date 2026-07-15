@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 export default function LawyerCases() {
   const [cases, setCases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"ALL" | "PENDING" | "ACCEPTED">("ALL");
   
   // Hardcoded to simulate lawyer "1" login for the MVP
   const lawyerId = "1";
@@ -48,8 +49,28 @@ export default function LawyerCases() {
 
   return (
     <div className="flex flex-col h-full p-4 md:p-8">
-      <header className="mb-8 pt-4 md:pt-0">
+      <header className="mb-8 pt-4 md:pt-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><Briefcase className="w-6 h-6 text-indigo-400"/> Active & Pending Cases</h1>
+        <div className="flex bg-neutral-900 border border-white/10 rounded-lg p-1 self-start md:self-auto">
+          <button 
+            onClick={() => setFilter("ALL")}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "ALL" ? "bg-indigo-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
+          >
+            All Cases
+          </button>
+          <button 
+            onClick={() => setFilter("PENDING")}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "PENDING" ? "bg-indigo-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
+          >
+            Pending
+          </button>
+          <button 
+            onClick={() => setFilter("ACCEPTED")}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "ACCEPTED" ? "bg-indigo-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
+          >
+            Accepted
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 max-w-5xl w-full mx-auto">
@@ -57,9 +78,11 @@ export default function LawyerCases() {
           <p className="text-neutral-400 text-center mt-10">Loading cases...</p>
         ) : cases.length === 0 ? (
           <p className="text-neutral-400 text-center mt-10">No cases assigned to you at the moment.</p>
+        ) : cases.filter(c => filter === "ALL" ? true : c.status === filter).length === 0 ? (
+          <p className="text-neutral-400 text-center mt-10">No {filter.toLowerCase()} cases found.</p>
         ) : (
           <div className="space-y-6">
-            {cases.map((c) => (
+            {cases.filter(c => filter === "ALL" ? true : c.status === filter).map((c) => (
               <div key={c._id} className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col md:flex-row gap-6 justify-between items-start md:items-center">
                 <div className="flex-1 space-y-2">
                   <div className="flex items-center gap-3 mb-2">
@@ -105,26 +128,3 @@ export default function LawyerCases() {
                     </Button>
                     <Button 
                       onClick={() => handleAction(c._id, "REJECT")}
-                      variant="outline" 
-                      className="border-red-500/30 text-red-400 hover:bg-red-500/10 w-full flex items-center gap-2"
-                    >
-                      <XCircle className="w-4 h-4" /> Reject & Reassign
-                    </Button>
-                  </div>
-                )}
-                
-                {c.status === "ACCEPTED" && (
-                  <div className="flex flex-col gap-3 min-w-[140px]">
-                    <Button variant="outline" className="border-indigo-500/30 text-indigo-400 w-full">
-                      Start Video Call
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
-  );
-}
