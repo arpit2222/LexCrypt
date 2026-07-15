@@ -8,7 +8,7 @@
   import ReactMarkdown from 'react-markdown';
 
   export default function CitizenDashboard() {
-    const [messages, setMessages] = useState([
+    const [messages, setMessages] = useState<{role: string, content: string, file?: {filename: string, text: string} | null}[]>([
       {
         role: "ai",
         content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",

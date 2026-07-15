@@ -6,7 +6,7 @@ import { Bot, Send, User, Paperclip, Loader2, FileText, X } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function CopilotChat() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<{role: string, content: string, file?: {filename: string, text: string} | null}[]>([
     {
       role: "ai",
       content: "Namaste, Advocate. I am Nyaya Copilot, your secure legal research assistant. How can I assist you with your case today?",
