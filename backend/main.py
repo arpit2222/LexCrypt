@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import time
+import uuid
 
 app = FastAPI(title="Nyaya AI Backend")
 
