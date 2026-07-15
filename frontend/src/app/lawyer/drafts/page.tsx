@@ -133,28 +133,18 @@ export default function LawyerDrafts() {
               )}
             </div>
             
-            <div className="p-8 overflow-y-auto flex-1 whitespace-pre-wrap font-serif text-sm md:text-base leading-relaxed">
+            <div className="p-8 overflow-y-auto flex-1 flex flex-col">
               {loading ? (
                 <div className="flex flex-col items-center justify-center h-full text-neutral-400 space-y-4">
                   <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
                   <p>AI is drafting the document...</p>
                 </div>
               ) : draft ? (
-                <div className="flex flex-col gap-6">
-                  {instructions && (
-                    <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl text-indigo-300 font-sans text-sm overflow-x-auto">
-                      <p className="font-semibold mb-2">AI Instructions & Context:</p>
-                      {typeof instructions === "string" ? (
-                        <p>{instructions}</p>
-                      ) : (
-                        <pre className="text-xs whitespace-pre-wrap font-mono">{JSON.stringify(instructions, null, 2)}</pre>
-                      )}
-                    </div>
-                  )}
-                  <div className="text-black">
-                    {draft}
-                  </div>
-                </div>
+                <textarea
+                  value={draft}
+                  onChange={(e) => setDraft(e.target.value)}
+                  className="w-full h-full min-h-[500px] text-black bg-transparent border-none resize-none focus:outline-none focus:ring-0 font-serif text-sm md:text-base leading-relaxed p-0"
+                />
               ) : (
                 <div className="flex items-center justify-center h-full text-neutral-400 text-center italic">
                   Your generated draft will appear here.
