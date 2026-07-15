@@ -234,10 +234,21 @@ def generate_draft(request: DraftRequest):
 @app.get("/api/draft/history")
 def get_draft_history(email: str):
     try:
-        drafts = list(lawyer_drafts_collection.find({"email": email}, {"_id": 0}).sort("timestamp", -1))
+        drafts = list(lawyer_drafts_collection.find({"email": email}).sort("timestamp", -1))
+        for d in drafts:
+            d["_id"] = str(d["_id"])
         return drafts
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
+@app.delete("/api/draft/history/{draft_id}")
+def delete_draft_history(draft_id: str):
+    from bson.objectid import ObjectId
+    try:
+        lawyer_drafts_collection.delete_one({"_id": ObjectId(draft_id)})
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 class CopilotRequest(BaseModel):
     query: str
@@ -268,10 +279,21 @@ def copilot_research_api(request: CopilotRequest):
 @app.get("/api/copilot/history")
 def get_copilot_history(email: str):
     try:
-        researches = list(lawyer_research_collection.find({"email": email}, {"_id": 0}).sort("timestamp", -1))
+        researches = list(lawyer_research_collection.find({"email": email}).sort("timestamp", -1))
+        for r in researches:
+            r["_id"] = str(r["_id"])
         return researches
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+
+@app.delete("/api/copilot/history/{copilot_id}")
+def delete_copilot_history(copilot_id: str):
+    from bson.objectid import ObjectId
+    try:
+        lawyer_research_collection.delete_one({"_id": ObjectId(copilot_id)})
+        return {"status": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 class SimulationRequest(BaseModel):
     case_id: str
