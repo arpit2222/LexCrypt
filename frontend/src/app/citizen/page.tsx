@@ -472,10 +472,7 @@
                                 })
                               });
                               if(res.ok) {
-                                target.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team';
-                                target.classList.add('bg-green-500', 'text-white');
-                                target.classList.remove('bg-white', 'text-black');
-                                item.assigned = true;
+                                setHistoryList(prev => prev.map(h => h._id === item._id ? { ...h, assigned: true } : h));
                               } else {
                                 alert("Failed to assign case.");
                               }
