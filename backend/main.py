@@ -145,7 +145,16 @@ def get_copilot_history(email: str):
 
 @app.delete("/api/copilot/history/{session_id}")
 def delete_copilot_history(session_id: str):
-    result = lawyer_copilot_collection.delete_one({"_id": session_id})
+    from bson.objectid import ObjectId
+    try:
+        obj_id = ObjectId(session_id)
+    except:
+        obj_id = None
+    query = {"$or": [{"_id": session_id}]}
+    if obj_id:
+        query["$or"].append({"_id": obj_id})
+        
+    result = lawyer_copilot_collection.delete_one(query)
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="History not found")
     return {"status": "success"}
@@ -213,7 +222,16 @@ def get_draft_history(email: str):
 
 @app.delete("/api/draft/history/{draft_id}")
 def delete_draft_history(draft_id: str):
-    result = lawyer_drafts_collection.delete_one({"_id": draft_id})
+    from bson.objectid import ObjectId
+    try:
+        obj_id = ObjectId(draft_id)
+    except:
+        obj_id = None
+    query = {"$or": [{"_id": draft_id}]}
+    if obj_id:
+        query["$or"].append({"_id": obj_id})
+        
+    result = lawyer_drafts_collection.delete_one(query)
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Draft not found")
     return {"status": "success"}
