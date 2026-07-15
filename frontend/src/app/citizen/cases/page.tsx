@@ -76,10 +76,10 @@ export default function CitizenCases() {
                 {c.status === "ACCEPTED" && (
                   <div className="flex flex-col gap-3 w-full md:w-auto md:min-w-[140px]">
                     <Button 
-                      onClick={() => setChatCaseId(c._id)}
-                      className="bg-teal-600 hover:bg-teal-500 text-white w-full flex items-center justify-center gap-2"
+                      disabled
+                      className="bg-neutral-800 text-neutral-400 w-full flex items-center justify-center gap-2 cursor-not-allowed"
                     >
-                      <MessageSquare className="w-4 h-4" /> Message Lawyer
+                      <MessageSquare className="w-4 h-4" /> Chat (Coming Soon)
                     </Button>
                     <Button variant="outline" className="border-teal-500/30 text-teal-400 w-full flex justify-center gap-2">
                       <Video className="w-4 h-4" /> Join Video Call
