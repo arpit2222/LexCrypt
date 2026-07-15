@@ -3,13 +3,15 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, Briefcase, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { ChevronLeft, Briefcase, CheckCircle2, XCircle, Clock, MessageSquare } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { ChatBox } from "@/components/ChatBox";
 
 export default function LawyerCases() {
   const [cases, setCases] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "ACCEPTED">("ALL");
+  const [chatCaseId, setChatCaseId] = useState<string | null>(null);
   
   // Hardcoded to simulate lawyer "1" login for the MVP
   const lawyerId = "1";
@@ -138,6 +140,12 @@ export default function LawyerCases() {
                 
                 {c.status === "ACCEPTED" && (
                   <div className="flex flex-col gap-3 min-w-[140px]">
+                    <Button 
+                      onClick={() => setChatCaseId(c._id)}
+                      className="bg-indigo-600 hover:bg-indigo-500 text-white w-full flex items-center gap-2"
+                    >
+                      <MessageSquare className="w-4 h-4" /> Chat with Client
+                    </Button>
                     <Button variant="outline" className="border-indigo-500/30 text-indigo-400 w-full">
                       Start Video Call
                     </Button>
@@ -148,6 +156,14 @@ export default function LawyerCases() {
           </div>
         )}
       </main>
+      
+      {chatCaseId && (
+        <ChatBox 
+          caseId={chatCaseId} 
+          currentUserRole="lawyer" 
+          onClose={() => setChatCaseId(null)} 
+        />
+      )}
     </div>
   );
 }

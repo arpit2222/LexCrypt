@@ -7,6 +7,7 @@ import { ChevronLeft, FileText, Send, Download, History, Edit, Save } from "luci
 
 export default function LawyerDrafts() {
   const [prompt, setPrompt] = useState("");
+  const [documentType, setDocumentType] = useState("Legal Notice / Pleading");
   const [draft, setDraft] = useState<string | null>(null);
   const [instructions, setInstructions] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -32,13 +33,13 @@ export default function LawyerDrafts() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          details: prompt,
-          document_type: "Legal Notice / Pleading",
+          instructions: prompt,
+          document_type: documentType,
           email
         })
       });
       const data = await res.json();
-      setDraft(data.draft || data.draft_content);
+      setDraft(data.draft || data.draft_content || (data.instructions && data.instructions.draft) || data);
       setInstructions(data.instructions || null);
       window.dispatchEvent(new Event('refresh-history'));
     } catch(err) {
@@ -61,7 +62,9 @@ export default function LawyerDrafts() {
       doc.setFont("times", "normal");
       doc.setFontSize(12);
       
-      const textLines = doc.splitTextToSize(draft, maxLineWidth);
+      // Ensure draft is a string before splitting
+      const textToExport = typeof draft === "string" ? draft : JSON.stringify(draft, null, 2);
+      const textLines = doc.splitTextToSize(textToExport, maxLineWidth);
       
       let cursorY = margin;
       const pageHeight = doc.internal.pageSize.getHeight();
@@ -79,7 +82,8 @@ export default function LawyerDrafts() {
     } catch (e) {
       console.error("PDF generation error", e);
       alert("Failed to generate PDF. Falling back to text file.");
-      const blob = new Blob([draft], { type: "text/plain" });
+      const textToExport = typeof draft === "string" ? draft : JSON.stringify(draft, null, 2);
+      const blob = new Blob([textToExport], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -104,6 +108,22 @@ export default function LawyerDrafts() {
           <div className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col h-full">
             <h2 className="text-xl font-bold mb-2">Drafting Instructions</h2>
             <p className="text-sm text-neutral-400 mb-6">Describe the case details, parties involved, and the type of document you want the AI to draft (e.g. Legal Notice for Eviction).</p>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-neutral-300 mb-2">Document Type</label>
+              <select 
+                value={documentType}
+                onChange={e => setDocumentType(e.target.value)}
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-indigo-500/50"
+              >
+                <option value="Legal Notice / Pleading">General Legal Notice / Pleading</option>
+                <option value="Eviction Notice">Eviction Notice</option>
+                <option value="Anticipatory Bail Application (BNSS)">Anticipatory Bail Application (BNSS)</option>
+                <option value="Writ Petition">Writ Petition</option>
+                <option value="Non-Disclosure Agreement (NDA)">Non-Disclosure Agreement (NDA)</option>
+                <option value="Consumer Complaint">Consumer Complaint</option>
+              </select>
+            </div>
             
             <textarea 
               value={prompt}

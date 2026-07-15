@@ -160,6 +160,7 @@ export default function CopilotChat() {
                             ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-4 space-y-1.5 marker:text-neutral-500" {...props} />,
                             li: ({node, ...props}) => <li className="pl-1" {...props} />,
                             strong: ({node, ...props}) => <strong className="text-white font-semibold" {...props} />,
+                            a: ({node, ...props}) => <a className="text-blue-400 hover:text-blue-300 underline underline-offset-2 decoration-blue-500/30 hover:decoration-blue-400 transition-all cursor-pointer font-medium" target="_blank" rel="noopener noreferrer" {...props} />,
                             h3: ({node, ...props}) => <h3 className="text-white font-bold text-lg mt-6 mb-3" {...props} />,
                             h4: ({node, ...props}) => <h4 className="text-white font-semibold text-base mt-4 mb-2" {...props} />
                           }}

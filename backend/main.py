@@ -138,6 +138,63 @@ async def copilot_upload(file: UploadFile = File(...)):
         
     return {"filename": file.filename, "text": text_content}
 
+class ActionRequest(BaseModel):
+    case_id: str
+    action: str
+
+@app.get("/api/cases/lawyer")
+def get_lawyer_cases(lawyer_id: str):
+    return list(cases_collection.find({"lawyer_id": lawyer_id}))
+
+@app.post("/api/cases/action")
+def action_case(request: ActionRequest):
+    cases_collection.update_one({"_id": request.case_id}, {"$set": {"status": request.action}})
+    return {"message": "Success"}
+
+@app.get("/api/cases/citizen")
+def get_citizen_cases(citizen_wallet: str):
+    return list(cases_collection.find({"citizen_wallet": citizen_wallet}))
+
+class DraftRequest(BaseModel):
+    instructions: str
+    document_type: str = "General Legal Document"
+
+@app.post("/api/draft")
+def get_draft(request: DraftRequest):
+    return draft_document(request.document_type, request.instructions)
+
+@app.get("/api/admin/stats")
+def get_admin_stats():
+    return {"total_citizens": 124, "total_lawyers": 45, "active_cases": 12, "ai_requests": 8420, "recent_users": []}
+
+@app.get("/api/admin/users")
+def get_admin_users():
+    return []
+
+chat_rooms_collection = db['chat_rooms']
+
+class ChatMessageRequest(BaseModel):
+    case_id: str
+    sender: str
+    text: str
+    file_url: str = ""
+
+@app.post("/api/cases/chat/send")
+def send_chat_message(request: ChatMessageRequest):
+    msg = {
+        "case_id": request.case_id,
+        "sender": request.sender,
+        "text": request.text,
+        "file_url": request.file_url,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+    chat_rooms_collection.insert_one(msg)
+    return {"status": "success"}
+
+@app.get("/api/cases/chat/history")
+def get_case_chat(case_id: str):
+    return list(chat_rooms_collection.find({"case_id": case_id}).sort("timestamp", 1))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
