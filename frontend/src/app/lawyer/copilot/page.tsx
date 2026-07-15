@@ -22,6 +22,17 @@ export default function CopilotChat() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    const handleLoad = (e: any) => {
+      setSessionId(e.detail._id);
+      if (e.detail.history && e.detail.history.length > 0) {
+        setMessages(e.detail.history);
+      }
+    };
+    window.addEventListener('load-history', handleLoad);
+    return () => window.removeEventListener('load-history', handleLoad);
+  }, []);
+
   const handleSend = async () => {
     if (!input.trim() && !attachedDoc) return;
 

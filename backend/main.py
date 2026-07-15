@@ -91,7 +91,11 @@ def chat_with_ai(request: ChatRequest):
 @app.get("/api/chat/history")
 def get_chat_history(email: str):
     cursor = citizen_chat_collection.find({"email": email}).sort("timestamp", -1)
-    return list(cursor)
+    results = []
+    for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        results.append(doc)
+    return results
 
 @app.get("/api/user/me")
 def get_user_me(email: str):
@@ -133,7 +137,11 @@ def copilot_research(request: CopilotRequest):
 @app.get("/api/copilot/history")
 def get_copilot_history(email: str):
     cursor = lawyer_copilot_collection.find({"email": email}).sort("timestamp", -1)
-    return list(cursor)
+    results = []
+    for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        results.append(doc)
+    return results
 
 @app.delete("/api/copilot/history/{session_id}")
 def delete_copilot_history(session_id: str):
@@ -197,7 +205,11 @@ def get_draft(request: DraftRequest):
 @app.get("/api/draft/history")
 def get_draft_history(email: str):
     cursor = lawyer_drafts_collection.find({"email": email}).sort("timestamp", -1)
-    return list(cursor)
+    results = []
+    for doc in cursor:
+        doc["_id"] = str(doc["_id"])
+        results.append(doc)
+    return results
 
 @app.delete("/api/draft/history/{draft_id}")
 def delete_draft_history(draft_id: str):

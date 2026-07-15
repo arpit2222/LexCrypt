@@ -15,9 +15,10 @@ export default function LawyerDrafts() {
 
   useEffect(() => {
     const handleLoad = (e: any) => {
-      setPrompt(e.detail.details);
+      setPrompt(e.detail.details || e.detail.instructions || "");
       setDraft(e.detail.draft_content || e.detail.draft);
       setInstructions(e.detail.instructions || null);
+      if (e.detail.document_type) setDocumentType(e.detail.document_type);
     };
     window.addEventListener('load-history', handleLoad);
     return () => window.removeEventListener('load-history', handleLoad);
