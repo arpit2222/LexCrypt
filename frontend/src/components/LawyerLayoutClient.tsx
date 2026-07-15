@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Scale, Briefcase, LayoutDashboard, MessageSquare, FileText, Coins, Menu, LogOut } from "lucide-react";
+import { Scale, Briefcase, LayoutDashboard, MessageSquare, FileText, Coins, Menu, LogOut, Trash2 } from "lucide-react";
 
 export default function LawyerLayoutClient({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -41,6 +41,17 @@ export default function LawyerLayoutClient({ children }: { children: React.React
     window.addEventListener('refresh-history', handleRefresh);
     return () => window.removeEventListener('refresh-history', handleRefresh);
   }, [pathname]);
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this history item?")) return;
+    const type = pathname === '/lawyer/copilot' ? 'copilot' : 'draft';
+    try {
+      await fetch(`/api/${type}/history/${id}`, { method: 'DELETE' });
+      fetchHistory(); // Refresh history list
+    } catch (err) {
+      console.error("Failed to delete", err);
+    }
+  };
 
   useEffect(() => {
     const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
@@ -90,15 +101,20 @@ export default function LawyerLayoutClient({ children }: { children: React.React
           {(pathname === '/lawyer/copilot' || pathname === '/lawyer/drafts') && (
              <div className="mt-8 pt-4 border-t border-white/5">
                 <h3 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-4 px-2">History</h3>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                   {history.map((item, idx) => (
-                    <button key={idx} className="w-full text-left p-3 rounded-lg hover:bg-white/5 text-sm transition-colors text-neutral-300" onClick={() => {
-                        window.dispatchEvent(new CustomEvent('load-history', { detail: item }));
-                        if(window.innerWidth < 768) setIsSidebarOpen(false);
-                    }}>
-                      <div className="text-[10px] text-neutral-500 mb-1">{new Date(item.timestamp).toLocaleDateString()}</div>
-                      <div className="font-medium line-clamp-2">{pathname === '/lawyer/copilot' ? item.query : item.document_type}</div>
-                    </button>
+                    <div key={idx} className="relative group">
+                      <button className="w-full text-left p-3 rounded-lg hover:bg-white/5 text-sm transition-colors text-neutral-300 pr-8" onClick={() => {
+                          window.dispatchEvent(new CustomEvent('load-history', { detail: item }));
+                          if(window.innerWidth < 768) setIsSidebarOpen(false);
+                      }}>
+                        <div className="text-[10px] text-neutral-500 mb-1">{new Date(item.timestamp).toLocaleDateString()}</div>
+                        <div className="font-medium line-clamp-2">{pathname === '/lawyer/copilot' ? item.query : item.document_type}</div>
+                      </button>
+                      <button onClick={(e) => { e.stopPropagation(); handleDelete(item._id); }} className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1.5 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   ))}
                   {history.length === 0 && <p className="text-xs text-neutral-500 px-2 italic">No history found.</p>}
                 </div>
