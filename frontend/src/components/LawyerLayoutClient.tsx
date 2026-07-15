@@ -70,7 +70,7 @@ export default function LawyerLayoutClient({ children }: { children: React.React
   }, []);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex font-sans selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 flex font-sans selection:bg-teal-500/30">
       {/* Mobile Backdrop */}
       {isSidebarOpen && (
         <div className="fixed inset-0 bg-black/50 z-[50] md:hidden" onClick={() => setIsSidebarOpen(false)} />
@@ -80,21 +80,21 @@ export default function LawyerLayoutClient({ children }: { children: React.React
       <aside className={`fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 group">
-            {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400 group-hover:text-emerald-300 transition-colors" /> : <Scale className="w-8 h-8 text-indigo-400 group-hover:text-indigo-300 transition-colors" />}
+            {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400 group-hover:text-emerald-300 transition-colors" /> : <Scale className="w-8 h-8 text-teal-400 group-hover:text-teal-300 transition-colors" />}
             <span className="font-bold tracking-wide group-hover:text-white text-neutral-200 transition-colors">{whiteLabel ? "Sharma & Associates" : "Nyaya Hub"}</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/lawyer" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer' ? 'bg-indigo-600/10 text-indigo-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
+          <Link href="/lawyer" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer' ? 'bg-teal-600/10 text-teal-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
             <LayoutDashboard className="w-5 h-5" /> Dashboard
           </Link>
-          <Link href="/lawyer/cases" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/cases' ? 'bg-indigo-600/10 text-indigo-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
+          <Link href="/lawyer/cases" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/cases' ? 'bg-teal-600/10 text-teal-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
             <Briefcase className="w-5 h-5" /> Active Cases
           </Link>
-          <Link href="/lawyer/copilot" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/copilot' ? 'bg-indigo-600/10 text-indigo-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
+          <Link href="/lawyer/copilot" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/copilot' ? 'bg-teal-600/10 text-teal-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
             <MessageSquare className="w-5 h-5" /> AI Copilot
           </Link>
-          <Link href="/lawyer/drafts" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/drafts' ? 'bg-indigo-600/10 text-indigo-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
+          <Link href="/lawyer/drafts" onClick={() => setIsSidebarOpen(false)} className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${pathname === '/lawyer/drafts' ? 'bg-teal-600/10 text-teal-300' : 'text-neutral-400 hover:text-white hover:bg-white/5'}`}>
             <FileText className="w-5 h-5" /> Drafts & Documents
           </Link>
 
@@ -135,7 +135,7 @@ export default function LawyerLayoutClient({ children }: { children: React.React
           </div>
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold">A</div>
+              <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center font-bold">A</div>
               <div>
                 <p className="text-sm font-medium text-white">Adv. Sharma</p>
                 <p className="text-xs text-neutral-500">Corporate Law</p>

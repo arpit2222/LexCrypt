@@ -85,12 +85,12 @@ function PracticeArenaContent() {
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
-            <Scale className="w-8 h-8 text-indigo-400" />
+            <Scale className="w-8 h-8 text-teal-400" />
             <span className="font-bold text-xl tracking-wide">Nyaya AI</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/student" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+          <Link href="/student" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-teal-600/10 text-teal-300 rounded-xl font-medium">
             <GraduationCap className="w-5 h-5" /> Moot Court Arena
           </Link>
           <a href="#" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
@@ -113,7 +113,7 @@ function PracticeArenaContent() {
               </Button>
             </Link>
             <div className="flex items-center gap-2">
-              <Scale className="w-5 h-5 md:w-6 md:h-6 text-indigo-400" />
+              <Scale className="w-5 h-5 md:w-6 md:h-6 text-teal-400" />
               <span className="text-base md:text-lg font-bold">Moot Court Arena</span>
               <span className="ml-2 px-2 py-0.5 rounded-full bg-white/10 text-[10px] md:text-xs text-neutral-400">Case {caseId}</span>
             </div>
@@ -122,7 +122,7 @@ function PracticeArenaContent() {
             <Button 
               onClick={handleSubmitForGrading}
               disabled={messages.length < 3 || isGrading || !!scoreData}
-              className="bg-indigo-600 hover:bg-indigo-500 text-white text-xs md:text-sm px-3 py-1.5 md:px-4 md:py-2"
+              className="bg-teal-600 hover:bg-teal-500 text-white text-xs md:text-sm px-3 py-1.5 md:px-4 md:py-2"
             >
               {isGrading ? "Grading..." : "Submit"}
             </Button>
@@ -134,14 +134,14 @@ function PracticeArenaContent() {
         {messages.map((msg, index) => (
           <div key={index} className={`flex gap-4 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
             <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-              msg.role === "ai" ? "bg-indigo-900/50 border border-indigo-500/30" : "bg-neutral-800"
+              msg.role === "ai" ? "bg-teal-900/50 border border-teal-500/30" : "bg-neutral-800"
             }`}>
-              {msg.role === "ai" ? <Scale className="w-5 h-5 text-indigo-400" /> : <User className="w-5 h-5 text-neutral-300" />}
+              {msg.role === "ai" ? <Scale className="w-5 h-5 text-teal-400" /> : <User className="w-5 h-5 text-neutral-300" />}
             </div>
             
             <div className={`max-w-[80%] rounded-2xl p-4 whitespace-pre-wrap shadow-lg ${
               msg.role === "user" 
-                ? "bg-indigo-600 text-white rounded-tr-none" 
+                ? "bg-teal-600 text-white rounded-tr-none" 
                 : "bg-neutral-900 border border-white/5 rounded-tl-none text-neutral-200"
             }`}>
               {msg.content}
@@ -150,13 +150,13 @@ function PracticeArenaContent() {
         ))}
         {loading && (
           <div className="flex gap-4">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-indigo-900/50 border border-indigo-500/30">
-              <Scale className="w-5 h-5 text-indigo-400" />
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-teal-900/50 border border-teal-500/30">
+              <Scale className="w-5 h-5 text-teal-400" />
             </div>
             <div className="bg-neutral-900 border border-white/5 rounded-2xl rounded-tl-none p-4 text-neutral-400 flex items-center gap-2">
-              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce" />
-              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.2s]" />
-              <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce [animation-delay:0.4s]" />
+              <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce" />
+              <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce [animation-delay:0.2s]" />
+              <div className="w-2 h-2 bg-teal-400 rounded-full animate-bounce [animation-delay:0.4s]" />
             </div>
           </div>
         )}
@@ -172,12 +172,12 @@ function PracticeArenaContent() {
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             disabled={loading || !!scoreData}
             placeholder={scoreData ? "Simulation Complete" : "Present your argument..."}
-            className="w-full bg-neutral-900/90 backdrop-blur-md border border-white/10 rounded-full py-4 pl-6 pr-16 text-sm focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all text-white placeholder-neutral-500 shadow-xl disabled:opacity-50"
+            className="w-full bg-neutral-900/90 backdrop-blur-md border border-white/10 rounded-full py-4 pl-6 pr-16 text-sm focus:outline-none focus:border-teal-500/50 focus:ring-1 focus:ring-teal-500/50 transition-all text-white placeholder-neutral-500 shadow-xl disabled:opacity-50"
           />
           <Button 
             onClick={handleSend}
             disabled={loading || !input.trim() || !!scoreData}
-            className="absolute right-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full h-10 w-10 p-0 shadow-lg disabled:opacity-50"
+            className="absolute right-2 bg-teal-600 hover:bg-teal-500 text-white rounded-full h-10 w-10 p-0 shadow-lg disabled:opacity-50"
           >
             <Send className="w-4 h-4 ml-0.5" />
           </Button>
@@ -188,12 +188,12 @@ function PracticeArenaContent() {
       {scoreData && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
           <div className="bg-neutral-900 border border-white/10 rounded-3xl max-w-lg w-full p-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-teal-500 via-purple-500 to-pink-500" />
             
             <div className="flex justify-center mb-6">
-              <div className="w-24 h-24 rounded-full bg-indigo-500/10 border-4 border-indigo-500/30 flex items-center justify-center flex-col">
-                <span className="text-3xl font-black text-indigo-400">{scoreData.score || "85"}</span>
-                <span className="text-xs text-indigo-300 font-medium">/100</span>
+              <div className="w-24 h-24 rounded-full bg-teal-500/10 border-4 border-teal-500/30 flex items-center justify-center flex-col">
+                <span className="text-3xl font-black text-teal-400">{scoreData.score || "85"}</span>
+                <span className="text-xs text-teal-300 font-medium">/100</span>
               </div>
             </div>
             

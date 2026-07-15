@@ -67,7 +67,7 @@ export default function ContractComposer() {
             </Button>
           </Link>
           <div className="flex items-center gap-2">
-            <FileText className="w-6 h-6 text-indigo-400" />
+            <FileText className="w-6 h-6 text-teal-400" />
             <span className="text-lg font-bold">Standard Contract Composer</span>
           </div>
         </div>
@@ -78,26 +78,26 @@ export default function ContractComposer() {
         {/* Left Column: Templates */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6">
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-indigo-400"/> Templates</h2>
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2"><FileText className="w-5 h-5 text-teal-400"/> Templates</h2>
             <div className="space-y-3">
               <Button 
                 onClick={() => handleTemplateChange('MergersAcquisition')}
                 variant={activeTemplate === 'MergersAcquisition' ? 'default' : 'outline'}
-                className={`w-full justify-start ${activeTemplate === 'MergersAcquisition' ? 'bg-indigo-600' : 'border-white/10 hover:bg-white/5'}`}
+                className={`w-full justify-start ${activeTemplate === 'MergersAcquisition' ? 'bg-teal-600' : 'border-white/10 hover:bg-white/5'}`}
               >
                 Mergers & Acquisitions (Earnout)
               </Button>
               <Button 
                 onClick={() => handleTemplateChange('SoftwareEscrow')}
                 variant={activeTemplate === 'SoftwareEscrow' ? 'default' : 'outline'}
-                className={`w-full justify-start ${activeTemplate === 'SoftwareEscrow' ? 'bg-indigo-600' : 'border-white/10 hover:bg-white/5'}`}
+                className={`w-full justify-start ${activeTemplate === 'SoftwareEscrow' ? 'bg-teal-600' : 'border-white/10 hover:bg-white/5'}`}
               >
                 Software Escrow Agreement
               </Button>
               <Button 
                 onClick={() => handleTemplateChange('GovernmentRFP')}
                 variant={activeTemplate === 'GovernmentRFP' ? 'default' : 'outline'}
-                className={`w-full justify-start ${activeTemplate === 'GovernmentRFP' ? 'bg-indigo-600' : 'border-white/10 hover:bg-white/5'}`}
+                className={`w-full justify-start ${activeTemplate === 'GovernmentRFP' ? 'bg-teal-600' : 'border-white/10 hover:bg-white/5'}`}
               >
                 Government Procurement
               </Button>
@@ -117,7 +117,7 @@ export default function ContractComposer() {
                 value={counterparty} 
                 onChange={(e) => setCounterparty(e.target.value)}
                 placeholder="counterparty@example.com"
-                className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500/50"
+                className="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-teal-500/50"
               />
             </div>
 
@@ -171,7 +171,7 @@ export default function ContractComposer() {
               <Button 
                 onClick={handleDeploy}
                 disabled={deploying}
-                className="w-full bg-indigo-600 hover:bg-indigo-500 py-6 text-lg rounded-xl flex items-center justify-center gap-2"
+                className="w-full bg-teal-600 hover:bg-teal-500 py-6 text-lg rounded-xl flex items-center justify-center gap-2"
               >
                 {deploying ? (
                   <>Saving & Sending... <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin ml-2"></div></>

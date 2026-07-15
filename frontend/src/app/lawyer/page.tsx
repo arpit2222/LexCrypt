@@ -53,13 +53,13 @@ export default function LawyerDashboard() {
               <Button 
                 variant="outline" 
                 onClick={() => setWhiteLabel(!whiteLabel)} 
-                className={`text-xs flex-1 ${whiteLabel ? 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10' : 'border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10'}`}
+                className={`text-xs flex-1 ${whiteLabel ? 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10' : 'border-teal-500/30 text-teal-400 hover:bg-teal-500/10'}`}
               >
                 Toggle Demo Branding
               </Button>
               <Button variant="ghost" size="icon" className="relative text-neutral-400 hover:text-white shrink-0">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full"></span>
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-teal-500 rounded-full"></span>
               </Button>
             </div>
             <div className="relative w-full md:w-auto">
@@ -67,7 +67,7 @@ export default function LawyerDashboard() {
               <input 
                 type="text" 
                 placeholder="Search cases, laws, precedents..." 
-                className="bg-neutral-900 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-indigo-500/50 w-full md:w-64 text-white"
+                className="bg-neutral-900 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-teal-500/50 w-full md:w-64 text-white"
               />
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function LawyerDashboard() {
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold">Upcoming Consultations</h3>
-                <Button variant="link" className="text-indigo-400">View All</Button>
+                <Button variant="link" className="text-teal-400">View All</Button>
               </div>
               <div className="space-y-4">
                 {loading ? (
@@ -133,7 +133,7 @@ export default function LawyerDashboard() {
                             <Clock className="w-3 h-3" /> New Lead
                           </span>
                         )}
-                        <Button variant="outline" size="sm" onClick={() => setActiveCall(consult.citizen)} className="border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10 shrink-0">
+                        <Button variant="outline" size="sm" onClick={() => setActiveCall(consult.citizen)} className="border-teal-500/30 text-teal-400 hover:bg-teal-500/10 shrink-0">
                           <Video className="w-4 h-4 mr-2"/> Join
                         </Button>
                       </div>
@@ -146,9 +146,9 @@ export default function LawyerDashboard() {
             {/* AI Copilot Quick Access */}
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">AI Copilot</h3>
-              <div className="p-6 rounded-2xl bg-gradient-to-b from-indigo-900/20 to-transparent border border-indigo-500/20 h-[300px] flex flex-col justify-between">
+              <div className="p-6 rounded-2xl bg-gradient-to-b from-teal-900/20 to-transparent border border-teal-500/20 h-[300px] flex flex-col justify-between">
                 <div>
-                  <Bot className={`w-8 h-8 mb-4 ${whiteLabel ? 'text-emerald-400' : 'text-indigo-400'}`} />
+                  <Bot className={`w-8 h-8 mb-4 ${whiteLabel ? 'text-emerald-400' : 'text-teal-400'}`} />
                   <p className="text-lg font-medium text-white mb-2">Private Firm AI</p>
                   <p className="text-sm text-neutral-400">Ask your Copilot to search your firm's historical templates and past judgments.</p>
                 </div>
@@ -171,7 +171,7 @@ export default function LawyerDashboard() {
           <div className="w-full max-w-5xl bg-neutral-900 rounded-2xl overflow-hidden flex flex-col border border-white/10 shadow-2xl">
             <div className="flex justify-between items-center p-4 border-b border-white/10 bg-neutral-950">
               <h3 className="font-bold flex items-center gap-2 text-white">
-                <Video className="w-5 h-5 text-indigo-400"/> Consultation Room: {activeCall}
+                <Video className="w-5 h-5 text-teal-400"/> Consultation Room: {activeCall}
               </h3>
               <Button variant="destructive" onClick={() => setActiveCall(null)}>End Call</Button>
             </div>

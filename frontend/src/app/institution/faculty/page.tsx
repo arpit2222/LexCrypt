@@ -67,7 +67,7 @@ export default function FacultyDashboard() {
                     </td>
                     <td className="px-6 py-4 text-neutral-400">{row.error}</td>
                     <td className="px-6 py-4">
-                      <Button variant="link" className="text-indigo-400 px-0">Review Submission</Button>
+                      <Button variant="link" className="text-teal-400 px-0">Review Submission</Button>
                     </td>
                   </tr>
                 ))}

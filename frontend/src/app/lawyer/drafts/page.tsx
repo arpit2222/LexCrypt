@@ -98,7 +98,7 @@ export default function LawyerDrafts() {
   return (
     <div className="flex flex-col h-full p-4 md:p-8">
       <header className="mb-8 pt-4 md:pt-0">
-        <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><FileText className="w-6 h-6 text-indigo-400"/> AI Drafts & Documents</h1>
+        <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><FileText className="w-6 h-6 text-teal-400"/> AI Drafts & Documents</h1>
       </header>
 
       <main className="flex-1 w-full max-w-5xl mx-auto flex flex-col gap-8">
@@ -114,7 +114,7 @@ export default function LawyerDrafts() {
               <select 
                 value={documentType}
                 onChange={e => setDocumentType(e.target.value)}
-                className="w-full bg-neutral-950 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-indigo-500/50"
+                className="w-full bg-neutral-950 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-teal-500/50"
               >
                 <option value="Legal Notice / Pleading">General Legal Notice / Pleading</option>
                 <option value="Eviction Notice">Eviction Notice</option>
@@ -129,13 +129,13 @@ export default function LawyerDrafts() {
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="e.g. Draft a legal notice on behalf of my client Mr. Sharma against his tenant Mr. Verma for non-payment of rent for 3 months..."
-              className="w-full flex-1 bg-neutral-950 border border-white/10 rounded-xl p-4 text-sm md:text-base text-white focus:outline-none focus:border-indigo-500/50 resize-none min-h-[200px] md:min-h-[300px]"
+              className="w-full flex-1 bg-neutral-950 border border-white/10 rounded-xl p-4 text-sm md:text-base text-white focus:outline-none focus:border-teal-500/50 resize-none min-h-[200px] md:min-h-[300px]"
             />
             
             <Button 
               onClick={handleGenerateDraft}
               disabled={loading || !prompt}
-              className="w-full mt-6 bg-indigo-600 hover:bg-indigo-500 py-6 text-lg rounded-xl flex items-center justify-center gap-2"
+              className="w-full mt-6 bg-teal-600 hover:bg-teal-500 py-6 text-lg rounded-xl flex items-center justify-center gap-2"
             >
               {loading ? "Generating Draft..." : "Generate Legal Draft"} <Send className="w-5 h-5" />
             </Button>
@@ -149,10 +149,10 @@ export default function LawyerDrafts() {
               <span className="font-semibold text-neutral-600">Preview</span>
               {draft && (
                 <div className="flex gap-2">
-                  <Button onClick={() => setIsEditing(!isEditing)} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
+                  <Button onClick={() => setIsEditing(!isEditing)} variant="outline" size="sm" className="border-teal-500/30 text-teal-600">
                     {isEditing ? <><Save className="w-4 h-4 mr-2"/> Save Edits</> : <><Edit className="w-4 h-4 mr-2"/> Edit Document</>}
                   </Button>
-                  <Button onClick={handleExport} variant="outline" size="sm" className="border-indigo-500/30 text-indigo-600">
+                  <Button onClick={handleExport} variant="outline" size="sm" className="border-teal-500/30 text-teal-600">
                     <Download className="w-4 h-4 mr-2"/> Export PDF
                   </Button>
                 </div>
@@ -162,7 +162,7 @@ export default function LawyerDrafts() {
             <div className="p-8 overflow-y-auto flex-1 flex flex-col">
               {loading ? (
                 <div className="flex flex-col items-center justify-center h-full text-neutral-400 space-y-4">
-                  <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin"></div>
                   <p>AI is drafting the document...</p>
                 </div>
               ) : draft ? (
@@ -170,7 +170,7 @@ export default function LawyerDrafts() {
                   <textarea
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
-                    className="w-full h-full min-h-[500px] text-black bg-white border-2 border-indigo-400 rounded-lg focus:outline-none focus:ring-0 font-serif text-sm md:text-base leading-relaxed p-4 shadow-inner"
+                    className="w-full h-full min-h-[500px] text-black bg-white border-2 border-teal-400 rounded-lg focus:outline-none focus:ring-0 font-serif text-sm md:text-base leading-relaxed p-4 shadow-inner"
                   />
                 ) : (
                   <div className="text-black whitespace-pre-wrap font-serif text-sm md:text-base leading-relaxed flex-1 w-full h-full">

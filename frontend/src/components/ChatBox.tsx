@@ -71,7 +71,7 @@ export function ChatBox({ caseId, currentUserRole, onClose }: { caseId: string, 
         ) : (
           messages.map((m, i) => (
             <div key={i} className={`flex ${m.sender === currentUserRole ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.sender === currentUserRole ? 'bg-indigo-600 text-white rounded-br-sm' : 'bg-neutral-800 text-neutral-200 rounded-bl-sm'}`}>
+              <div className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.sender === currentUserRole ? 'bg-teal-600 text-white rounded-br-sm' : 'bg-neutral-800 text-neutral-200 rounded-bl-sm'}`}>
                 <p className="text-[10px] opacity-50 mb-1 font-semibold uppercase">{m.sender === "lawyer" ? "Lawyer" : "Citizen"}</p>
                 {m.text}
               </div>
@@ -87,9 +87,9 @@ export function ChatBox({ caseId, currentUserRole, onClose }: { caseId: string, 
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && handleSend()}
           placeholder="Type a message..."
-          className="flex-1 bg-neutral-900 border border-white/10 rounded-lg px-3 text-sm text-white focus:outline-none focus:border-indigo-500"
+          className="flex-1 bg-neutral-900 border border-white/10 rounded-lg px-3 text-sm text-white focus:outline-none focus:border-teal-500"
         />
-        <Button onClick={handleSend} disabled={loading || !input.trim()} className="bg-indigo-600 hover:bg-indigo-500 rounded-lg px-3">
+        <Button onClick={handleSend} disabled={loading || !input.trim()} className="bg-teal-600 hover:bg-teal-500 rounded-lg px-3">
           {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
         </Button>
       </div>

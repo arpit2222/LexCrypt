@@ -53,7 +53,7 @@ export default function LawyerMarketplace() {
           <input 
             type="text" 
             placeholder="Search by specialty, location, or language..." 
-            className="w-full bg-neutral-900 border border-white/10 rounded-full py-4 pl-12 pr-4 text-white focus:outline-none focus:border-indigo-500/50"
+            className="w-full bg-neutral-900 border border-white/10 rounded-full py-4 pl-12 pr-4 text-white focus:outline-none focus:border-teal-500/50"
           />
         </div>
 
@@ -67,7 +67,7 @@ export default function LawyerMarketplace() {
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h2 className="text-xl font-semibold text-white">{lawyer.name}</h2>
-                      <p className="text-indigo-400 text-sm font-medium">{lawyer.specialty}</p>
+                      <p className="text-teal-400 text-sm font-medium">{lawyer.specialty}</p>
                     </div>
                     <div className="flex items-center gap-1 bg-yellow-500/10 text-yellow-400 px-2 py-1 rounded-md text-sm font-medium">
                       <Star className="w-4 h-4 fill-current" /> {lawyer.rating}
@@ -90,14 +90,14 @@ export default function LawyerMarketplace() {
                 {bookedLawyerName === lawyer.name ? (
                   <Button 
                     onClick={() => setActiveCall(lawyer.name)}
-                    className="w-full bg-indigo-600 hover:bg-indigo-500 text-white"
+                    className="w-full bg-teal-600 hover:bg-teal-500 text-white"
                   >
                     <Video className="w-4 h-4 mr-2" /> Join Video Call
                   </Button>
                 ) : (
                   <Button 
                     onClick={() => handleBook(lawyer)}
-                    className="w-full bg-white/10 hover:bg-indigo-600 text-white"
+                    className="w-full bg-white/10 hover:bg-teal-600 text-white"
                   >
                     <CalendarCheck className="w-4 h-4 mr-2" /> Book Consultation
                   </Button>
@@ -114,7 +114,7 @@ export default function LawyerMarketplace() {
           <div className="w-full max-w-5xl bg-neutral-900 rounded-2xl overflow-hidden flex flex-col border border-white/10 shadow-2xl">
             <div className="flex justify-between items-center p-4 border-b border-white/10 bg-neutral-950">
               <h3 className="font-bold flex items-center gap-2 text-white">
-                <Video className="w-5 h-5 text-indigo-400"/> Consultation Room: Adv. {activeCall}
+                <Video className="w-5 h-5 text-teal-400"/> Consultation Room: Adv. {activeCall}
               </h3>
               <Button variant="destructive" onClick={() => setActiveCall(null)}>End Call</Button>
             </div>

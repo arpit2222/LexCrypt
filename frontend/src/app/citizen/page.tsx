@@ -209,12 +209,12 @@
         <aside className={`fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-[#0a0a0a]/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
           <div className="p-6 flex items-center gap-3 border-b border-white/5">
             <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-2 cursor-pointer group">
-              <Scale className="w-6 h-6 text-indigo-400 group-hover:text-white transition-colors" />
+              <Scale className="w-6 h-6 text-teal-400 group-hover:text-white transition-colors" />
               <span className="text-xl font-bold tracking-widest text-neutral-200 group-hover:text-white transition-colors uppercase">Nyaya</span>
             </Link>
           </div>
           <nav className="flex-1 px-4 py-6 space-y-2">
-            <button onClick={() => { handleNewCase(); setIsSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+            <button onClick={() => { handleNewCase(); setIsSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 bg-teal-600/10 text-teal-300 rounded-xl font-medium">
               <Plus className="w-5 h-5" /> New Case
             </button>
             <button onClick={() => { fetchHistory(); setIsSidebarOpen(false); }} className="w-full flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
@@ -289,7 +289,7 @@
                       <div className="bg-neutral-800/50 text-neutral-200 px-6 py-4 rounded-2xl rounded-tr-sm max-w-[85%] leading-relaxed border border-white/5">
                         {msg.file && (
                           <div className="flex items-center gap-2 mb-3 bg-neutral-900/50 p-2 rounded-lg border border-white/5 w-fit">
-                            <FileText className="w-4 h-4 text-indigo-400" />
+                            <FileText className="w-4 h-4 text-teal-400" />
                             <span className="text-xs font-medium text-neutral-300">{msg.file.filename}</span>
                           </div>
                         )}
@@ -331,9 +331,9 @@
                     <Scale className="w-3 h-3" /> Nyaya AI
                   </div>
                   <div className="flex gap-1.5 items-center bg-neutral-900/50 px-5 py-4 rounded-2xl rounded-tl-sm border border-white/5 h-12 w-20">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" />
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                    <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce" />
                   </div>
                 </div>
               )}
@@ -347,12 +347,12 @@
         <div className={`absolute left-0 right-0 z-40 transition-all duration-700 ease-in-out px-4 ${isHome ? 'bottom-1/3 translate-y-1/2' : 'bottom-8'}`}>
           <div className="max-w-3xl mx-auto relative group">
             {attachedDoc && (
-              <div className="absolute -top-12 left-0 animate-in slide-in-from-bottom-2 fade-in bg-indigo-500/10 border border-indigo-500/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-3 w-max max-w-[90%] z-50">
-                <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
-                <span className="text-sm text-indigo-200 truncate">{attachedDoc.filename}</span>
+              <div className="absolute -top-12 left-0 animate-in slide-in-from-bottom-2 fade-in bg-teal-500/10 border border-teal-500/20 backdrop-blur-md px-4 py-2 rounded-full flex items-center gap-3 w-max max-w-[90%] z-50">
+                <FileText className="w-4 h-4 text-teal-400 shrink-0" />
+                <span className="text-sm text-teal-200 truncate">{attachedDoc.filename}</span>
                 <button 
                   onClick={() => setAttachedDoc(null)} 
-                  className="text-indigo-400 hover:text-white transition-colors ml-2"
+                  className="text-teal-400 hover:text-white transition-colors ml-2"
                 >
                   <X className="w-4 h-4" />
                 </button>

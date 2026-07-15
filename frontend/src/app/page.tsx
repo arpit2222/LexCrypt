@@ -10,17 +10,17 @@ export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-50 selection:bg-indigo-500/30">
+    <div className="min-h-screen bg-neutral-950 text-neutral-50 selection:bg-teal-500/30">
       {/* Background gradients */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/20 blur-[120px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-teal-900/20 blur-[120px]" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-900/20 blur-[120px]" />
       </div>
 
       {/* Navbar */}
       <nav className="relative z-20 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto border-b border-white/5">
         <div className="flex items-center gap-2">
-          <Scale className="w-8 h-8 text-indigo-400" />
+          <Scale className="w-8 h-8 text-teal-400" />
           <span className="text-xl font-bold tracking-wider">NYAYA AI</span>
         </div>
         
@@ -38,7 +38,7 @@ export default function Home() {
             <Link href="/lawyer" className={cn(buttonVariants({ variant: "ghost" }), "text-neutral-300 hover:text-white hover:bg-white/5")}>
               Lawyer Login
             </Link>
-            <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "border-indigo-500/30 text-indigo-400 hover:bg-indigo-500/10")}>
+            <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "border-teal-500/30 text-teal-400 hover:bg-teal-500/10")}>
               Supreme Court
             </Link>
           </div>
@@ -65,7 +65,7 @@ export default function Home() {
           <Link href="/lawyer" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "secondary" }), "w-full justify-center")}>
             Lawyer Login
           </Link>
-          <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "default" }), "w-full justify-center bg-indigo-600 hover:bg-indigo-500")}>
+          <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className={cn(buttonVariants({ variant: "default" }), "w-full justify-center bg-teal-600 hover:bg-teal-500")}>
             Supreme Court
           </Link>
         </div>
@@ -73,8 +73,8 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="relative z-10 flex flex-col items-center justify-center px-4 pt-32 pb-24 text-center max-w-5xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-indigo-300 mb-8 backdrop-blur-sm">
-          <span className="flex w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-teal-300 mb-8 backdrop-blur-sm">
+          <span className="flex w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
            Powered by Enterprise-Grade Proprietary AI
         </div>
         
@@ -117,7 +117,7 @@ export default function Home() {
                 desc: "A multilingual citizen-facing portal that triages issues and hands them directly to your associates, saving hours of manual work."
               },
               {
-                icon: <Users className="w-8 h-8 text-indigo-400" />,
+                icon: <Users className="w-8 h-8 text-teal-400" />,
                 title: "Clinical Education",
                 desc: "An advanced Moot Court Arena where students can practice arguments against an AI judge in real-time."
               }
@@ -153,7 +153,7 @@ export default function Home() {
                   <h3 className="text-2xl font-bold text-white mb-2">1. Citizen Intake</h3>
                   <p className="text-neutral-400">A potential client visits your website and chats with the AI in their native language (Hindi, Marathi, etc.) to explain their legal problem.</p>
                 </div>
-                <div className="absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-indigo-600 border-4 border-neutral-950 flex items-center justify-center font-bold text-white z-10 hidden md:flex">1</div>
+                <div className="absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-teal-600 border-4 border-neutral-950 flex items-center justify-center font-bold text-white z-10 hidden md:flex">1</div>
                 <div className="md:w-1/2" />
               </div>
               

@@ -52,23 +52,23 @@ export default function LawyerCases() {
   return (
     <div className="flex flex-col h-full p-4 md:p-8">
       <header className="mb-8 pt-4 md:pt-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><Briefcase className="w-6 h-6 text-indigo-400"/> Active & Pending Cases</h1>
+        <h1 className="text-xl md:text-2xl font-bold flex items-center gap-2"><Briefcase className="w-6 h-6 text-teal-400"/> Active & Pending Cases</h1>
         <div className="flex bg-neutral-900 border border-white/10 rounded-lg p-1 self-start md:self-auto">
           <button 
             onClick={() => setFilter("ALL")}
-            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "ALL" ? "bg-indigo-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "ALL" ? "bg-teal-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
           >
             All Cases
           </button>
           <button 
             onClick={() => setFilter("PENDING")}
-            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "PENDING" ? "bg-indigo-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "PENDING" ? "bg-teal-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
           >
             Pending
           </button>
           <button 
             onClick={() => setFilter("ACCEPTED")}
-            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "ACCEPTED" ? "bg-indigo-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
+            className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${filter === "ACCEPTED" ? "bg-teal-600 text-white shadow" : "text-neutral-400 hover:text-white hover:bg-white/5"}`}
           >
             Accepted
           </button>
@@ -101,7 +101,7 @@ export default function LawyerCases() {
                   </div>
                   <p className="text-sm text-neutral-400"><span className="text-neutral-300 font-semibold">Client Wallet/Email:</span> {c.citizen}</p>
                   <div className="bg-black/30 p-4 rounded-xl border border-white/5 text-sm text-neutral-300">
-                    <p className="font-semibold text-indigo-300 mb-2">Case Summary (AI Generated):</p>
+                    <p className="font-semibold text-teal-300 mb-2">Case Summary (AI Generated):</p>
                     <div className="text-sm text-neutral-300 leading-relaxed">
                       <ReactMarkdown
                         components={{
@@ -142,11 +142,11 @@ export default function LawyerCases() {
                   <div className="flex flex-col gap-3 min-w-[140px]">
                     <Button 
                       onClick={() => setChatCaseId(c._id)}
-                      className="bg-indigo-600 hover:bg-indigo-500 text-white w-full flex items-center gap-2"
+                      className="bg-teal-600 hover:bg-teal-500 text-white w-full flex items-center gap-2"
                     >
                       <MessageSquare className="w-4 h-4" /> Chat with Client
                     </Button>
-                    <Button variant="outline" className="border-indigo-500/30 text-indigo-400 w-full">
+                    <Button variant="outline" className="border-teal-500/30 text-teal-400 w-full">
                       Start Video Call
                     </Button>
                   </div>

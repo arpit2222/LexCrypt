@@ -8,7 +8,7 @@ import json
 from datetime import datetime
 from PyPDF2 import PdfReader
 
-from ai_service import draft_document, chat_analysis
+from ai_service import draft_document, chat_analysis, copilot_research as copilot_research_ai
 from auth import auth_router
 
 app = FastAPI(title="Nyaya AI Backend")
@@ -97,7 +97,8 @@ def get_chat_history(email: str):
 
 @app.post("/api/copilot/research")
 def copilot_research(request: CopilotRequest):
-    reply = chat_analysis(request.history)
+    ai_result = copilot_research_ai(request.history)
+    reply = ai_result.get("summary", "")
     
     session_id = request.session_id
     if not session_id:

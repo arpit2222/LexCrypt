@@ -34,7 +34,7 @@ export default function CitizenCases() {
             <ChevronLeft className="w-5 h-5 text-neutral-400" />
           </Button>
         </Link>
-        <h1 className="text-xl font-bold flex items-center gap-2"><Briefcase className="w-5 h-5 text-indigo-400"/> My Cases</h1>
+        <h1 className="text-xl font-bold flex items-center gap-2"><Briefcase className="w-5 h-5 text-teal-400"/> My Cases</h1>
       </header>
 
       <main className="flex-1 max-w-5xl w-full mx-auto p-4 md:p-8">
@@ -66,7 +66,7 @@ export default function CitizenCases() {
                   <p className="text-sm text-neutral-400"><span className="text-neutral-300 font-semibold">Lawyer ID:</span> {c.lawyer_id}</p>
                   
                   <div className="bg-black/30 p-4 rounded-xl border border-white/5 text-sm text-neutral-300 mt-2">
-                    <p className="font-semibold text-indigo-300 mb-2">Your Query:</p>
+                    <p className="font-semibold text-teal-300 mb-2">Your Query:</p>
                     <div className="text-sm text-neutral-300 leading-relaxed max-h-[200px] overflow-y-auto pr-2">
                       <ReactMarkdown>{c.query_details || c.query}</ReactMarkdown>
                     </div>
@@ -77,11 +77,11 @@ export default function CitizenCases() {
                   <div className="flex flex-col gap-3 w-full md:w-auto md:min-w-[140px]">
                     <Button 
                       onClick={() => setChatCaseId(c._id)}
-                      className="bg-indigo-600 hover:bg-indigo-500 text-white w-full flex items-center justify-center gap-2"
+                      className="bg-teal-600 hover:bg-teal-500 text-white w-full flex items-center justify-center gap-2"
                     >
                       <MessageSquare className="w-4 h-4" /> Message Lawyer
                     </Button>
-                    <Button variant="outline" className="border-indigo-500/30 text-indigo-400 w-full flex justify-center gap-2">
+                    <Button variant="outline" className="border-teal-500/30 text-teal-400 w-full flex justify-center gap-2">
                       <Video className="w-4 h-4" /> Join Video Call
                     </Button>
                   </div>

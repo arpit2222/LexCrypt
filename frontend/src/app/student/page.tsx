@@ -29,12 +29,12 @@ export default function StudentDashboard() {
       <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
-            <Scale className="w-8 h-8 text-indigo-400" />
+            <Scale className="w-8 h-8 text-teal-400" />
             <span className="font-bold text-xl tracking-wide">Nyaya AI</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <Link href="/student" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-indigo-600/10 text-indigo-300 rounded-xl font-medium">
+          <Link href="/student" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 bg-teal-600/10 text-teal-300 rounded-xl font-medium">
             <GraduationCap className="w-5 h-5" /> Moot Court Arena
           </Link>
           <a href="#" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 px-4 py-3 text-neutral-400 hover:text-white hover:bg-white/5 rounded-xl font-medium transition-colors">
@@ -54,7 +54,7 @@ export default function StudentDashboard() {
             <button className="md:hidden p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5" onClick={() => setIsSidebarOpen(true)}>
               <Menu className="w-6 h-6" />
             </button>
-            <h1 className="text-xl font-bold flex items-center gap-2 hidden md:flex"><GraduationCap className="w-6 h-6 text-indigo-400"/> Nyaya Student Hub</h1>
+            <h1 className="text-xl font-bold flex items-center gap-2 hidden md:flex"><GraduationCap className="w-6 h-6 text-teal-400"/> Nyaya Student Hub</h1>
             <span className="font-bold text-lg md:hidden">Student Hub</span>
           </div>
         </header>
@@ -67,16 +67,16 @@ export default function StudentDashboard() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {mockCases.map((c) => (
-            <div key={c.id} className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col hover:border-indigo-500/50 transition-colors group">
+            <div key={c.id} className="bg-neutral-900/50 border border-white/10 rounded-2xl p-6 flex flex-col hover:border-teal-500/50 transition-colors group">
               <div className="flex justify-between items-start mb-4">
-                <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-medium border border-indigo-500/20">
+                <span className="px-3 py-1 rounded-full bg-teal-500/10 text-teal-400 text-xs font-medium border border-teal-500/20">
                   {c.tag}
                 </span>
                 <span className={`text-xs font-semibold ${c.difficulty === 'Beginner' ? 'text-green-400' : c.difficulty === 'Intermediate' ? 'text-yellow-400' : 'text-red-400'}`}>
                   {c.difficulty}
                 </span>
               </div>
-              <h3 className="text-xl font-bold mb-2 group-hover:text-indigo-300 transition-colors">{c.title}</h3>
+              <h3 className="text-xl font-bold mb-2 group-hover:text-teal-300 transition-colors">{c.title}</h3>
               <p className="text-sm text-neutral-400 mb-6 flex-1">{c.description}</p>
               
               <Link href={`/student/practice?case=${c.id}`}>

@@ -50,7 +50,7 @@ export default function Drafting() {
             <select 
               value={docType}
               onChange={(e) => setDocType(e.target.value)}
-              className="w-full bg-neutral-900 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-indigo-500/50"
+              className="w-full bg-neutral-900 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:border-teal-500/50"
             >
               <option>Legal Notice</option>
               <option>RTI Application</option>
@@ -64,13 +64,13 @@ export default function Drafting() {
               value={details}
               onChange={(e) => setDetails(e.target.value)}
               placeholder="E.g., I bought a defected washing machine from XYZ Corp on 12 Oct 2024..."
-              className="w-full h-48 bg-neutral-900 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-indigo-500/50 resize-none"
+              className="w-full h-48 bg-neutral-900 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-teal-500/50 resize-none"
             />
           </div>
           <Button 
             onClick={handleGenerate} 
             disabled={loading || !details}
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-6 text-lg rounded-xl shadow-lg"
+            className="w-full bg-teal-600 hover:bg-teal-500 text-white py-6 text-lg rounded-xl shadow-lg"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <FileText className="w-5 h-5 mr-2" />}
             Generate Draft
@@ -82,7 +82,7 @@ export default function Drafting() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-semibold text-lg">AI Generated Draft</h2>
             {draft && (
-              <Button variant="outline" size="sm" className="border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/10">
+              <Button variant="outline" size="sm" className="border-teal-500/30 text-teal-300 hover:bg-teal-500/10">
                 <Download className="w-4 h-4 mr-2" /> Export PDF
               </Button>
             )}
