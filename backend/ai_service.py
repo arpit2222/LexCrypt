@@ -349,14 +349,16 @@ def draft_document(doc_type: str, details: str) -> dict:
     except Exception as e:
         return {"instructions": {"summary": "Failed to generate"}, "draft": f"AI Error: {str(e)}"}
 
-def copilot_research(query: str) -> dict:
+def copilot_research(history: list) -> dict:
     try:
+        messages = [{"role": "system", "content": PROMPT_COPILOT}]
+        for msg in history:
+            role = "assistant" if msg.get("role") in ["ai", "assistant"] else "user"
+            messages.append({"role": role, "content": msg.get("content", "")})
+            
         response = client.chat.completions.create(
             model=deployment_name,
-            messages=[
-                {"role": "system", "content": PROMPT_COPILOT},
-                {"role": "user", "content": query}
-            ],
+            messages=messages,
             max_completion_tokens=3000
         )
         return {
