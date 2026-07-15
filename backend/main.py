@@ -251,7 +251,8 @@ def delete_draft_history(draft_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 class CopilotRequest(BaseModel):
-    query: str
+    history: list
+    session_id: str = ""
     email: str = ""
 
 @app.post("/api/copilot/research")
@@ -263,17 +264,35 @@ def copilot_research_api(request: CopilotRequest):
         if user:
             users_collection.update_one({"email": request.email}, {"$inc": {"tokens_remaining": -1}})
             
-    result = ai_copilot(request.query)
+    result = ai_copilot(request.history)
     
     if request.email:
-        lawyer_research_collection.insert_one({
-            "email": request.email,
-            "query": request.query,
-            "summary": result.get("summary", ""),
-            "citations": result.get("citations", []),
-            "timestamp": datetime.utcnow().isoformat()
-        })
+        from bson.objectid import ObjectId
+        title = "New Conversation"
+        if request.history:
+            title = request.history[0].get("content", "")[:50] + "..."
+            
+        new_ai_message = {"role": "assistant", "content": result.get("summary", "")}
+        updated_history = request.history + [new_ai_message]
         
+        if request.session_id:
+            lawyer_research_collection.update_one(
+                {"_id": ObjectId(request.session_id)},
+                {"$set": {
+                    "history": updated_history,
+                    "timestamp": datetime.utcnow().isoformat()
+                }}
+            )
+            result["session_id"] = request.session_id
+        else:
+            inserted = lawyer_research_collection.insert_one({
+                "email": request.email,
+                "title": title,
+                "history": updated_history,
+                "timestamp": datetime.utcnow().isoformat()
+            })
+            result["session_id"] = str(inserted.inserted_id)
+            
     return result
 
 @app.get("/api/copilot/history")
@@ -282,6 +301,12 @@ def get_copilot_history(email: str):
         researches = list(lawyer_research_collection.find({"email": email}).sort("timestamp", -1))
         for r in researches:
             r["_id"] = str(r["_id"])
+            if "query" in r and "history" not in r:
+                r["title"] = r["query"][:50] + "..."
+                r["history"] = [
+                    {"role": "user", "content": r["query"]},
+                    {"role": "assistant", "content": r["summary"]}
+                ]
         return researches
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
