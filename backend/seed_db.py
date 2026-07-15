@@ -5,10 +5,10 @@ def seed():
     users_collection.delete_many({})
 
     dummy_users = [
-        {"email": "admin@nyaya.ai", "name": "System Admin", "password": "password123", "role": "admin"},
-        {"email": "citizen@nyaya.ai", "name": "Rahul Citizen", "password": "password123", "role": "citizen"},
-        {"email": "lawyer@nyaya.ai", "name": "Adv. Ravi Sharma", "password": "password123", "role": "lawyer"},
-        {"email": "associate@nyaya.ai", "name": "Priya Associate", "password": "password123", "role": "associate"},
+        {"email": "admin@nyayasetu.ai", "name": "System Admin", "password": "password123", "role": "admin"},
+        {"email": "citizen@nyayasetu.ai", "name": "Rahul Citizen", "password": "password123", "role": "citizen"},
+        {"email": "lawyer@nyayasetu.ai", "name": "Adv. Ravi Sharma", "password": "password123", "role": "lawyer"},
+        {"email": "associate@nyayasetu.ai", "name": "Priya Associate", "password": "password123", "role": "associate"},
     ]
 
     print("Inserting dummy users...")

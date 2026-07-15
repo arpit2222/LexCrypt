@@ -9,7 +9,7 @@ password = b"Alpha@1002@"
 hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode()
 
 users_collection.update_one(
-    {"email": "admin@nyaya.ai"},
+    {"email": "admin@nyayasetu.ai"},
     {"$set": {
         "password": hashed,
         "name": "Super Admin",

@@ -10,8 +10,8 @@ db = client.nyaya_db
 users_collection = db.users
 
 users = [
-    {"email": "partner1@nyaya.ai", "password": "PremiumUser123!", "name": "Partner One", "role": "lawyer", "firm_name": "Premium Law Firm", "tokens_remaining": 999999},
-    {"email": "partner2@nyaya.ai", "password": "PremiumUser123!", "name": "Partner Two", "role": "lawyer", "firm_name": "Premium Law Firm", "tokens_remaining": 999999}
+    {"email": "partner1@nyayasetu.ai", "password": "PremiumUser123!", "name": "Partner One", "role": "lawyer", "firm_name": "Premium Law Firm", "tokens_remaining": 999999},
+    {"email": "partner2@nyayasetu.ai", "password": "PremiumUser123!", "name": "Partner Two", "role": "lawyer", "firm_name": "Premium Law Firm", "tokens_remaining": 999999}
 ]
 
 for u in users:

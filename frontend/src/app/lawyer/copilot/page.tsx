@@ -35,7 +35,7 @@ export default function CopilotChat() {
     setIsLoading(true);
 
     try {
-      const lawyerEmail = localStorage.getItem("nyaya_email") || "lawyer@nyaya.ai";
+      const lawyerEmail = localStorage.getItem("nyaya_email") || "lawyer@nyayasetu.ai";
       const payloadHistory = currentHistory.map(m => ({
         role: m.role,
         content: m.file ? `(Attached Document: ${m.file.filename})\n\n${m.file.text}\n\nUser Question: ${m.content}` : m.content

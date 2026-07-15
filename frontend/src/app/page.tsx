@@ -21,7 +21,7 @@ export default function Home() {
       <nav className="relative z-20 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto border-b border-white/5">
         <div className="flex items-center gap-2">
           <Scale className="w-8 h-8 text-teal-400" />
-          <span className="text-xl font-bold tracking-wider">NYAYA AI</span>
+          <span className="text-xl font-bold tracking-wider">NYAYA SETU</span>
         </div>
         
         {/* Desktop Menu */}
@@ -183,7 +183,7 @@ export default function Home() {
       
       {/* Footer */}
       <footer className="relative z-10 py-12 border-t border-white/5 text-center text-neutral-500 text-sm">
-        <p>© 2026 Nyaya AI. All rights reserved.</p>
+        <p>© 2026 Nyaya Setu. All rights reserved.</p>
         
       </footer>
     </div>

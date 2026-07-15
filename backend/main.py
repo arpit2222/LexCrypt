@@ -11,7 +11,7 @@ from PyPDF2 import PdfReader
 from ai_service import draft_document, chat_analysis, copilot_research as copilot_research_ai
 from auth import auth_router
 
-app = FastAPI(title="Nyaya AI Backend")
+app = FastAPI(title="Nyaya Setu Backend")
 
 app.add_middleware(
     CORSMiddleware,
@@ -102,7 +102,7 @@ def get_user_me(email: str):
         "email": user.get("email"),
         "name": user.get("name"),
         "role": user.get("role"),
-        "firm_name": user.get("firm_name", "Nyaya Hub")
+        "firm_name": user.get("firm_name", "Nyaya Setu")
     }
 
 @app.post("/api/copilot/research")

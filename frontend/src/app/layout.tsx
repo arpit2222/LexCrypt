@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Nyaya AI",
+  title: "Nyaya Setu",
   description: "Multilingual Legal AI for India",
 };
 

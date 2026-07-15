@@ -28,7 +28,7 @@ export default function LawyerDrafts() {
     setLoading(true);
     
     try {
-      const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
+      const email = localStorage.getItem("nyaya_email") || "admin@nyayasetu.ai";
       const res = await fetch("/api/draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

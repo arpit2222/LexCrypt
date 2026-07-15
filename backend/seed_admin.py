@@ -13,7 +13,7 @@ db = client.nyaya_db
 users_collection = db.users
 
 def seed_admin():
-    email = "admin@nyaya.ai"
+    email = "admin@nyayasetu.ai"
     password = "Alpha@1002@"
     
     existing = users_collection.find_one({"email": email})

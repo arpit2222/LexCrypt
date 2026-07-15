@@ -54,7 +54,7 @@ export default function Login() {
         <div className="flex flex-col items-center mb-8">
           <Scale className="w-10 h-10 text-teal-400 mb-4" />
           <h1 className="text-2xl font-bold text-white">Welcome Back</h1>
-          <p className="text-neutral-400 mt-2 text-sm">Sign in to your Nyaya AI account</p>
+          <p className="text-neutral-400 mt-2 text-sm">Sign in to your Nyaya Setu account</p>
         </div>
 
         {error && <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-lg text-sm mb-6 text-center">{error}</div>}

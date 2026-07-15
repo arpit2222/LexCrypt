@@ -13,7 +13,7 @@ export default function CitizenCases() {
   const [chatCaseId, setChatCaseId] = useState<string | null>(null);
   
   useEffect(() => {
-    const email = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+    const email = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
     fetch(`/api/cases/citizen?citizen_wallet=${email}`)
       .then(res => res.json())
       .then(data => {

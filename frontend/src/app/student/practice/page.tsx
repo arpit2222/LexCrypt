@@ -86,7 +86,7 @@ function PracticeArenaContent() {
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3">
             <Scale className="w-8 h-8 text-teal-400" />
-            <span className="font-bold text-xl tracking-wide">Nyaya AI</span>
+            <span className="font-bold text-xl tracking-wide">Nyaya Setu</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">

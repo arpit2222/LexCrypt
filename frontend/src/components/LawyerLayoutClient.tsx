@@ -21,7 +21,7 @@ export default function LawyerLayoutClient({ children }: { children: React.React
   };
 
   const fetchHistory = async () => {
-    const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
+    const email = localStorage.getItem("nyaya_email") || "admin@nyayasetu.ai";
     try {
       if (pathname === '/lawyer/copilot') {
         const res = await fetch(`/api/copilot/history?email=${email}`);
@@ -54,7 +54,7 @@ export default function LawyerLayoutClient({ children }: { children: React.React
   };
 
   useEffect(() => {
-    const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
+    const email = localStorage.getItem("nyaya_email") || "admin@nyayasetu.ai";
     const fetchData = async () => {
       try {
         const userRes = await fetch(`/api/user/me?email=${email}`);
@@ -83,7 +83,7 @@ export default function LawyerLayoutClient({ children }: { children: React.React
             <div className="bg-teal-500 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20">
               {whiteLabel ? <Briefcase className="w-5 h-5 text-white" /> : <Scale className="w-5 h-5 text-white" />}
             </div>
-            <span className="font-bold tracking-wide group-hover:text-white text-neutral-200 transition-colors">{whiteLabel ? "Test Associates" : "Nyaya Hub"}</span>
+            <span className="font-bold tracking-wide group-hover:text-white text-neutral-200 transition-colors">{whiteLabel ? "Test Associates" : "Nyaya Setu"}</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">

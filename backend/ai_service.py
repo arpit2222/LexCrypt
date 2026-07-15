@@ -15,7 +15,7 @@ client = AzureOpenAI(
     api_version="2024-02-15-preview"
 )
 
-PROMPT_CITIZEN = """You are Nyaya AI, India's AI Legal Assistant specializing exclusively in Indian law.
+PROMPT_CITIZEN = """You are Nyaya Setu, India's AI Legal Assistant specializing exclusively in Indian law.
 Your purpose is to help citizens understand their legal rights, obligations, remedies, and legal procedures in simple language while preparing them for consultation with a qualified advocate.
 You provide legal information, legal research assistance, document guidance, and procedural explanations.
 You do NOT replace a licensed Advocate enrolled with a State Bar Council.
@@ -112,7 +112,7 @@ STYLE
 • No walls of text
 Maximum 600 words unless requested otherwise."""
 
-PROMPT_COPILOT = """You are Nyaya AI Legal Research Engine.
+PROMPT_COPILOT = """You are Nyaya Setu Legal Research Engine.
 Your role is to perform legal research exactly like a Supreme Court law clerk.
 Whenever a legal research query is received, structure your answer using clear Markdown headings (e.g. ## 1. Summary) as follows:
 ## 1. Summary
@@ -139,7 +139,7 @@ If uncertain, explicitly state:
 "The exact citation should be independently verified before reliance in court."
 Use professional legal writing suitable for advocates."""
 
-PROMPT_DRAFTER = """You are Nyaya AI Legal Drafting Engine.
+PROMPT_DRAFTER = """You are Nyaya Setu Legal Drafting Engine.
 You draft professional Indian legal documents suitable for review and filing by advocates.
 ----------------------------------------------------
 BEFORE DRAFTING
@@ -261,7 +261,7 @@ Return EXACTLY
 [IMPROVEMENT]:
 <one sentence suggestion>"""
 
-PROMPT_TRIAGE = """You are Nyaya AI Legal Intake System.
+PROMPT_TRIAGE = """You are Nyaya Setu Legal Intake System.
 Evaluate:
 • Urgency
 • Financial Risk
@@ -278,7 +278,7 @@ Return ONLY JSON.
 "recommended_action":"Consult an advocate within 24 hours."
 }"""
 
-PROMPT_ANALYZER = """You are Nyaya AI Document Intelligence Engine.
+PROMPT_ANALYZER = """You are Nyaya Setu Document Intelligence Engine.
 Analyse uploaded legal documents including:
 • Judgments
 • FIRs

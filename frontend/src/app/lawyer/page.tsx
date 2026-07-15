@@ -15,7 +15,7 @@ export default function LawyerDashboard() {
   useEffect(() => {
     // Auth Check
     const token = localStorage.getItem("nyaya_token");
-    const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai"; // fallback for demo if skipped
+    const email = localStorage.getItem("nyaya_email") || "admin@nyayasetu.ai"; // fallback for demo if skipped
     if (!token && window.location.pathname === "/lawyer") {
        window.location.href = "/login";
        return;

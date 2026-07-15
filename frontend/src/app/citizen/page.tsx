@@ -11,7 +11,7 @@
     const [messages, setMessages] = useState<{role: string, content: string, file?: {filename: string, text: string} | null}[]>([
       {
         role: "ai",
-        content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",
+        content: "Namaste. I am Nyaya Setu, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",
       },
     ]);
     const [input, setInput] = useState("");
@@ -52,7 +52,7 @@
       setMessages([
         {
           role: "ai",
-          content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",
+          content: "Namaste. I am Nyaya Setu, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.",
         },
       ]);
       setInput("");
@@ -95,7 +95,7 @@
     };
 
     const fetchHistory = async () => {
-      const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+      const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
       try {
         const res = await fetch(`/api/chat/history?email=${userIdentifier}`);
         const data = await res.json();
@@ -109,7 +109,7 @@
     const handleSave = async (index: number) => {
       const ai_response = messages[index].content;
       const query = messages[index-1]?.content || "Document Upload / General Chat";
-      const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+      const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
       
       try {
         const res = await fetch("/api/chat/save", {
@@ -136,12 +136,12 @@
       setIsLoading(true);
 
       try {
-        const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+        const userIdentifier = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
         
         const payloadHistory = currentHistory.map(m => ({
           role: m.role,
           content: m.file ? `(Attached Document: ${m.file.filename})\\n\\n${m.file.text}\\n\\nUser Question: ${m.content}` : m.content
-        })).filter(m => m.content !== "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.");
+        })).filter(m => m.content !== "Namaste. I am Nyaya Setu, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief.");
         
         const response = await fetch("/api/chat", {
           method: "POST",
@@ -259,7 +259,7 @@
                 What legal matter can we assist you with?
               </h1>
               <p className="text-lg text-neutral-500">
-                Describe your issue securely. Nyaya AI will triage your case and prepare it for our advocates.
+                Describe your issue securely. Nyaya Setu will triage your case and prepare it for our advocates.
               </p>
             </div>
           )}
@@ -281,7 +281,7 @@
                       {isUser ? (
                         <>You <User className="w-3 h-3" /></>
                       ) : (
-                        <><Scale className="w-3 h-3" /> Nyaya AI</>
+                        <><Scale className="w-3 h-3" /> Nyaya Setu</>
                       )}
                     </div>
 
@@ -328,7 +328,7 @@
               {isLoading && (
                 <div className="flex flex-col items-start animate-in fade-in slide-in-from-bottom-2 duration-500">
                   <div className="flex items-center gap-2 mb-2 text-xs font-semibold tracking-wider text-neutral-500 uppercase">
-                    <Scale className="w-3 h-3" /> Nyaya AI
+                    <Scale className="w-3 h-3" /> Nyaya Setu
                   </div>
                   <div className="flex gap-1.5 items-center bg-neutral-900/50 px-5 py-4 rounded-2xl rounded-tl-sm border border-white/5 h-12 w-20">
                     <div className="w-2 h-2 bg-teal-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -372,7 +372,7 @@
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (input.trim() || attachedDoc) && handleSend()}
-                placeholder="Message Nyaya AI..."
+                placeholder="Message Nyaya Setu..."
                 className="flex-1 bg-transparent border-none py-3 px-1 md:px-2 text-white placeholder-neutral-600 focus:outline-none focus:ring-0 text-sm md:text-[15px] min-w-0"
               />
               
@@ -394,7 +394,7 @@
             </div>
             
             <div className="text-center mt-3 hidden md:block">
-              <span className="text-xs text-neutral-600">Nyaya AI can make mistakes. Consider verifying important information.</span>
+              <span className="text-xs text-neutral-600">Nyaya Setu can make mistakes. Consider verifying important information.</span>
             </div>
 
             {isHome && (
@@ -438,7 +438,7 @@
                   historyList.map((item, idx) => (
                     <div key={idx} className="group border border-white/5 hover:border-white/10 bg-neutral-900/30 rounded-2xl p-5 transition-all cursor-pointer" onClick={() => {
                       setMessages([
-                        { role: "ai", content: "Namaste. I am Nyaya AI, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief." },
+                        { role: "ai", content: "Namaste. I am Nyaya Setu, your secure legal intelligence partner. Please describe your legal matter, and I will prepare a preliminary brief." },
                         ...(item.history || [])
                       ]);
                       setSessionId(item._id || "");
@@ -451,7 +451,7 @@
                         onClick={async (e) => {
                           e.stopPropagation();
                           const target = e.currentTarget;
-                          const citizen = localStorage.getItem("nyaya_email") || "citizen@nyaya.ai";
+                          const citizen = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
                           try {
                             const res = await fetch("/api/cases/hire", {
                               method: "POST",

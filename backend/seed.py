@@ -6,7 +6,7 @@ client = MongoClient(MONGO_URI)
 db = client.nyaya_db
 users_collection = db.users
 
-email = "admin@nyaya.ai"
+email = "admin@nyayasetu.ai"
 password = b"Alpha@1002@"
 hashed = bcrypt.hashpw(password, bcrypt.gensalt()).decode()
 
