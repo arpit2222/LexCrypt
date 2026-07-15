@@ -80,8 +80,10 @@ export default function LawyerLayoutClient({ children }: { children: React.React
       <aside className={`fixed inset-y-0 left-0 z-[60] w-64 border-r border-white/5 bg-neutral-900/95 backdrop-blur-xl flex flex-col transform transition-transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0`}>
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
           <Link href="/" onClick={() => setIsSidebarOpen(false)} className="flex items-center gap-3 group">
-            {whiteLabel ? <Briefcase className="w-8 h-8 text-emerald-400 group-hover:text-emerald-300 transition-colors" /> : <Scale className="w-8 h-8 text-teal-400 group-hover:text-teal-300 transition-colors" />}
-            <span className="font-bold tracking-wide group-hover:text-white text-neutral-200 transition-colors">{whiteLabel ? "Sharma & Associates" : "Nyaya Hub"}</span>
+            <div className="bg-teal-500 p-2 rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20">
+              {whiteLabel ? <Briefcase className="w-5 h-5 text-white" /> : <Scale className="w-5 h-5 text-white" />}
+            </div>
+            <span className="font-bold tracking-wide group-hover:text-white text-neutral-200 transition-colors">{whiteLabel ? "Test Associates" : "Nyaya Hub"}</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-6 space-y-2">
@@ -134,11 +136,13 @@ export default function LawyerLayoutClient({ children }: { children: React.React
             </div>
           </div>
           <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center font-bold">A</div>
-              <div>
-                <p className="text-sm font-medium text-white">Adv. Sharma</p>
-                <p className="text-xs text-neutral-500">Corporate Law</p>
+            <div className="flex items-center gap-3 w-full">
+              <div className="w-10 h-10 rounded-full bg-teal-500 flex items-center justify-center font-bold text-white shadow-lg shadow-teal-500/20 text-sm">
+                T
+              </div>
+              <div className="flex-1 text-left hidden md:block group-hover:opacity-100 opacity-90 transition-opacity overflow-hidden">
+                <p className="text-sm font-medium text-white truncate">Test Lawyer</p>
+                <p className="text-[10px] text-teal-300 font-medium truncate uppercase tracking-wider">{whiteLabel ? "Managing Partner" : "Corporate Law"}</p>
               </div>
             </div>
             <button onClick={handleLogout} className="text-neutral-500 hover:text-white transition-colors" title="Log out">
@@ -155,8 +159,8 @@ export default function LawyerLayoutClient({ children }: { children: React.React
            <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-neutral-400 hover:text-white rounded-lg hover:bg-white/5">
              <Menu className="w-6 h-6" />
            </button>
-           <div className="ml-2 flex items-center gap-2 font-bold text-lg">
-             <Briefcase className="w-5 h-5 text-emerald-400" /> {whiteLabel ? "Sharma & Assoc." : "Nyaya"}
+           <div className="font-bold tracking-wide text-neutral-200 flex items-center gap-2">
+             <Briefcase className="w-5 h-5 text-emerald-400" /> {whiteLabel ? "Test Assoc." : "Nyaya"}
            </div>
          </header>
          {/* Page Content */}
