@@ -128,3 +128,26 @@ export default function LawyerCases() {
                     </Button>
                     <Button 
                       onClick={() => handleAction(c._id, "REJECT")}
+                      variant="outline" 
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/10 w-full flex items-center gap-2"
+                    >
+                      <XCircle className="w-4 h-4" /> Reject & Reassign
+                    </Button>
+                  </div>
+                )}
+                
+                {c.status === "ACCEPTED" && (
+                  <div className="flex flex-col gap-3 min-w-[140px]">
+                    <Button variant="outline" className="border-indigo-500/30 text-indigo-400 w-full">
+                      Start Video Call
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
