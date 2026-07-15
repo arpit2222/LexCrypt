@@ -250,6 +250,27 @@ def delete_draft_history(draft_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/copilot/upload")
+async def copilot_upload_document(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        text = ""
+        
+        if file.filename.lower().endswith('.pdf'):
+            doc = fitz.open(stream=content, filetype="pdf")
+            for page in doc:
+                text += page.get_text()
+            doc.close()
+        else:
+            text = content.decode('utf-8', errors='ignore')
+            
+        return {
+            "filename": file.filename,
+            "text": text.strip()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 class CopilotRequest(BaseModel):
     history: list
     session_id: str = ""
