@@ -23,6 +23,7 @@ saved_queries_collection = db.saved_queries
 assignments_collection = db.assignments
 lawyer_drafts_collection = db.lawyer_drafts
 lawyer_research_collection = db.lawyer_research
+citizen_chat_collection = db.citizen_chat
 
 # Removed /api/fhe/score as it's no longer used by frontend
 
@@ -41,23 +42,13 @@ class SaveQueryRequest(BaseModel):
     ai_response: str
 
 @app.post("/api/chat/save")
-def save_query(request: SaveQueryRequest):
-    try:
-        new_query = {
-            "email": request.user_email,
-            "query": request.query,
-            "ai_response": request.ai_response,
-            "timestamp": datetime.utcnow().isoformat()
-        }
-        saved_queries_collection.insert_one(new_query)
-        return {"message": "Query saved successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+def save_chat_query(request: SaveQueryRequest):
+    return {"message": "Deprecated"}
 
 @app.get("/api/chat/history")
-def get_query_history(email: str):
+def get_chat_history(email: str):
     try:
-        queries = list(saved_queries_collection.find({"email": email}, {"_id": 0}).sort("timestamp", -1))
+        queries = list(citizen_chat_collection.find({"email": email}).sort("timestamp", -1))
         return queries
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
@@ -137,7 +128,8 @@ def get_admin_stats(admin: dict = Depends(verify_admin)):
     }
 
 class ChatRequest(BaseModel):
-    message: str
+    history: list
+    session_id: str = ""
     user_id: str
     language: str = "english"
 
@@ -152,18 +144,32 @@ def health_check():
 @app.post("/api/chat")
 def chat_with_ai(request: ChatRequest):
     # Check rate limit: 1 case per week (TEMPORARILY DISABLED)
-    # if request.user_id:
-    #     seven_days_ago = datetime.utcnow().timestamp() - (7 * 24 * 60 * 60)
-    #     recent_cases = saved_queries_collection.count_documents({
-    #         "email": request.user_id,
-    #         "timestamp": {"$gte": datetime.fromtimestamp(seven_days_ago).isoformat()}
-    #     })
-    #     if recent_cases >= 1:
-    #         raise HTTPException(status_code=429, detail="You have reached your limit of 1 case per week. Please wait before creating a new case.")
     
-    reply = chat_analysis(request.message)
+    reply = chat_analysis(request.history)
+    
+    session_id = request.session_id
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        title = request.history[0].get("content", "")[:50] + "..." if request.history else "New Case"
+        citizen_chat_collection.insert_one({
+            "_id": session_id,
+            "email": request.user_id,
+            "title": title,
+            "history": request.history + [{"role": "assistant", "content": reply}],
+            "timestamp": datetime.utcnow().isoformat()
+        })
+    else:
+        citizen_chat_collection.update_one(
+            {"_id": session_id},
+            {"$set": {
+                "history": request.history + [{"role": "assistant", "content": reply}],
+                "timestamp": datetime.utcnow().isoformat()
+            }}
+        )
+
     return {
-        "reply": reply
+        "reply": reply,
+        "session_id": session_id
     }
 
 @app.post("/api/upload")
