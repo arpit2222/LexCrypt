@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Bot, Send, User } from "lucide-react";
+import { Bot, Send, User, Paperclip, Loader2 } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
 export default function LawyerCopilot() {
@@ -10,7 +10,9 @@ export default function LawyerCopilot() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [sessionId, setSessionId] = useState("");
+  const [uploading, setUploading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -28,6 +30,52 @@ export default function LawyerCopilot() {
     window.addEventListener('load-history', handleLoad);
     return () => window.removeEventListener('load-history', handleLoad);
   }, []);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    try {
+      const res = await fetch("/api/copilot/upload", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      
+      if (res.ok) {
+        const text = data.text.substring(0, 10000); 
+        const docMsg = { 
+          role: "user", 
+          content: `(Attached Document: ${data.filename})\\n\\n${text}`
+        };
+        const currentHistory = [...messages, docMsg];
+        setMessages(currentHistory);
+        
+        setLoading(true);
+        const email = localStorage.getItem("nyaya_email") || "admin@nyaya.ai";
+        const aiRes = await fetch("/api/copilot/research", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ history: currentHistory, session_id: sessionId, email })
+        });
+        const aiData = await aiRes.json();
+        setMessages([...currentHistory, { role: "assistant", content: aiData.summary }]);
+        if (aiData.session_id) setSessionId(aiData.session_id);
+        window.dispatchEvent(new Event('refresh-history'));
+      } else {
+        alert("Failed to extract text from document.");
+      }
+    } catch(err) {
+      alert("Error uploading document.");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const handleResearch = async () => {
     if (!input.trim()) return;
@@ -118,7 +166,24 @@ export default function LawyerCopilot() {
       </main>
 
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent pt-10 pb-4 md:pb-8 px-4">
-        <div className="max-w-3xl mx-auto relative">
+        <div className="max-w-3xl mx-auto relative flex items-center">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              onChange={handleFileUpload} 
+              className="hidden" 
+              accept=".pdf,.txt" 
+            />
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading || loading}
+              className="text-neutral-400 hover:text-indigo-400 transition-colors disabled:opacity-50"
+              title="Upload PDF or TXT"
+            >
+              {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
+            </button>
+          </div>
           <textarea 
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -128,14 +193,14 @@ export default function LawyerCopilot() {
                 handleResearch();
               }
             }}
-            placeholder="Ask a legal question..."
-            className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-4 pr-12 text-sm text-white focus:outline-none focus:border-indigo-500/50 shadow-xl resize-none min-h-[52px] max-h-32"
+            placeholder="Ask a legal question or attach a document..."
+            className="w-full bg-neutral-900 border border-white/10 rounded-2xl py-3 pl-12 pr-12 text-sm text-white focus:outline-none focus:border-indigo-500/50 shadow-xl resize-none min-h-[52px] max-h-32"
             rows={1}
           />
           <Button 
             onClick={handleResearch}
             disabled={loading || !input.trim()}
-            className="absolute right-2 bottom-2 rounded-xl h-9 w-9 p-0 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
+            className="absolute right-2 bottom-2 rounded-xl h-9 w-9 p-0 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 z-10"
           >
             <Send className="w-4 h-4 ml-0.5" />
           </Button>
