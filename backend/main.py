@@ -28,11 +28,8 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 
 load_dotenv()
-uri = os.getenv("MONGODB_URI")
-if not uri:
-    raise ValueError("MONGODB_URI environment variable not set")
-
-client = MongoClient(uri, server_api=ServerApi('1'))
+uri = os.getenv("MONGO_URI", "mongodb://localhost:27017")
+client = MongoClient(uri, serverSelectionTimeoutMS=5000)
 db = client['nyaya_db']
 citizen_chat_collection = db['citizen_chats']
 lawyer_copilot_collection = db['lawyer_copilots']
