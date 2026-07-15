@@ -37,9 +37,10 @@ lawyer_drafts_collection = db['lawyer_drafts']
 cases_collection = db['cases']
 
 class CaseAssignRequest(BaseModel):
-    citizen_wallet: str
+    session_id: str
+    citizen: str
     lawyer_id: str
-    query_details: str
+    query: str
 
 class ChatRequest(BaseModel):
     history: list
@@ -55,15 +56,22 @@ class CopilotRequest(BaseModel):
 @app.post("/api/cases/hire")
 def assign_case(request: CaseAssignRequest):
     case_doc = {
-        "_id": str(uuid.uuid4()),
-        "citizen_wallet": request.citizen_wallet,
+        "citizen": request.citizen,
         "lawyer_id": request.lawyer_id,
-        "query_details": request.query_details,
-        "status": "pending",
+        "query": request.query,
+        "status": "PENDING",
         "timestamp": datetime.utcnow().isoformat()
     }
-    cases_collection.insert_one(case_doc)
-    return {"status": "success", "case_id": case_doc["_id"]}
+    cases_collection.update_one(
+        {"_id": request.session_id},
+        {"$set": case_doc},
+        upsert=True
+    )
+    citizen_chat_collection.update_one(
+        {"_id": request.session_id},
+        {"$set": {"assigned": True}}
+    )
+    return {"status": "success", "case_id": request.session_id}
 
 @app.post("/api/chat")
 def chat_with_ai(request: ChatRequest):

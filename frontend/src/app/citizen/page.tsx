@@ -447,36 +447,47 @@
                       <p className="text-[10px] uppercase tracking-widest text-neutral-600 mb-3">{new Date(item.timestamp).toLocaleDateString()}</p>
                       <p className="text-sm text-white font-medium mb-2">{item.title || "Case Session"}</p>
                       <p className="text-xs text-neutral-400 line-clamp-3 leading-relaxed mb-4">{item.history ? item.history[item.history.length-1].content : ""}</p>
-                      <button 
-                        onClick={async (e) => {
-                          e.stopPropagation();
-                          const target = e.currentTarget;
-                          const citizen = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
-                          try {
-                            const res = await fetch("/api/cases/hire", {
-                              method: "POST",
-                              headers: {"Content-Type": "application/json"},
-                              body: JSON.stringify({ 
-                                citizen_wallet: citizen, 
-                                lawyer_id: "1", 
-                                query_details: `Citizen Chat Session (${item.title || 'Case'}):\\n\\n` + (item.history || []).map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join('\\n\\n')
-                              })
-                            });
-                            if(res.ok) {
-                              target.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team';
-                              target.classList.add('bg-green-500', 'text-white');
-                              target.classList.remove('bg-white', 'text-black');
-                            } else {
+                        {item.assigned ? (
+                        <button 
+                          disabled
+                          className="w-full bg-green-500 text-white py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team
+                        </button>
+                      ) : (
+                        <button 
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            const target = e.currentTarget;
+                            const citizen = localStorage.getItem("nyaya_email") || "citizen@nyayasetu.ai";
+                            try {
+                              const res = await fetch("/api/cases/hire", {
+                                method: "POST",
+                                headers: {"Content-Type": "application/json"},
+                                body: JSON.stringify({ 
+                                  session_id: item._id || "",
+                                  citizen: citizen, 
+                                  lawyer_id: "1", 
+                                  query: `Citizen Chat Session (${item.title || 'Case'}):\n\n` + (item.history || []).map((m: any) => `${m.role.toUpperCase()}: ${m.content}`).join('\n\n')
+                                })
+                              });
+                              if(res.ok) {
+                                target.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg> Assigned to Legal Team';
+                                target.classList.add('bg-green-500', 'text-white');
+                                target.classList.remove('bg-white', 'text-black');
+                                item.assigned = true;
+                              } else {
+                                alert("Failed to assign case.");
+                              }
+                            } catch(err) {
                               alert("Failed to assign case.");
                             }
-                          } catch(err) {
-                            alert("Failed to assign case.");
-                          }
-                        }}
-                        className="w-full bg-white text-black hover:bg-neutral-200 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
-                      >
-                        <Briefcase className="w-3 h-3" /> Assign to Legal Team
-                      </button>
+                          }}
+                          className="w-full bg-white text-black hover:bg-neutral-200 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+                        >
+                          <Briefcase className="w-3 h-3" /> Assign to Legal Team
+                        </button>
+                      )}
                     </div>
                   ))
                 )}
