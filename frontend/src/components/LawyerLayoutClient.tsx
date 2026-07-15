@@ -104,12 +104,15 @@ export default function LawyerLayoutClient({ children }: { children: React.React
                 <div className="space-y-2 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
                   {history.map((item, idx) => (
                     <div key={idx} className="relative group">
-                      <button className="w-full text-left p-3 rounded-lg hover:bg-white/5 text-sm transition-colors text-neutral-300 pr-8" onClick={() => {
+                      <button 
+                        onClick={() => {
                           window.dispatchEvent(new CustomEvent('load-history', { detail: item }));
                           if(window.innerWidth < 768) setIsSidebarOpen(false);
-                      }}>
+                        }}
+                        className="w-full text-left bg-neutral-900 border border-white/5 hover:bg-neutral-800 p-3 rounded-xl transition-all group relative pr-10"
+                      >
                         <div className="text-[10px] text-neutral-500 mb-1">{new Date(item.timestamp).toLocaleDateString()}</div>
-                        <div className="font-medium line-clamp-2">{pathname === '/lawyer/copilot' ? item.query : item.document_type}</div>
+                        <div className="font-medium line-clamp-2 text-sm">{pathname === '/lawyer/copilot' ? (item.title || item.query) : item.document_type}</div>
                       </button>
                       <button onClick={(e) => { e.stopPropagation(); handleDelete(item._id); }} className="absolute right-2 top-1/2 -translate-y-1/2 opacity-100 md:opacity-0 group-hover:opacity-100 p-1.5 text-neutral-500 hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all">
                         <Trash2 className="w-4 h-4" />
