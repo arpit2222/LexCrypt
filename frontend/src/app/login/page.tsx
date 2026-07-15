@@ -38,7 +38,7 @@ export default function Login() {
         case "citizen": router.push("/citizen"); break;
         case "lawyer": router.push("/lawyer"); break;
         case "associate": router.push("/associate"); break;
-        case "admin": router.push("/admin"); break;
+        case "admin": router.push("/citizen"); break;
         default: router.push("/");
       }
     } catch (err: any) {
