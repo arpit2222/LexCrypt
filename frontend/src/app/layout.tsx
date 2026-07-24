@@ -16,6 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Pixel Code - https://analytics.techisfuture.com/ */}
+        <script defer src="https://analytics.techisfuture.com/pixel/806wtVUQzgSk8fVP"></script>
+        {/* END Pixel Code */}
+      </head>
       <body className={inter.className}>
         {children}
       </body>
